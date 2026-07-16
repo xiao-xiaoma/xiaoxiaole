@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐴 小小马单词消消乐</title>
+    <style>
+        /* ... 样式与之前保持一致，仅移除相关元素 ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 750px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .title .horse-icon {
+            -webkit-text-fill-color: initial;
+            background: none;
+            font-size: 32px;
+        }
+
+        /* 移除 .badge-eb 样式 */
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .custom-select {
+            padding: 8px 30px 8px 16px;
+            border: 2px solid #fcd34d;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #78350f;
+            background: #fef3c7;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2378350f' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px 8px;
+            transition: all 0.3s ease;
+            min-width: 160px;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.2);
+        }
+
+        .custom-select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+            border-color: #fbbf24;
+            background: #fde68a;
+        }
+
+        .custom-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3);
+            border-color: #f59e0b;
+        }
+
+        .custom-select option {
+            background: #fef3c7;
+            color: #78350f;
+            padding: 8px 12px;
+            font-weight: 500;
+        }
+
+        .custom-select option:hover {
+            background: #fde68a;
+        }
+
+        .custom-select option:checked {
+            background: #fbbf24;
+            color: #78350f;
+        }
+
+        .custom-select::-ms-expand {
+            display: none;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .btn-pink {
+            background: linear-gradient(135deg, #ec4899, #db2777);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 6px;
+            background: #f3f4f6;
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        .stat-item .number {
+            background: #fff;
+            padding: 0 8px;
+            border-radius: 20px;
+            font-size: 16px;
+            color: #1f2937;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .stat-item .label {
+            font-size: 10px;
+            color: #6b7280;
+        }
+
+        .stat-item.highlight .number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+        }
+
+        .stat-item.success .number {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .stat-item.warning .number {
+            background: #f59e0b;
+            color: #fff;
+        }
+
+        .status-bar {
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: #f0f4ff;
+            color: #4b5563;
+            font-size: 14px;
+            margin-bottom: 16px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            flex-wrap: wrap;
+        }
+
+        .status-bar .badge {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.urgent {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .badge.learning {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge.mastered {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-bar.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-bar.error {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .status-bar.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+            min-height: 300px;
+        }
+
+        .card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            border: 3px solid #e5e7eb;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            word-break: break-all;
+            position: relative;
+            color: #1f2937;
+            min-height: 80px;
+        }
+
+        .card .level-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            font-size: 9px;
+            background: rgba(0, 0, 0, 0.08);
+            padding: 1px 6px;
+            border-radius: 8px;
+            color: #6b7280;
+        }
+
+        .card:hover:not(.flipped):not(.matched):not(.hidden) {
+            transform: scale(1.03);
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .card.flipped {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            border-color: #667eea;
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .card.flipped .level-badge {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .card.matched {
+            animation: matchPop 0.6s ease forwards;
+            pointer-events: none;
+        }
+
+        .card.hidden {
+            visibility: hidden;
+            pointer-events: none;
+            animation: fadeOut 0.3s ease forwards;
+        }
+
+        .card.fail {
+            animation: shake 0.5s ease;
+            border-color: #ef4444;
+        }
+
+        .card.unflip {
+            animation: unflipAnim 0.3s ease forwards;
+        }
+
+        @keyframes unflipAnim {
+            0% {
+                transform: scale(1.02);
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: #fff;
+                border-color: #667eea;
+            }
+            50% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(1);
+                background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+                color: #1f2937;
+                border-color: #e5e7eb;
+            }
+        }
+
+        @keyframes matchPop {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            30% {
+                transform: scale(1.3) rotate(10deg);
+                opacity: 1;
+                background: linear-gradient(135deg, #10b981, #059669);
+                border-color: #10b981;
+                box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+            }
+            60% {
+                transform: scale(0.8) rotate(-5deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0) rotate(0);
+            }
+            20% {
+                transform: translateX(-8px) rotate(-3deg);
+            }
+            40% {
+                transform: translateX(8px) rotate(3deg);
+            }
+            60% {
+                transform: translateX(-6px) rotate(-2deg);
+            }
+            80% {
+                transform: translateX(6px) rotate(2deg);
+            }
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card.flipped::after {
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), transparent 70%);
+            opacity: 1;
+        }
+
+        .panel {
+            margin-top: 20px;
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 20px;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+
+        .panel textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .panel textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .panel .input-group {
+            display: flex;
+            gap: 10px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .panel .input-group input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            min-width: 150px;
+        }
+
+        .panel .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .panel .hint {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .panel .divider {
+            border: none;
+            border-top: 2px solid #e5e7eb;
+            margin: 16px 0;
+        }
+
+        .upload-section {
+            background: #f0fdf4;
+            border: 2px dashed #10b981;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+        }
+
+        .upload-section .upload-title {
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 8px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-section .upload-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .upload-section .upload-actions input[type="file"] {
+            display: none;
+        }
+
+        .upload-section .upload-status {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            min-height: 36px;
+            background: #f3f4f6;
+            color: #4b5563;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section .upload-status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .upload-section .upload-status.error {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state .emoji {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+        }
+
+        .next-level-btn {
+            grid-column: 1 / -1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .next-level-btn button {
+            padding: 16px 40px;
+            font-size: 20px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .next-level-btn button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(16, 185, 129, 0.6);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px;
+            }
+            .title {
+                font-size: 22px;
+            }
+            .grid {
+                gap: 8px;
+                min-height: 200px;
+            }
+            .card {
+                font-size: 13px;
+                min-height: 60px;
+                border-radius: 12px;
+            }
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 4px;
+                padding: 10px;
+            }
+            .stat-item .number {
+                font-size: 15px;
+            }
+            .controls .btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            .panel {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .grid {
+                gap: 6px;
+            }
+            .card {
+                font-size: 11px;
+                min-height: 50px;
+                border-radius: 10px;
+                padding: 4px;
+            }
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        .celebration {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .score-popup {
+            position: fixed;
+            font-size: 48px;
+            font-weight: 900;
+            color: #10b981;
+            pointer-events: none;
+            z-index: 999;
+            animation: scoreFloat 1s ease forwards;
+            text-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        @keyframes scoreFloat {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 0;
+            }
+            30% {
+                transform: translateY(-30px) scale(1.3);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120px) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">
+                <span class="horse-icon">🐴</span>
+                小小马单词消消乐
+            </h1>
+            <div class="controls">
+                <select id="groupSelect" class="custom-select"></select>
+                <button class="btn btn-success" id="restartBtn">🔄 重开</button>
+                <button class="btn btn-warning" id="manageBtn">📚 词库管理</button>
+            </div>
+        </div>
+
+        <div class="stats" id="statsContainer">
+            <div class="stat-item highlight">
+                <span class="label">📚 总词汇</span>
+                <span class="number" id="totalCount">0</span>
+            </div>
+            <div class="stat-item warning">
+                <span class="label">⏰ 待复习</span>
+                <span class="number" id="remainCount">0</span>
+            </div>
+            <div class="stat-item success">
+                <span class="label">🧠 掌握率</span>
+                <span class="number" id="masteryRate">0%</span>
+            </div>
+            <!-- 已移除：平均等级、关卡、已匹配 -->
+        </div>
+
+        <div class="status-bar" id="statusBar">
+            💡 点击卡片配对英文和中文（再次点击可取消选中）
+            <span class="badge learning" id="statusBadge" style="display:none;">学习中</span>
+        </div>
+
+        <div class="grid" id="gameGrid"></div>
+
+        <div class="panel" id="managePanel">
+            <h3 class="panel-title">📚 词库管理</h3>
+
+            <!-- 批量上传功能 -->
+            <div class="upload-section">
+                <div class="upload-title">📤 批量上传单词</div>
+                <div class="upload-actions">
+                    <input type="file" id="uploadInput" accept=".json,.csv,.txt">
+                    <button class="btn btn-primary" id="uploadBtn">📂 选择文件</button>
+                    <span style="font-size:12px;color:#6b7280;">支持 JSON / CSV / TXT</span>
+                </div>
+                <div class="upload-status" id="uploadStatus">💡 上传 JSON 或 CSV 文件批量导入单词</div>
+            </div>
+
+            <div class="hint">
+                💡 每行一个单词，英文和中文用 <strong>逗号</strong> 或 <strong>Tab</strong> 分隔<br>
+                例如：<code>apple,苹果</code>
+            </div>
+            <textarea id="wordInput" placeholder="apple,苹果&#10;banana,香蕉&#10;cat,猫"></textarea>
+            <div class="input-group">
+                <input id="groupNameInput" type="text" placeholder="分组名称 (如: 四级词汇)">
+                <button class="btn btn-primary" id="importBtn">📥 导入并刷新</button>
+            </div>
+            <hr class="divider">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-danger" id="clearBtn">🗑️ 清空当前分组</button>
+                <button class="btn btn-info" id="resetAllBtn">🔄 重置所有数据</button>
+                <button class="btn btn-purple" id="updateWordsBtn">📦 更新词库</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 艾宾浩斯记忆系统 ====================
+        const EBBINGHAUS_INTERVALS = [
+            5 * 60 * 1000,
+            30 * 60 * 1000,
+            12 * 60 * 60 * 1000,
+            24 * 60 * 60 * 1000,
+            2 * 24 * 60 * 60 * 1000,
+            4 * 24 * 60 * 60 * 1000,
+            7 * 24 * 60 * 60 * 1000,
+            15 * 24 * 60 * 60 * 1000
+        ];
+
+        const LEVEL_LABELS = [
+            '初次学习',
+            '5分钟复习',
+            '30分钟复习',
+            '12小时复习',
+            '1天复习',
+            '2天复习',
+            '4天复习',
+            '7天复习',
+            '15天复习',
+            '已掌握 ✅'
+        ];
+
+        function isWordDueForReview(word) {
+            const now = Date.now();
+            const level = Math.min(word.level, EBBINGHAUS_INTERVALS.length);
+            if (level >= EBBINGHAUS_INTERVALS.length) {
+                return (now - word.last) >= 30 * 24 * 60 * 60 * 1000;
+            }
+            const interval = EBBINGHAUS_INTERVALS[level];
+            return word.last === 0 || (now - word.last) >= interval;
+        }
+
+        function getWordPriority(word) {
+            const now = Date.now();
+            const level = Math.min(word.level, EBBINGHAUS_INTERVALS.length - 1);
+            const interval = EBBINGHAUS_INTERVALS[level] || 30 * 24 * 60 * 60 * 1000;
+            const elapsed = now - word.last;
+            const ratio = Math.min(elapsed / interval, 3);
+            return Math.round(ratio * 33);
+        }
+
+        function getWordStage(word) {
+            const level = Math.min(word.level, EBBINGHAUS_INTERVALS.length);
+            return LEVEL_LABELS[level] || '已掌握 ✅';
+        }
+
+        function getPrioritizedReviewWords(group) {
+            const db = loadDB();
+            let words = db.filter(w => {
+                if (w.group !== group) return false;
+                return isWordDueForReview(w);
+            });
+            words = words.map(w => ({
+                ...w,
+                priority: getWordPriority(w),
+                stage: getWordStage(w),
+                daysSinceLast: w.last > 0 ? (Date.now() - w.last) / (24 * 60 * 60 * 1000) : 0
+            }));
+            words.sort((a, b) => {
+                if (a.last === 0 && b.last > 0) return -1;
+                if (a.last > 0 && b.last === 0) return 1;
+                return b.priority - a.priority;
+            });
+            return words;
+        }
+
+        function getLearningStats(group) {
+            const db = loadDB();
+            const groupWords = db.filter(w => w.group === group);
+            const total = groupWords.length;
+            const mastered = groupWords.filter(w => w.level >= EBBINGHAUS_INTERVALS.length).length;
+            const learning = groupWords.filter(w => w.level > 0 && w.level < EBBINGHAUS_INTERVALS.length).length;
+            const newWords = groupWords.filter(w => w.level === 0).length;
+            const avgLevel = total > 0 ? groupWords.reduce((sum, w) => sum + w.level, 0) / total : 0;
+            return {
+                total,
+                mastered,
+                learning,
+                newWords,
+                avgLevel: avgLevel.toFixed(1),
+                masteredPercent: total > 0 ? (mastered / total * 100).toFixed(1) : 0
+            };
+        }
+
+        // ==================== 音效系统 ====================
+        class SoundManager {
+            constructor() {
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new(window.AudioContext || window.webkitAudioContext)();
+                }
+                return this.ctx;
+            }
+
+            play(type) {
+                try {
+                    const ctx = this.init();
+                    const now = ctx.currentTime;
+                    switch (type) {
+                        case 'flip':
+                            this._playFlip(ctx, now);
+                            break;
+                        case 'unflip':
+                            this._playUnflip(ctx, now);
+                            break;
+                        case 'match':
+                            this._playMatch(ctx, now);
+                            break;
+                        case 'match_combo':
+                            this._playMatchCombo(ctx, now);
+                            break;
+                        case 'fail':
+                            this._playFail(ctx, now);
+                            break;
+                        case 'win':
+                            this._playWin(ctx, now);
+                            break;
+                        case 'perfect':
+                            this._playPerfect(ctx, now);
+                            break;
+                        case 'levelup':
+                            this._playLevelUp(ctx, now);
+                            break;
+                    }
+                } catch (e) {
+                    console.log('音效播放失败:', e);
+                }
+            }
+
+            _playFlip(ctx, now) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, now);
+                osc.frequency.exponentialRampToValueAtTime(660, now + 0.06);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            }
+
+            _playUnflip(ctx, now) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(500, now);
+                osc.frequency.exponentialRampToValueAtTime(400, now + 0.05);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+                osc.start(now);
+                osc.stop(now + 0.06);
+            }
+
+            _playMatch(ctx, now) {
+                const notes = [523, 659, 784, 1047];
+                notes.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.08);
+                    gain.gain.setValueAtTime(0.15, now + i * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.12);
+                    osc.start(now + i * 0.08);
+                    osc.stop(now + i * 0.08 + 0.12);
+                });
+            }
+
+            _playMatchCombo(ctx, now) {
+                const notes = [587, 740, 880, 1175];
+                notes.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.06);
+                    gain.gain.setValueAtTime(0.18, now + i * 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.1);
+                    osc.start(now + i * 0.06);
+                    osc.stop(now + i * 0.06 + 0.1);
+                });
+            }
+
+            _playFail(ctx, now) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.25);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            }
+
+            _playWin(ctx, now) {
+                const melody = [
+                    [523, 0.1],
+                    [587, 0.1],
+                    [659, 0.1],
+                    [784, 0.1],
+                    [880, 0.12],
+                    [784, 0.1],
+                    [880, 0.15],
+                    [988, 0.15],
+                    [1175, 0.2]
+                ];
+                melody.forEach(([freq, duration], i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.1);
+                    gain.gain.setValueAtTime(0.2, now + i * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + duration);
+                    osc.start(now + i * 0.1);
+                    osc.stop(now + i * 0.1 + duration);
+                });
+            }
+
+            _playPerfect(ctx, now) {
+                const melody = [523, 659, 784, 1047, 1319, 1568];
+                melody.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.07);
+                    gain.gain.setValueAtTime(0.2, now + i * 0.07);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.15);
+                    osc.start(now + i * 0.07);
+                    osc.stop(now + i * 0.07 + 0.15);
+                });
+            }
+
+            _playLevelUp(ctx, now) {
+                const melody = [523, 659, 784, 988, 1175, 1319, 1568];
+                melody.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.06);
+                    gain.gain.setValueAtTime(0.25, now + i * 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.15);
+                    osc.start(now + i * 0.06);
+                    osc.stop(now + i * 0.06 + 0.15);
+                });
+            }
+        }
+
+        const sound = new SoundManager();
+
+        // ==================== 数据层 ====================
+        const DB_KEY = 'word_match_game_v10_ebbinghaus';
+
+        const ALL_WORDS = [
+            // ... 所有136个单词（与之前相同，为了简洁这里省略，实际使用需要包含完整列表）
+            { group: "基础词汇", en: "apple", zh: "苹果" },
+            { group: "基础词汇", en: "banana", zh: "香蕉" },
+            { group: "基础词汇", en: "cat", zh: "猫" },
+            { group: "基础词汇", en: "dog", zh: "狗" },
+            { group: "基础词汇", en: "elephant", zh: "大象" },
+            { group: "基础词汇", en: "fish", zh: "鱼" },
+            { group: "基础词汇", en: "grape", zh: "葡萄" },
+            { group: "基础词汇", en: "house", zh: "房子" },
+            { group: "基础词汇", en: "book", zh: "书" },
+            { group: "基础词汇", en: "school", zh: "学校" },
+            { group: "基础词汇", en: "teacher", zh: "老师" },
+            { group: "基础词汇", en: "student", zh: "学生" },
+            { group: "动物世界", en: "lion", zh: "狮子" },
+            { group: "动物世界", en: "tiger", zh: "老虎" },
+            { group: "动物世界", en: "rabbit", zh: "兔子" },
+            { group: "动物世界", en: "panda", zh: "熊猫" },
+            { group: "动物世界", en: "dolphin", zh: "海豚" },
+            { group: "动物世界", en: "eagle", zh: "老鹰" },
+            { group: "动物世界", en: "snake", zh: "蛇" },
+            { group: "动物世界", en: "whale", zh: "鲸鱼" },
+            { group: "颜色认知", en: "red", zh: "红色" },
+            { group: "颜色认知", en: "blue", zh: "蓝色" },
+            { group: "颜色认知", en: "green", zh: "绿色" },
+            { group: "颜色认知", en: "yellow", zh: "黄色" },
+            { group: "颜色认知", en: "white", zh: "白色" },
+            { group: "颜色认知", en: "black", zh: "黑色" },
+            { group: "颜色认知", en: "pink", zh: "粉色" },
+            { group: "颜色认知", en: "orange", zh: "橙色" },
+            { group: "美食天地", en: "pizza", zh: "披萨" },
+            { group: "美食天地", en: "burger", zh: "汉堡" },
+            { group: "美食天地", en: "sushi", zh: "寿司" },
+            { group: "美食天地", en: "noodle", zh: "面条" },
+            { group: "美食天地", en: "rice", zh: "米饭" },
+            { group: "美食天地", en: "bread", zh: "面包" },
+            { group: "美食天地", en: "cake", zh: "蛋糕" },
+            { group: "美食天地", en: "milk", zh: "牛奶" },
+            { group: "美食天地", en: "sandwich", zh: "三明治" },
+            { group: "美食天地", en: "salad", zh: "沙拉" },
+            { group: "美食天地", en: "soup", zh: "汤" },
+            { group: "美食天地", en: "steak", zh: "牛排" },
+            { group: "美食天地", en: "chicken", zh: "鸡肉" },
+            { group: "美食天地", en: "egg", zh: "鸡蛋" },
+            { group: "美食天地", en: "cheese", zh: "奶酪" },
+            { group: "美食天地", en: "butter", zh: "黄油" },
+            { group: "美食天地", en: "jam", zh: "果酱" },
+            { group: "职业大全", en: "doctor", zh: "医生" },
+            { group: "职业大全", en: "nurse", zh: "护士" },
+            { group: "职业大全", en: "pilot", zh: "飞行员" },
+            { group: "职业大全", en: "driver", zh: "司机" },
+            { group: "职业大全", en: "farmer", zh: "农民" },
+            { group: "职业大全", en: "cook", zh: "厨师" },
+            { group: "职业大全", en: "singer", zh: "歌手" },
+            { group: "职业大全", en: "dancer", zh: "舞者" },
+            { group: "职业大全", en: "writer", zh: "作家" },
+            { group: "职业大全", en: "artist", zh: "艺术家" },
+            { group: "家庭生活", en: "father", zh: "父亲" },
+            { group: "家庭生活", en: "mother", zh: "母亲" },
+            { group: "家庭生活", en: "brother", zh: "兄弟" },
+            { group: "家庭生活", en: "sister", zh: "姐妹" },
+            { group: "家庭生活", en: "uncle", zh: "叔叔" },
+            { group: "家庭生活", en: "aunt", zh: "阿姨" },
+            { group: "家庭生活", en: "grandpa", zh: "爷爷" },
+            { group: "家庭生活", en: "grandma", zh: "奶奶" },
+            { group: "家庭生活", en: "cousin", zh: "表兄妹" },
+            { group: "家庭生活", en: "baby", zh: "宝宝" },
+            { group: "自然景观", en: "river", zh: "河流" },
+            { group: "自然景观", en: "mountain", zh: "山" },
+            { group: "自然景观", en: "forest", zh: "森林" },
+            { group: "自然景观", en: "ocean", zh: "海洋" },
+            { group: "自然景观", en: "desert", zh: "沙漠" },
+            { group: "自然景观", en: "island", zh: "岛屿" },
+            { group: "自然景观", en: "waterfall", zh: "瀑布" },
+            { group: "自然景观", en: "valley", zh: "山谷" },
+            { group: "自然景观", en: "volcano", zh: "火山" },
+            { group: "自然景观", en: "cave", zh: "洞穴" },
+            { group: "交通工具", en: "car", zh: "汽车" },
+            { group: "交通工具", en: "bus", zh: "公交车" },
+            { group: "交通工具", en: "train", zh: "火车" },
+            { group: "交通工具", en: "plane", zh: "飞机" },
+            { group: "交通工具", en: "ship", zh: "轮船" },
+            { group: "交通工具", en: "bike", zh: "自行车" },
+            { group: "交通工具", en: "subway", zh: "地铁" },
+            { group: "交通工具", en: "taxi", zh: "出租车" },
+            { group: "交通工具", en: "truck", zh: "卡车" },
+            { group: "交通工具", en: "motorcycle", zh: "摩托车" },
+            { group: "身体部位", en: "head", zh: "头" },
+            { group: "身体部位", en: "hand", zh: "手" },
+            { group: "身体部位", en: "foot", zh: "脚" },
+            { group: "身体部位", en: "eye", zh: "眼睛" },
+            { group: "身体部位", en: "ear", zh: "耳朵" },
+            { group: "身体部位", en: "nose", zh: "鼻子" },
+            { group: "身体部位", en: "mouth", zh: "嘴" },
+            { group: "身体部位", en: "hair", zh: "头发" },
+            { group: "身体部位", en: "arm", zh: "手臂" },
+            { group: "身体部位", en: "leg", zh: "腿" },
+            { group: "天气气象", en: "sunny", zh: "晴朗的" },
+            { group: "天气气象", en: "rainy", zh: "下雨的" },
+            { group: "天气气象", en: "cloudy", zh: "多云的" },
+            { group: "天气气象", en: "windy", zh: "有风的" },
+            { group: "天气气象", en: "snowy", zh: "下雪的" },
+            { group: "天气气象", en: "hot", zh: "热的" },
+            { group: "天气气象", en: "cold", zh: "冷的" },
+            { group: "天气气象", en: "warm", zh: "温暖的" },
+            { group: "天气气象", en: "cool", zh: "凉爽的" },
+            { group: "天气气象", en: "rainbow", zh: "彩虹" },
+            { group: "学校生活", en: "classroom", zh: "教室" },
+            { group: "学校生活", en: "library", zh: "图书馆" },
+            { group: "学校生活", en: "playground", zh: "操场" },
+            { group: "学校生活", en: "desk", zh: "书桌" },
+            { group: "学校生活", en: "chair", zh: "椅子" },
+            { group: "学校生活", en: "board", zh: "黑板" },
+            { group: "学校生活", en: "ruler", zh: "尺子" },
+            { group: "学校生活", en: "eraser", zh: "橡皮" },
+            { group: "学校生活", en: "pen", zh: "钢笔" },
+            { group: "学校生活", en: "pencil", zh: "铅笔" },
+            { group: "体育运动", en: "swim", zh: "游泳" },
+            { group: "体育运动", en: "run", zh: "跑步" },
+            { group: "体育运动", en: "jump", zh: "跳" },
+            { group: "体育运动", en: "walk", zh: "走" },
+            { group: "体育运动", en: "dance", zh: "跳舞" },
+            { group: "体育运动", en: "skate", zh: "滑冰" },
+            { group: "体育运动", en: "climb", zh: "爬" },
+            { group: "体育运动", en: "ride", zh: "骑" },
+            { group: "体育运动", en: "throw", zh: "扔" },
+            { group: "体育运动", en: "catch", zh: "接" },
+            { group: "形容词", en: "happy", zh: "快乐的" },
+            { group: "形容词", en: "sad", zh: "悲伤的" },
+            { group: "形容词", en: "angry", zh: "生气的" },
+            { group: "形容词", en: "tired", zh: "疲惫的" },
+            { group: "形容词", en: "hungry", zh: "饥饿的" },
+            { group: "形容词", en: "thirsty", zh: "口渴的" },
+            { group: "形容词", en: "scared", zh: "害怕的" },
+            { group: "形容词", en: "brave", zh: "勇敢的" },
+            { group: "形容词", en: "kind", zh: "善良的" },
+            { group: "形容词", en: "smart", zh: "聪明的" },
+        ];
+
+        function loadDB() {
+            try {
+                const data = localStorage.getItem(DB_KEY);
+                if (data) {
+                    const db = JSON.parse(data);
+                    if (db && db.length > 0) {
+                        const existingGroups = [...new Set(db.map(w => w.group))];
+                        const allGroups = [...new Set(ALL_WORDS.map(w => w.group))];
+                        if (existingGroups.length < allGroups.length) {
+                            return mergeWords(db);
+                        }
+                        return db;
+                    }
+                }
+                const db = ALL_WORDS.map(w => ({
+                    ...w,
+                    level: 0,
+                    last: 0,
+                    totalReviews: 0,
+                    correctCount: 0,
+                    wrongCount: 0,
+                    consecutiveCorrect: 0
+                }));
+                saveDB(db);
+                return db;
+            } catch (e) {
+                console.error('加载数据失败:', e);
+                return ALL_WORDS.map(w => ({
+                    ...w,
+                    level: 0,
+                    last: 0,
+                    totalReviews: 0,
+                    correctCount: 0,
+                    wrongCount: 0,
+                    consecutiveCorrect: 0
+                }));
+            }
+        }
+
+        function mergeWords(oldDB) {
+            const newDB = [];
+            const existingWords = new Set();
+            oldDB.forEach(w => {
+                newDB.push(w);
+                existingWords.add(w.en + '|' + w.group);
+            });
+            ALL_WORDS.forEach(w => {
+                const key = w.en + '|' + w.group;
+                if (!existingWords.has(key)) {
+                    newDB.push({
+                        ...w,
+                        level: 0,
+                        last: 0,
+                        totalReviews: 0,
+                        correctCount: 0,
+                        wrongCount: 0,
+                        consecutiveCorrect: 0
+                    });
+                }
+            });
+            saveDB(newDB);
+            return newDB;
+        }
+
+        function saveDB(db) {
+            try {
+                localStorage.setItem(DB_KEY, JSON.stringify(db));
+            } catch (e) {
+                console.error('保存数据失败:', e);
+            }
+        }
+
+        function updateWordMemoryEbbinghaus(en, success) {
+            const db = loadDB();
+            const word = db.find(w => w.en === en);
+            if (!word) return;
+
+            const now = Date.now();
+
+            if (success) {
+                if (word.level < EBBINGHAUS_INTERVALS.length) {
+                    word.level += 1;
+                }
+                word.last = now;
+                word.correctCount = (word.correctCount || 0) + 1;
+                word.consecutiveCorrect = (word.consecutiveCorrect || 0) + 1;
+                word.totalReviews = (word.totalReviews || 0) + 1;
+
+                if (word.consecutiveCorrect >= 3 && word.level < EBBINGHAUS_INTERVALS.length) {
+                    word.level = Math.min(word.level + 1, EBBINGHAUS_INTERVALS.length);
+                    word.consecutiveCorrect = 0;
+                }
+            } else {
+                word.level = Math.max(0, word.level - 1);
+                word.last = now;
+                word.wrongCount = (word.wrongCount || 0) + 1;
+                word.consecutiveCorrect = 0;
+                word.totalReviews = (word.totalReviews || 0) + 1;
+            }
+
+            saveDB(db);
+            return word;
+        }
+
+        // ==================== 游戏状态 ====================
+        class GameState {
+            constructor() {
+                this.cards = [];
+                this.flipped = [];
+                this.matched = new Set();
+                this.locked = false;
+                this.currentGroup = '';
+                this.totalPairs = 0;
+                this.matchedPairs = 0;
+                this.matchCount = 0;
+                this.currentLevel = 1;
+                this.usedWords = [];
+                this.isLevelComplete = false;
+            }
+
+            reset() {
+                this.cards = [];
+                this.flipped = [];
+                this.matched = new Set();
+                this.locked = false;
+                this.matchedPairs = 0;
+                this.matchCount = 0;
+                this.isLevelComplete = false;
+            }
+        }
+
+        const game = new GameState();
+
+        // ==================== UI 渲染 ====================
+        function renderGroups() {
+            const db = loadDB();
+            const groups = [...new Set(db.map(w => w.group))];
+            const select = document.getElementById('groupSelect');
+            const current = select.value;
+            select.innerHTML = '';
+            groups.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                const count = db.filter(w => w.group === g).length;
+                const mastered = db.filter(w => w.group === g && w.level >= EBBINGHAUS_INTERVALS.length).length;
+                opt.textContent = g + ' (' + count + '个, ' + mastered + '已掌握)';
+                select.appendChild(opt);
+            });
+            if (current && groups.includes(current)) {
+                select.value = current;
+            } else if (groups.length > 0) {
+                select.value = groups[0];
+            }
+        }
+
+        function updateStats() {
+            const db = loadDB();
+            const group = document.getElementById('groupSelect').value;
+            if (!group) return;
+
+            // ✅ 总词汇 = 整个词库的所有单词数（所有分组）
+            const totalAll = db.length;
+
+            // 当前分组的统计
+            const groupWords = db.filter(w => w.group === group);
+            const stats = getLearningStats(group);
+            const reviewWords = groupWords.filter(w => isWordDueForReview(w));
+
+            document.getElementById('totalCount').textContent = totalAll;
+            document.getElementById('remainCount').textContent = reviewWords.length;
+            document.getElementById('masteryRate').textContent = stats.masteredPercent + '%';
+        }
+
+        function setStatus(message, type = '', badge = '') {
+            const bar = document.getElementById('statusBar');
+            const textNode = bar.childNodes[0];
+            if (textNode) {
+                textNode.textContent = message;
+            }
+            bar.className = 'status-bar' + (type ? ' ' + type : '');
+
+            const badgeEl = document.getElementById('statusBadge');
+            if (badge) {
+                badgeEl.style.display = 'inline-block';
+                badgeEl.textContent = badge;
+                badgeEl.className = 'badge';
+                if (badge.includes('紧急')) badgeEl.classList.add('urgent');
+                else if (badge.includes('掌握')) badgeEl.classList.add('mastered');
+                else badgeEl.classList.add('learning');
+            } else {
+                badgeEl.style.display = 'none';
+            }
+        }
+
+        function showScorePopup(x, y, text = '✨ +1') {
+            const popup = document.createElement('div');
+            popup.className = 'score-popup';
+            popup.textContent = text;
+            popup.style.left = x + 'px';
+            popup.style.top = y + 'px';
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 1000);
+        }
+
+        function initGame() {
+            const select = document.getElementById('groupSelect');
+            if (!select || !select.value) {
+                console.warn('分组选择器未就绪');
+                return;
+            }
+
+            game.currentGroup = select.value;
+            game.currentLevel = 1;
+            game.usedWords = [];
+            game.reset();
+            loadLevel();
+        }
+
+        function loadLevel() {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
+
+            const group = document.getElementById('groupSelect').value;
+            if (!group) {
+                grid.innerHTML = `<div class="empty-state"><span class="emoji">📚</span><p>请选择一个分组</p></div>`;
+                return;
+            }
+
+            let words = getPrioritizedReviewWords(group);
+            updateStats();
+
+            const stats = getLearningStats(group);
+
+            if (words.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <span class="emoji">🎉</span>
+                        <p>所有单词都已按艾宾浩斯计划复习！</p>
+                        <p style="font-size:13px;margin-top:8px;color:#9ca3af;">
+                            掌握率: ${stats.masteredPercent}% | 平均等级: ${stats.avgLevel}
+                            <br>明天再来复习吧！🧠
+                        </p>
+                    </div>
+                `;
+                setStatus('🎉 今日复习完成！明天再来吧', 'success', '已掌握 ✅');
+                return;
+            }
+
+            let available = words.filter(w => !game.usedWords.includes(w.en));
+
+            if (available.length < 8) {
+                game.usedWords = [];
+                available = words;
+            }
+
+            const selected = available.slice(0, 8);
+            selected.forEach(w => game.usedWords.push(w.en));
+
+            game.totalPairs = selected.length;
+            game.matchedPairs = 0;
+            game.matchCount = 0;
+            game.isLevelComplete = false;
+
+            const cards = [];
+            selected.forEach(w => {
+                cards.push({ id: w.en, text: w.en, type: 'en', pairId: w.en });
+                cards.push({ id: w.en + '_zh', text: w.zh, type: 'zh', pairId: w.en });
+            });
+
+            game.cards = cards.sort(() => 0.5 - Math.random());
+
+            game.cards.forEach((card, index) => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.textContent = card.text;
+                div.dataset.index = index;
+                div.dataset.pairId = card.pairId;
+                div.dataset.type = card.type;
+
+                const wordData = selected.find(w => w.en === card.pairId);
+                if (wordData) {
+                    const level = Math.min(wordData.level, EBBINGHAUS_INTERVALS.length);
+                    const label = LEVEL_LABELS[level] || '已掌握';
+                    const badge = document.createElement('span');
+                    badge.className = 'level-badge';
+                    badge.textContent = '📍 ' + label;
+                    div.appendChild(badge);
+                }
+
+                div.onclick = () => flipCard(div);
+                grid.appendChild(div);
+            });
+
+            updateStats();
+
+            const urgentCount = selected.filter(w => w.priority > 70).length;
+            const badgeText = urgentCount > 0 ? '⚠️ ' + urgentCount + '个紧急复习' : '📖 按计划复习';
+            setStatus('🎯 第 ' + game.currentLevel + ' 关 - 优先复习 ' + selected.length + ' 个单词', 'info', badgeText);
+        }
+
+        function showLevelComplete() {
+            const grid = document.getElementById('gameGrid');
+            const words = getPrioritizedReviewWords(game.currentGroup);
+            const remainingWords = words.filter(w => !game.usedWords.includes(w.en));
+
+            const nextBtn = document.createElement('div');
+            nextBtn.className = 'next-level-btn';
+            const remainingCount = remainingWords.length;
+            nextBtn.innerHTML = `
+                <button onclick="continueToNextLevel()">
+                    🚀 下一关 (剩余 ${remainingCount} 个单词待复习)
+                </button>
+            `;
+
+            grid.innerHTML = '';
+            grid.appendChild(nextBtn);
+
+            const infoDiv = document.createElement('div');
+            infoDiv.style.cssText = 'grid-column:1/-1;text-align:center;padding:20px;';
+
+            const stats = getLearningStats(game.currentGroup);
+            infoDiv.innerHTML = `
+                <div style="font-size:48px;margin-bottom:10px;">🎉</div>
+                <h2 style="color:#10b981;font-size:24px;">第 ${game.currentLevel} 关完成！</h2>
+                <p style="color:#6b7280;margin-top:8px;">
+                    已掌握 ${game.totalPairs} 个单词 | 总掌握率 ${stats.masteredPercent}%
+                    <br>平均记忆等级: ${stats.avgLevel}
+                </p>
+                <div style="margin-top:12px;display:flex;gap:16px;justify-content:center;font-size:13px;color:#6b7280;flex-wrap:wrap;">
+                    <span>📊 新学: ${stats.newWords}</span>
+                    <span>📈 学习中: ${stats.learning}</span>
+                    <span>✅ 已掌握: ${stats.mastered}</span>
+                </div>
+            `;
+            grid.appendChild(infoDiv);
+
+            sound.play('levelup');
+            showCelebration();
+            setStatus('🎉 第 ' + game.currentLevel + ' 关完成！继续复习吧', 'success', '🌟 进步中');
+        }
+
+        function continueToNextLevel() {
+            game.currentLevel++;
+            game.reset();
+            loadLevel();
+            setStatus('🎯 第 ' + game.currentLevel + ' 关开始！');
+        }
+
+        function flipCard(cardEl) {
+            if (game.locked) return;
+            if (cardEl.classList.contains('matched')) return;
+            if (cardEl.classList.contains('hidden')) return;
+            if (game.isLevelComplete) return;
+
+            if (cardEl.classList.contains('flipped')) {
+                const index = game.flipped.indexOf(cardEl);
+                if (index !== -1) {
+                    game.flipped.splice(index, 1);
+                }
+                cardEl.classList.remove('flipped');
+                sound.play('unflip');
+                if (game.flipped.length === 0) {
+                    setStatus('💡 已取消选择，重新选卡配对', '', '📖 复习中');
+                } else {
+                    setStatus('💡 已选 ' + game.flipped.length + '/2', '', '🔍 配對中');
+                }
+                return;
+            }
+
+            sound.play('flip');
+            cardEl.classList.add('flipped');
+            game.flipped.push(cardEl);
+
+            if (game.flipped.length === 2) {
+                game.locked = true;
+                const [c1, c2] = game.flipped;
+                const isMatch = c1.dataset.pairId === c2.dataset.pairId && c1 !== c2;
+
+                if (isMatch) {
+                    game.matchCount++;
+
+                    if (game.matchCount >= 3) {
+                        sound.play('match_combo');
+                        setStatus('🔥 连续匹配 ' + game.matchCount + ' 次！太棒了！', 'success', '🔥 连击');
+                    } else {
+                        sound.play('match');
+                        setStatus('✅ 匹配成功！(' + (game.matchedPairs + 1) + '/' + game.totalPairs + ')', 'success', '✨ 匹配');
+                    }
+
+                    c1.classList.add('matched');
+                    c2.classList.add('matched');
+
+                    const rect1 = c1.getBoundingClientRect();
+                    const rect2 = c2.getBoundingClientRect();
+                    const midX = (rect1.left + rect1.right + rect2.left + rect2.right) / 4;
+                    const midY = (rect1.top + rect1.bottom + rect2.top + rect2.bottom) / 4;
+
+                    let popupText = '✨ +1';
+                    if (game.matchCount >= 3) popupText = '🔥 连击 x' + game.matchCount;
+                    else if (game.matchCount === 2) popupText = '⭐ +2';
+                    showScorePopup(midX - 30, midY - 30, popupText);
+
+                    game.matched.add(c1.dataset.pairId);
+                    game.matchedPairs++;
+
+                    updateWordMemoryEbbinghaus(c1.dataset.pairId, true);
+                    updateStats();
+
+                    setTimeout(() => {
+                        c1.classList.add('hidden');
+                        c2.classList.add('hidden');
+
+                        game.flipped = [];
+                        game.locked = false;
+
+                        if (game.matchedPairs === game.totalPairs) {
+                            game.isLevelComplete = true;
+                            if (game.matchCount === game.totalPairs) {
+                                sound.play('perfect');
+                                setStatus('🌟 完美通关！全部连续匹配！', 'success', '🏆 完美');
+                            } else {
+                                sound.play('win');
+                            }
+                            setTimeout(() => {
+                                showLevelComplete();
+                            }, 500);
+                        } else {
+                            const remaining = game.totalPairs - game.matchedPairs;
+                            if (game.matchCount >= 3) {
+                                setStatus('🔥 连击 ' + game.matchCount + ' 次！还剩 ' + remaining + ' 对', 'success', '🔥 连击');
+                            } else {
+                                setStatus('💡 继续配对，还剩 ' + remaining + ' 对', '', '📖 复习中');
+                            }
+                        }
+                    }, 600);
+                } else {
+                    sound.play('fail');
+                    c1.classList.add('fail');
+                    c2.classList.add('fail');
+
+                    game.matchCount = 0;
+
+                    updateWordMemoryEbbinghaus(c1.dataset.pairId, false);
+                    updateWordMemoryEbbinghaus(c2.dataset.pairId, false);
+
+                    setStatus('❌ 不匹配，再试一次！', 'error', '😅 再试试');
+
+                    setTimeout(() => {
+                        c1.classList.remove('flipped', 'fail');
+                        c2.classList.remove('flipped', 'fail');
+                        game.flipped = [];
+                        game.locked = false;
+                        const remaining = game.totalPairs - game.matchedPairs;
+                        setStatus('💡 继续配对，还剩 ' + remaining + ' 对', '', '📖 复习中');
+                    }, 700);
+                }
+            } else {
+                setStatus('💡 已选 ' + game.flipped.length + '/2', '', '🔍 配對中');
+            }
+        }
+
+        function showCelebration() {
+            const container = document.createElement('div');
+            container.className = 'celebration';
+            document.body.appendChild(container);
+
+            const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6'];
+            const shapes = ['■', '●', '▲', '★', '♦', '♥'];
+
+            for (let i = 0; i < 80; i++) {
+                const el = document.createElement('div');
+                el.className = 'confetti';
+                el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+                el.style.left = Math.random() * 100 + '%';
+                el.style.color = colors[Math.floor(Math.random() * colors.length)];
+                el.style.fontSize = (Math.random() * 16 + 8) + 'px';
+                el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                el.style.animationDelay = (Math.random() * 1.5) + 's';
+                container.appendChild(el);
+            }
+
+            setTimeout(() => {
+                container.remove();
+            }, 5000);
+        }
+
+        // ==================== 批量上传功能 ====================
+        function handleFileUpload(file) {
+            const statusEl = document.getElementById('uploadStatus');
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    let words = [];
+
+                    // 根据文件扩展名判断格式
+                    const ext = file.name.split('.').pop().toLowerCase();
+
+                    if (ext === 'json') {
+                        // JSON 格式: [{"en": "apple", "zh": "苹果"}, ...]
+                        const data = JSON.parse(content);
+                        if (Array.isArray(data)) {
+                            words = data.map(item => ({
+                                en: item.en || item.english || item.word || '',
+                                zh: item.zh || item.chinese || item.mean || ''
+                            })).filter(w => w.en && w.zh);
+                        }
+                    } else if (ext === 'csv' || ext === 'txt') {
+                        // CSV/TXT 格式: 每行 "英文,中文"
+                        const lines = content.split('\n').filter(line => line.trim());
+                        words = lines.map(line => {
+                            const parts = line.split(/[,，\t]+/);
+                            if (parts.length >= 2) {
+                                return { en: parts[0].trim(), zh: parts[1].trim() };
+                            }
+                            return null;
+                        }).filter(w => w && w.en && w.zh);
+                    } else {
+                        statusEl.textContent = '⚠️ 不支持的文件格式，请使用 JSON 或 CSV/TXT';
+                        statusEl.className = 'upload-status error';
+                        return;
+                    }
+
+                    if (words.length === 0) {
+                        statusEl.textContent = '⚠️ 未识别到有效的单词数据，请检查文件格式';
+                        statusEl.className = 'upload-status error';
+                        return;
+                    }
+
+                    // 导入到当前分组
+                    const group = document.getElementById('groupSelect').value || '导入词汇';
+                    const db = loadDB();
+                    let addedCount = 0;
+                    let existingCount = 0;
+
+                    words.forEach(w => {
+                        if (!db.some(item => item.en === w.en && item.group === group)) {
+                            db.push({
+                                group: group,
+                                en: w.en,
+                                zh: w.zh,
+                                level: 0,
+                                last: 0,
+                                totalReviews: 0,
+                                correctCount: 0,
+                                wrongCount: 0,
+                                consecutiveCorrect: 0
+                            });
+                            addedCount++;
+                        } else {
+                            existingCount++;
+                        }
+                    });
+
+                    if (addedCount === 0) {
+                        statusEl.textContent = `⚠️ 所有单词都已存在于 "${group}" 分组中`;
+                        statusEl.className = 'upload-status error';
+                        return;
+                    }
+
+                    saveDB(db);
+                    statusEl.textContent = `✅ 成功导入 ${addedCount} 个单词到 "${group}" 分组！${existingCount > 0 ? existingCount + ' 个已存在' : ''}`;
+                    statusEl.className = 'upload-status success';
+
+                    // 刷新界面
+                    renderGroups();
+                    initGame();
+                    updateStats();
+
+                } catch (error) {
+                    console.error('解析文件失败:', error);
+                    statusEl.textContent = '❌ 文件解析失败: ' + error.message;
+                    statusEl.className = 'upload-status error';
+                }
+            };
+
+            reader.onerror = function() {
+                statusEl.textContent = '❌ 读取文件失败';
+                statusEl.className = 'upload-status error';
+            };
+
+            reader.readAsText(file);
+        }
+
+        // ==================== 管理功能 ====================
+        function importWords() {
+            const text = document.getElementById('wordInput').value.trim();
+            const group = document.getElementById('groupNameInput').value.trim();
+
+            if (!text || !group) {
+                alert('请填写分组名称和单词列表！');
+                return;
+            }
+
+            const db = loadDB();
+            let count = 0;
+            const lines = text.split('\n').filter(l => l.trim());
+
+            lines.forEach(line => {
+                const parts = line.split(/[,，\t]+/);
+                if (parts.length >= 2) {
+                    const en = parts[0].trim();
+                    const zh = parts[1].trim();
+                    if (en && zh && !db.some(w => w.en === en && w.group === group)) {
+                        db.push({
+                            group,
+                            en,
+                            zh,
+                            level: 0,
+                            last: 0,
+                            totalReviews: 0,
+                            correctCount: 0,
+                            wrongCount: 0,
+                            consecutiveCorrect: 0
+                        });
+                        count++;
+                    }
+                }
+            });
+
+            if (count === 0) {
+                alert('没有新单词可导入（可能已存在）');
+                return;
+            }
+
+            saveDB(db);
+            alert('✅ 成功导入 ' + count + ' 个单词到 "' + group + '"！');
+            document.getElementById('wordInput').value = '';
+            document.getElementById('groupNameInput').value = '';
+            renderGroups();
+            initGame();
+            updateStats();
+        }
+
+        function clearGroup() {
+            const group = document.getElementById('groupSelect').value;
+            if (!group) {
+                alert('请先选择一个分组');
+                return;
+            }
+            if (!confirm('确定要清空 "' + group + '" 分组的所有数据吗？')) return;
+
+            let db = loadDB();
+            db = db.filter(w => w.group !== group);
+            saveDB(db);
+            renderGroups();
+            initGame();
+            updateStats();
+            setStatus('🗑️ 已清空 "' + group + '" 分组', 'error');
+        }
+
+        function resetAll() {
+            if (!confirm('⚠️ 确定要重置所有数据吗？这将恢复到默认词库！')) return;
+
+            const db = ALL_WORDS.map(w => ({
+                ...w,
+                level: 0,
+                last: 0,
+                totalReviews: 0,
+                correctCount: 0,
+                wrongCount: 0,
+                consecutiveCorrect: 0
+            }));
+            saveDB(db);
+            renderGroups();
+            initGame();
+            updateStats();
+            setStatus('🔄 已重置所有数据', 'success');
+        }
+
+        function updateWords() {
+            if (!confirm('📦 这将更新词库到最新版本，会保留您的学习进度。继续吗？')) return;
+
+            const db = loadDB();
+            const oldCount = db.length;
+            const newDB = mergeWords(db);
+            const newCount = newDB.length;
+            renderGroups();
+            initGame();
+            updateStats();
+            setStatus('✅ 词库已更新！新增 ' + (newCount - oldCount) + ' 个单词', 'success');
+            alert('✅ 词库更新完成！\n原有 ' + oldCount + ' 个单词\n新增 ' + (newCount - oldCount) + ' 个单词\n现在共 ' + newCount + ' 个单词');
+        }
+
+        // ==================== 键盘快捷键 ====================
+        document.addEventListener('keydown', (e) => {
+            const tag = e.target.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+            if (e.key === 'r' || e.key === 'R') {
+                if (!e.ctrlKey && !e.metaKey) {
+                    initGame();
+                    setStatus('🔄 已重新开始');
+                }
+            }
+            if (e.key === 'Enter' && game.isLevelComplete) {
+                continueToNextLevel();
+            }
+            if (e.key === 'Escape') {
+                const panel = document.getElementById('managePanel');
+                panel.classList.remove('active');
+            }
+        });
+
+        // ==================== 初始化 ====================
+        window.onload = function() {
+            console.log('🐴 小小马单词消消乐初始化...');
+
+            document.addEventListener('click', () => {
+                sound.init();
+            }, { once: true });
+
+            loadDB();
+            renderGroups();
+            initGame();
+            updateStats();
+
+            document.getElementById('groupSelect').addEventListener('change', function() {
+                initGame();
+                updateStats();
+            });
+
+            document.getElementById('restartBtn').addEventListener('click', function() {
+                initGame();
+                setStatus('🔄 已重新开始');
+            });
+
+            document.getElementById('manageBtn').addEventListener('click', function() {
+                const panel = document.getElementById('managePanel');
+                panel.classList.toggle('active');
+                if (panel.classList.contains('active')) {
+                    setStatus('📚 词库管理模式', 'info');
+                } else {
+                    setStatus('💡 回到游戏');
+                }
+            });
+
+            // 上传按钮
+            document.getElementById('uploadBtn').addEventListener('click', function() {
+                document.getElementById('uploadInput').click();
+            });
+
+            document.getElementById('uploadInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    handleFileUpload(file);
+                }
+                this.value = '';
+            });
+
+            document.getElementById('importBtn').addEventListener('click', importWords);
+            document.getElementById('clearBtn').addEventListener('click', clearGroup);
+            document.getElementById('resetAllBtn').addEventListener('click', resetAll);
+            document.getElementById('updateWordsBtn').addEventListener('click', updateWords);
+
+            document.getElementById('groupNameInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') importWords();
+            });
+
+            console.log('🐴 小小马单词消消乐已启动！');
+            const totalWords = loadDB().length;
+            console.log('📚 总词库: ' + totalWords + ' 个单词');
+            console.log('📖 快捷键: R=重新开始, Enter=下一关, Esc=关闭面板');
+            console.log('💡 点击已选中的卡片可以取消选中');
+        };
+    </script>
+
+</body>
+</html>
