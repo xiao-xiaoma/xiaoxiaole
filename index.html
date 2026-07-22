@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🐴 小小马单词消消乐</title>
     <style>
-        /* ===== 全局样式 ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,22 +18,23 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 12px;
+            padding: 10px;
             touch-action: manipulation;
         }
-
         .container {
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 18px;
+            padding: 16px;
             max-width: 600px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideUp 0.5s ease;
+            min-height: 92vh;
+            display: flex;
+            flex-direction: column;
         }
-
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -46,19 +45,17 @@
                 transform: translateY(0);
             }
         }
-
-        /* ===== 头部 ===== */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
+            flex-shrink: 0;
         }
-
         .title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 800;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
@@ -66,27 +63,24 @@
             background-clip: text;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
-
         .title .horse-icon {
             -webkit-text-fill-color: initial;
             background: none;
-            font-size: 28px;
+            font-size: 24px;
         }
-
         .controls {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             flex-wrap: wrap;
             align-items: center;
         }
-
         .custom-select {
-            padding: 6px 28px 6px 12px;
+            padding: 5px 24px 5px 10px;
             border: 2px solid #fcd34d;
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             color: #78350f;
@@ -96,40 +90,35 @@
             -moz-appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2378350f' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 10px center;
+            background-position: right 8px center;
             background-size: 10px 7px;
             transition: all 0.3s ease;
-            min-width: 120px;
-            max-width: 180px;
-            font-size: 13px;
+            min-width: 100px;
+            max-width: 160px;
         }
-
         .custom-select:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3);
             border-color: #f59e0b;
         }
-
         .btn {
-            padding: 6px 12px;
+            padding: 5px 10px;
             border: none;
-            border-radius: 10px;
-            font-size: 13px;
+            border-radius: 8px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             color: #fff;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             touch-action: manipulation;
             white-space: nowrap;
         }
-
         .btn:active {
             transform: scale(0.95);
         }
-
         .btn-primary {
             background: linear-gradient(135deg, #667eea, #764ba2);
         }
@@ -148,81 +137,105 @@
         .btn-purple {
             background: linear-gradient(135deg, #8b5cf6, #7c3aed);
         }
-
-        /* ===== 统计区 ===== */
+        .btn-sm {
+            padding: 3px 8px;
+            font-size: 10px;
+            border-radius: 6px;
+        }
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 4px;
             background: #f3f4f6;
-            padding: 8px 10px;
-            border-radius: 12px;
-            margin-bottom: 12px;
+            padding: 6px 8px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
         }
-
         .stat-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1px;
-            font-size: 11px;
+            gap: 0px;
+            font-size: 10px;
             font-weight: 600;
             color: #4b5563;
         }
-
         .stat-item .number {
             background: #fff;
-            padding: 0 8px;
-            border-radius: 16px;
-            font-size: 18px;
+            padding: 0 6px;
+            border-radius: 14px;
+            font-size: 16px;
             color: #1f2937;
-            min-width: 24px;
+            min-width: 20px;
             text-align: center;
             font-weight: 700;
         }
-
         .stat-item .label {
-            font-size: 10px;
+            font-size: 9px;
             color: #6b7280;
         }
-
         .stat-item.highlight .number {
             background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #fff;
-        }
-        .stat-item.success .number {
-            background: #10b981;
             color: #fff;
         }
         .stat-item.warning .number {
             background: #f59e0b;
             color: #fff;
         }
-
-        /* ===== 状态栏 ===== */
+        .mode-switch-item {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .mode-switch-item:active {
+            transform: scale(0.95);
+        }
+        .mode-switch-item .mode-label {
+            font-size: 8px;
+            color: #6b7280;
+            text-align: center;
+        }
+        .mode-switch-item .mode-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1f2937;
+            background: #fff;
+            padding: 0 8px;
+            border-radius: 12px;
+            min-width: 40px;
+            text-align: center;
+        }
+        .mode-switch-item .mode-name.normal {
+            color: #10b981;
+        }
+        .mode-switch-item .mode-name.review {
+            color: #f59e0b;
+        }
+        .mode-switch-item .mode-name.eb {
+            color: #7c3aed;
+        }
         .status-bar {
-            padding: 8px 12px;
-            border-radius: 10px;
+            padding: 6px 10px;
+            border-radius: 8px;
             background: #f0f4ff;
             color: #4b5563;
-            font-size: 13px;
-            margin-bottom: 12px;
-            min-height: 38px;
+            font-size: 12px;
+            margin-bottom: 10px;
+            min-height: 32px;
             display: flex;
             align-items: center;
             gap: 6px;
             transition: all 0.3s ease;
             flex-wrap: wrap;
+            flex-shrink: 0;
         }
-
         .status-bar .badge {
             padding: 2px 8px;
             border-radius: 10px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             white-space: nowrap;
         }
-
         .badge.urgent {
             background: #fecaca;
             color: #991b1b;
@@ -235,7 +248,6 @@
             background: #d1fae5;
             color: #065f46;
         }
-
         .status-bar.success {
             background: #d1fae5;
             color: #065f46;
@@ -248,49 +260,151 @@
             background: #dbeafe;
             color: #1e40af;
         }
-
-        /* ===== 游戏网格 ===== */
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
-            margin: 12px 0;
-            min-height: 200px;
+            margin: 8px 0;
+            flex: 1;
+            min-height: 0;
         }
-
-        /* ===== 短句分组特殊样式 ===== */
         .grid-short-sentence {
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 14px !important;
-            max-width: 480px;
-            margin-left: auto;
-            margin-right: auto;
+            grid-template-columns: 1fr !important;
+            gap: 8px !important;
+            max-width: 100% !important;
+            width: 100% !important;
         }
-
         .grid-short-sentence .card {
-            font-size: 20px !important;
-            min-height: 100px !important;
-            padding: 16px 12px !important;
-            border-radius: 16px !important;
-            border-width: 3px !important;
+            font-size: 17px !important;
+            padding: 14px 20px !important;
+            border-radius: 14px !important;
+            border-width: 2.5px !important;
             aspect-ratio: auto !important;
-            height: auto !important;
-            min-height: 110px;
+            width: 100% !important;
+            min-height: 56px !important;
+            height: 64px !important;
+            flex-direction: row !important;
+            justify-content: center !important;
+            gap: 8px !important;
         }
-
         .grid-short-sentence .card .level-badge {
-            font-size: 11px !important;
-            top: 6px !important;
-            right: 6px !important;
-            padding: 2px 8px !important;
+            font-size: 9px !important;
+            top: 4px !important;
+            right: 4px !important;
+            padding: 1px 6px !important;
         }
-
         .grid-short-sentence .card .speaker-icon {
-            font-size: 18px !important;
-            bottom: 6px !important;
-            right: 6px !important;
+            font-size: 14px !important;
+            bottom: 4px !important;
+            right: 4px !important;
         }
-
+        .grid-short-sentence .card .card-lang-tag {
+            font-size: 8px !important;
+            bottom: 2px !important;
+        }
+        .grid-review-list {
+            grid-template-columns: 1fr 1fr !important;
+            gap: 10px !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        .grid-review-list .review-card {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 10px 14px !important;
+            background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+            border: 2.5px solid #e5e7eb;
+            border-radius: 14px !important;
+            min-height: 56px !important;
+            height: 62px !important;
+            aspect-ratio: auto !important;
+            width: 100% !important;
+            cursor: default !important;
+            transition: all 0.3s ease;
+            gap: 8px !important;
+            position: relative;
+        }
+        .grid-review-list .review-card .card-left {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            flex: 2;
+            min-width: 0;
+            gap: 2px !important;
+        }
+        .grid-review-list .review-card .card-right {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-end !important;
+            flex: 1;
+            min-width: 0;
+            gap: 2px !important;
+        }
+        .grid-review-list .review-card .en-part {
+            font-weight: 700;
+            font-size: 16px;
+            color: #1f2937;
+            text-align: left;
+            line-height: 1.2;
+        }
+        .grid-review-list .review-card .zh-part {
+            font-weight: 500;
+            font-size: 15px;
+            color: #4b5563;
+            text-align: right;
+            line-height: 1.2;
+        }
+        .grid-review-list .review-card .speaker-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+            color: #667eea;
+            flex-shrink: 0;
+            margin-left: 4px;
+        }
+        .grid-review-list .review-card .speaker-btn:active {
+            transform: scale(0.85);
+            background: rgba(102, 126, 234, 0.1);
+        }
+        .grid-review-list .review-card .card-index {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            font-size: 9px;
+            color: #d1d5db;
+            font-weight: 700;
+        }
+        .review-complete {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 16px;
+            color: #6b7280;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .review-complete .emoji {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .review-complete p {
+            font-size: 15px;
+        }
+        .review-complete .sub {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
         .card {
             aspect-ratio: 1;
             background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
@@ -301,44 +415,57 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 6px;
+            padding: 4px;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
             word-break: break-word;
             position: relative;
             color: #1f2937;
-            min-height: 60px;
-            line-height: 1.3;
+            min-height: 50px;
+            line-height: 1.2;
             -webkit-touch-callout: none;
         }
-
+        .card .card-lang-tag {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 7px;
+            color: #9ca3af;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 0 5px;
+            border-radius: 4px;
+            font-weight: 400;
+            pointer-events: none;
+        }
+        .card.flipped .card-lang-tag {
+            color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+        }
         .card .level-badge {
             position: absolute;
             top: 2px;
             right: 2px;
-            font-size: 8px;
+            font-size: 7px;
             background: rgba(0, 0, 0, 0.07);
             padding: 1px 4px;
             border-radius: 6px;
             color: #6b7280;
         }
-
         .card .speaker-icon {
             position: absolute;
             bottom: 2px;
             right: 2px;
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.5;
             pointer-events: none;
         }
-
         .card:active {
             transform: scale(0.95);
         }
-
         .card.flipped {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: #fff;
@@ -346,27 +473,22 @@
             transform: scale(1.02);
             box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
         }
-
         .card.flipped .level-badge {
             color: rgba(255, 255, 255, 0.6);
         }
-
         .card.matched {
             animation: matchPop 0.5s ease forwards;
             pointer-events: none;
         }
-
         .card.hidden {
             visibility: hidden;
             pointer-events: none;
             animation: fadeOut 0.25s ease forwards;
         }
-
         .card.fail {
             animation: shake 0.4s ease;
             border-color: #ef4444;
         }
-
         @keyframes matchPop {
             0% {
                 transform: scale(1);
@@ -388,7 +510,6 @@
                 opacity: 0;
             }
         }
-
         @keyframes fadeOut {
             0% {
                 opacity: 1;
@@ -399,7 +520,6 @@
                 transform: scale(0.6);
             }
         }
-
         @keyframes shake {
             0%,
             100% {
@@ -412,7 +532,6 @@
                 transform: translateX(6px) rotate(2deg);
             }
         }
-
         .card::after {
             content: '';
             position: absolute;
@@ -422,164 +541,150 @@
             transition: opacity 0.3s ease;
             pointer-events: none;
         }
-
         .card.flipped::after {
             background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), transparent 70%);
             opacity: 1;
         }
-
-        /* ===== 管理面板 ===== */
         .panel {
-            margin-top: 14px;
+            margin-top: 10px;
             background: #f9fafb;
-            border-radius: 14px;
-            padding: 14px;
+            border-radius: 12px;
+            padding: 12px;
             display: none;
             animation: slideUp 0.3s ease;
+            flex-shrink: 0;
         }
-
         .panel.active {
             display: block;
         }
-
         .panel-title {
-            font-size: 17px;
+            font-size: 15px;
             font-weight: 700;
             color: #1f2937;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-
         .panel textarea {
             width: 100%;
-            height: 80px;
-            padding: 10px;
+            height: 70px;
+            padding: 8px;
             border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 13px;
             resize: vertical;
             transition: border-color 0.3s ease;
             font-family: inherit;
         }
-
         .panel textarea:focus {
             outline: none;
             border-color: #667eea;
         }
-
         .panel .input-group {
             display: flex;
-            gap: 8px;
-            margin: 10px 0;
+            gap: 6px;
+            margin: 8px 0;
             flex-wrap: wrap;
         }
-
         .panel .input-group input {
             flex: 1;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 13px;
             transition: border-color 0.3s ease;
-            min-width: 100px;
+            min-width: 80px;
         }
-
         .panel .input-group input:focus {
             outline: none;
             border-color: #667eea;
         }
-
         .panel .hint {
-            font-size: 13px;
+            font-size: 12px;
             color: #6b7280;
-            margin-bottom: 8px;
-            line-height: 1.5;
+            margin-bottom: 6px;
+            line-height: 1.4;
         }
-
         .panel .divider {
             border: none;
             border-top: 2px solid #e5e7eb;
-            margin: 12px 0;
+            margin: 10px 0;
         }
-
         .upload-section {
             background: #f0fdf4;
             border: 2px dashed #10b981;
-            border-radius: 10px;
-            padding: 12px;
-            margin: 10px 0;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 8px 0;
         }
-
         .upload-section .upload-title {
             font-weight: 700;
             color: #065f46;
-            margin-bottom: 6px;
-            font-size: 14px;
+            margin-bottom: 4px;
+            font-size: 13px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
-
         .upload-section .upload-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
             align-items: center;
         }
-
         .upload-section .upload-actions input[type="file"] {
             display: none;
         }
-
         .upload-section .upload-status {
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            min-height: 32px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            min-height: 28px;
             background: #f3f4f6;
             color: #4b5563;
-            margin-top: 6px;
+            margin-top: 4px;
             transition: all 0.3s ease;
         }
-
         .upload-section .upload-status.success {
             background: #d1fae5;
             color: #065f46;
         }
-
         .upload-section .upload-status.error {
             background: #fecaca;
             color: #991b1b;
         }
-
-        /* ===== 空状态 & 下一关 ===== */
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 40px 16px;
+            padding: 30px 16px;
             color: #6b7280;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
-
         .empty-state .emoji {
-            font-size: 42px;
+            font-size: 38px;
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
-
         .empty-state p {
-            font-size: 15px;
+            font-size: 14px;
         }
-
         .next-level-btn {
             grid-column: 1 / -1;
-            padding: 14px;
+            padding: 10px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
-
         .next-level-btn button {
-            padding: 12px 28px;
-            font-size: 17px;
+            padding: 10px 24px;
+            font-size: 16px;
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             background: linear-gradient(135deg, #10b981, #059669);
             color: #fff;
             cursor: pointer;
@@ -588,25 +693,25 @@
             box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
             touch-action: manipulation;
         }
-
         .next-level-btn button:active {
             transform: scale(0.95);
         }
-
-        /* ===== 庆祝动画 ===== */
+        .next-level-btn .info-text {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 6px;
+        }
         .celebration {
             position: fixed;
             inset: 0;
             pointer-events: none;
             z-index: 1000;
         }
-
         .confetti {
             position: absolute;
             font-size: 14px;
             animation: confettiFall linear forwards;
         }
-
         @keyframes confettiFall {
             0% {
                 transform: translateY(-10vh) rotate(0deg) scale(1);
@@ -617,10 +722,9 @@
                 opacity: 0;
             }
         }
-
         .score-popup {
             position: fixed;
-            font-size: 40px;
+            font-size: 36px;
             font-weight: 900;
             color: #10b981;
             pointer-events: none;
@@ -628,7 +732,6 @@
             animation: scoreFloat 0.9s ease forwards;
             text-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
         }
-
         @keyframes scoreFloat {
             0% {
                 transform: translateY(0) scale(0.5);
@@ -643,10 +746,8 @@
                 opacity: 0;
             }
         }
-
-        /* ===== 滚动条 ===== */
         ::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
@@ -656,137 +757,11 @@
             background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 8px;
         }
-
-        /* ===== 手机端适配 ===== */
         @media (max-width: 500px) {
             .container {
-                padding: 12px;
-                border-radius: 16px;
-            }
-            .title {
-                font-size: 20px;
-            }
-            .title .horse-icon {
-                font-size: 24px;
-            }
-            .custom-select {
-                font-size: 12px;
-                padding: 4px 24px 4px 10px;
-                min-width: 90px;
-                border-radius: 8px;
-            }
-            .btn {
-                font-size: 12px;
-                padding: 4px 10px;
-                border-radius: 8px;
-            }
-            .stats {
-                padding: 6px 8px;
-                border-radius: 10px;
-            }
-            .stat-item .number {
-                font-size: 16px;
-            }
-            .stat-item .label {
-                font-size: 9px;
-            }
-            .grid {
-                gap: 6px;
-                min-height: 160px;
-            }
-            .card {
-                font-size: 13px;
-                min-height: 52px;
-                border-radius: 10px;
-                border-width: 2px;
-                padding: 4px;
-            }
-            .card .level-badge {
-                font-size: 7px;
-                top: 1px;
-                right: 1px;
-                padding: 0px 3px;
-            }
-            .card .speaker-icon {
-                font-size: 10px;
-                bottom: 1px;
-                right: 1px;
-            }
-            .grid-short-sentence {
-                gap: 10px !important;
-                padding: 0 4px;
-            }
-            .grid-short-sentence .card {
-                font-size: 17px !important;
-                min-height: 80px !important;
-                padding: 12px 10px !important;
-                border-radius: 14px !important;
-            }
-            .status-bar {
-                font-size: 12px;
-                padding: 6px 10px;
-                min-height: 32px;
-                border-radius: 8px;
-            }
-            .status-bar .badge {
-                font-size: 10px;
-                padding: 1px 6px;
-            }
-            .panel {
                 padding: 10px;
-                border-radius: 12px;
-            }
-            .panel-title {
-                font-size: 15px;
-            }
-            .panel textarea {
-                height: 60px;
-                font-size: 13px;
-                padding: 8px;
-                border-radius: 8px;
-            }
-            .panel .input-group input {
-                font-size: 13px;
-                padding: 6px 10px;
-                border-radius: 8px;
-                min-width: 70px;
-            }
-            .panel .hint {
-                font-size: 12px;
-            }
-            .upload-section {
-                padding: 10px;
-                border-radius: 8px;
-            }
-            .upload-section .upload-title {
-                font-size: 13px;
-            }
-            .upload-section .upload-status {
-                font-size: 12px;
-                min-height: 28px;
-                padding: 4px 8px;
-                border-radius: 6px;
-            }
-            .next-level-btn button {
-                padding: 10px 20px;
-                font-size: 15px;
-                border-radius: 12px;
-            }
-            .score-popup {
-                font-size: 30px;
-            }
-            .empty-state .emoji {
-                font-size: 34px;
-            }
-            .empty-state p {
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .container {
-                padding: 8px;
-                border-radius: 12px;
+                border-radius: 14px;
+                min-height: 90vh;
             }
             .title {
                 font-size: 17px;
@@ -796,173 +771,387 @@
             }
             .custom-select {
                 font-size: 11px;
-                padding: 3px 20px 3px 8px;
-                min-width: 70px;
+                padding: 4px 20px 4px 8px;
+                min-width: 80px;
+                border-radius: 6px;
             }
             .btn {
                 font-size: 11px;
-                padding: 3px 8px;
+                padding: 4px 8px;
                 border-radius: 6px;
             }
-            .grid {
-                gap: 4px;
-                min-height: 120px;
-            }
-            .card {
-                font-size: 11px;
-                min-height: 44px;
-                border-radius: 8px;
-                border-width: 1.5px;
-                padding: 3px;
-            }
-            .card .level-badge {
-                font-size: 6px;
-            }
-            .card .speaker-icon {
-                font-size: 8px;
-            }
-            .grid-short-sentence .card {
-                font-size: 15px !important;
-                min-height: 65px !important;
-                padding: 10px 8px !important;
-                border-radius: 12px !important;
-            }
             .stats {
-                gap: 2px;
                 padding: 4px 6px;
+                border-radius: 8px;
+                gap: 2px;
             }
             .stat-item .number {
                 font-size: 14px;
                 min-width: 18px;
+                padding: 0 4px;
             }
             .stat-item .label {
                 font-size: 8px;
+            }
+            .mode-switch-item .mode-name {
+                font-size: 11px;
+                padding: 0 6px;
+            }
+            .grid {
+                gap: 5px;
+            }
+            .card {
+                font-size: 12px;
+                min-height: 44px;
+                border-radius: 8px;
+                border-width: 2px;
+                padding: 3px;
+            }
+            .card .level-badge {
+                font-size: 6px;
+                top: 1px;
+                right: 1px;
+                padding: 0px 3px;
+            }
+            .card .speaker-icon {
+                font-size: 9px;
+                bottom: 1px;
+                right: 1px;
+            }
+            .card .card-lang-tag {
+                font-size: 6px !important;
+                bottom: 1px !important;
+            }
+            .grid-short-sentence {
+                gap: 6px !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .grid-short-sentence .card {
+                font-size: 15px !important;
+                min-height: 48px !important;
+                height: 54px !important;
+                padding: 8px 14px !important;
+                border-radius: 10px !important;
+            }
+            .grid-review-list {
+                gap: 6px !important;
+                grid-template-columns: 1fr !important;
+            }
+            .grid-review-list .review-card {
+                padding: 8px 12px !important;
+                min-height: 48px !important;
+                height: 54px !important;
+                border-radius: 12px !important;
+            }
+            .grid-review-list .review-card .en-part {
+                font-size: 14px !important;
+            }
+            .grid-review-list .review-card .zh-part {
+                font-size: 13px !important;
+            }
+            .grid-review-list .review-card .speaker-btn {
+                font-size: 14px !important;
+            }
+            .grid-review-list .review-card .card-index {
+                font-size: 7px !important;
+                top: 2px !important;
+                right: 4px !important;
             }
             .status-bar {
                 font-size: 11px;
                 padding: 4px 8px;
                 min-height: 28px;
+                border-radius: 6px;
             }
             .status-bar .badge {
                 font-size: 9px;
+                padding: 1px 6px;
+            }
+            .panel {
+                padding: 8px;
+                border-radius: 10px;
+            }
+            .panel-title {
+                font-size: 14px;
+            }
+            .panel textarea {
+                height: 50px;
+                font-size: 12px;
+                padding: 6px;
+                border-radius: 6px;
+            }
+            .panel .input-group input {
+                font-size: 12px;
+                padding: 4px 8px;
+                border-radius: 6px;
+                min-width: 60px;
+            }
+            .panel .hint {
+                font-size: 11px;
+            }
+            .upload-section {
+                padding: 8px;
+                border-radius: 6px;
+            }
+            .upload-section .upload-title {
+                font-size: 12px;
+            }
+            .upload-section .upload-status {
+                font-size: 11px;
+                min-height: 24px;
+                padding: 3px 6px;
+                border-radius: 4px;
+            }
+            .next-level-btn button {
+                padding: 8px 18px;
+                font-size: 14px;
+                border-radius: 10px;
+            }
+            .next-level-btn .info-text {
+                font-size: 12px;
+            }
+            .score-popup {
+                font-size: 28px;
+            }
+            .empty-state .emoji {
+                font-size: 30px;
+            }
+            .empty-state p {
+                font-size: 13px;
+            }
+            .review-complete .emoji {
+                font-size: 38px;
+            }
+            .review-complete p {
+                font-size: 14px;
+            }
+        }
+        @media (max-width: 380px) {
+            .container {
+                padding: 6px;
+                border-radius: 10px;
+                min-height: 85vh;
+            }
+            .title {
+                font-size: 15px;
+            }
+            .title .horse-icon {
+                font-size: 18px;
+            }
+            .custom-select {
+                font-size: 10px;
+                padding: 3px 16px 3px 6px;
+                min-width: 60px;
+            }
+            .btn {
+                font-size: 10px;
+                padding: 3px 6px;
+                border-radius: 4px;
+            }
+            .stats {
+                padding: 3px 4px;
+                gap: 1px;
+            }
+            .stat-item .number {
+                font-size: 12px;
+                min-width: 14px;
+                padding: 0 3px;
+            }
+            .stat-item .label {
+                font-size: 7px;
+            }
+            .mode-switch-item .mode-name {
+                font-size: 10px;
+                padding: 0 4px;
+            }
+            .grid {
+                gap: 4px;
+            }
+            .card {
+                font-size: 10px;
+                min-height: 38px;
+                border-radius: 6px;
+                border-width: 1.5px;
+                padding: 2px;
+            }
+            .card .level-badge {
+                font-size: 5px;
+            }
+            .card .speaker-icon {
+                font-size: 8px;
+            }
+            .card .card-lang-tag {
+                font-size: 5px !important;
+            }
+            .grid-short-sentence {
+                gap: 5px !important;
+            }
+            .grid-short-sentence .card {
+                font-size: 13px !important;
+                min-height: 42px !important;
+                height: 48px !important;
+                padding: 6px 12px !important;
+                border-radius: 8px !important;
+            }
+            .grid-review-list {
+                gap: 5px !important;
+                grid-template-columns: 1fr !important;
+            }
+            .grid-review-list .review-card {
+                padding: 6px 10px !important;
+                min-height: 42px !important;
+                height: 48px !important;
+                border-radius: 10px !important;
+            }
+            .grid-review-list .review-card .en-part {
+                font-size: 12px !important;
+            }
+            .grid-review-list .review-card .zh-part {
+                font-size: 11px !important;
+            }
+            .grid-review-list .review-card .speaker-btn {
+                font-size: 12px !important;
+            }
+            .grid-review-list .review-card .card-index {
+                font-size: 6px !important;
+                top: 2px !important;
+                right: 4px !important;
+            }
+            .status-bar {
+                font-size: 10px;
+                padding: 3px 6px;
+                min-height: 24px;
+            }
+            .status-bar .badge {
+                font-size: 8px;
                 padding: 1px 4px;
             }
             .score-popup {
-                font-size: 24px;
+                font-size: 22px;
+            }
+            .next-level-btn button {
+                padding: 6px 14px;
+                font-size: 12px;
+            }
+            .empty-state .emoji {
+                font-size: 26px;
+            }
+            .empty-state p {
+                font-size: 12px;
+            }
+            .review-complete .emoji {
+                font-size: 32px;
+            }
+            .review-complete p {
+                font-size: 13px;
             }
         }
-
         @media (min-width: 601px) {
             .card {
-                font-size: 18px;
-                min-height: 90px;
-                border-radius: 16px;
-                padding: 8px;
+                font-size: 17px;
+                min-height: 80px;
+                border-radius: 14px;
+                padding: 6px;
             }
             .card .level-badge {
-                font-size: 10px;
+                font-size: 9px;
                 top: 4px;
                 right: 4px;
-                padding: 2px 8px;
+                padding: 2px 6px;
             }
             .card .speaker-icon {
-                font-size: 16px;
+                font-size: 14px;
                 bottom: 4px;
                 right: 4px;
             }
+            .card .card-lang-tag {
+                font-size: 8px !important;
+                bottom: 3px !important;
+            }
             .grid-short-sentence .card {
-                font-size: 22px !important;
-                min-height: 120px !important;
-                padding: 20px 16px !important;
+                font-size: 19px !important;
+                min-height: 66px !important;
+                height: 72px !important;
+                padding: 14px 24px !important;
+                border-radius: 14px !important;
+            }
+            .grid-review-list .review-card {
+                padding: 12px 18px !important;
+                min-height: 64px !important;
+                height: 70px !important;
+                border-radius: 14px !important;
+            }
+            .grid-review-list .review-card .en-part {
+                font-size: 18px !important;
+            }
+            .grid-review-list .review-card .zh-part {
+                font-size: 17px !important;
+            }
+            .grid-review-list .review-card .speaker-btn {
+                font-size: 20px !important;
             }
             .stats {
-                padding: 10px 14px;
+                padding: 8px 12px;
             }
             .stat-item .number {
-                font-size: 20px;
+                font-size: 18px;
             }
             .stat-item .label {
-                font-size: 12px;
+                font-size: 11px;
             }
             .grid {
-                gap: 12px;
-                min-height: 300px;
+                gap: 10px;
+            }
+            .grid-review-list {
+                gap: 10px !important;
             }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <!-- ===== 头部 ===== -->
         <div class="header">
-            <h1 class="title">
-                <span class="horse-icon">🐴</span>小小马单词消消乐
-            </h1>
+            <h1 class="title"><span class="horse-icon">🐴</span>小小马单词消消乐</h1>
             <div class="controls">
                 <select id="groupSelect" class="custom-select"></select>
                 <button class="btn btn-success" id="restartBtn">🔄</button>
                 <button class="btn btn-warning" id="manageBtn">📚</button>
             </div>
         </div>
-
-        <!-- ===== 统计区 ===== -->
         <div class="stats" id="statsContainer">
-            <div class="stat-item highlight">
-                <span class="label">📚 总词汇</span>
-                <span class="number" id="totalCount">0</span>
-            </div>
-            <div class="stat-item warning">
-                <span class="label">⏰ 待复习</span>
-                <span class="number" id="remainCount">0</span>
-            </div>
-            <div class="stat-item success">
-                <span class="label">🧠 掌握率</span>
-                <span class="number" id="masteryRate">0%</span>
-            </div>
+            <div class="stat-item highlight"><span class="label">📚 总词汇</span><span class="number" id="totalCount">0</span></div>
+            <div class="stat-item warning"><span class="label">⏰ 待复习</span><span class="number" id="remainCount">0</span></div>
+            <div class="stat-item mode-switch-item" id="modeSwitch"><span class="mode-label">🎯 模式</span><span class="mode-name" id="modeDisplay">普通</span></div>
         </div>
-
-        <!-- ===== 状态栏 ===== -->
-        <div class="status-bar" id="statusBar">
-            💡 点击配对 · 长按发音
-            <span class="badge learning" id="statusBadge" style="display:none;">学习中</span>
-        </div>
-
-        <!-- ===== 游戏网格 ===== -->
+        <div class="status-bar" id="statusBar">💡 点击配对 · 长按发音<span class="badge learning" id="statusBadge" style="display:none;">学习中</span></div>
         <div class="grid" id="gameGrid"></div>
-
-        <!-- ===== 管理面板 ===== -->
         <div class="panel" id="managePanel">
             <h3 class="panel-title">📚 词库管理</h3>
-
             <div class="upload-section">
                 <div class="upload-title">📤 批量上传</div>
                 <div class="upload-actions">
                     <input type="file" id="uploadInput" accept=".json,.csv,.txt">
                     <button class="btn btn-primary" id="uploadBtn">📂 选择文件</button>
-                    <span style="font-size:12px;color:#6b7280;">JSON / CSV / TXT</span>
+                    <span style="font-size:11px;color:#6b7280;">JSON / CSV / TXT</span>
                 </div>
                 <div class="upload-status" id="uploadStatus">💡 上传文件批量导入词条</div>
             </div>
-
-            <div class="hint">
-                💡 每行一个词条，英文和中文用 <strong>逗号</strong> 或 <strong>Tab</strong> 分隔<br>
-                例如：<code>get up,起床</code> 或 <code>How are you?,你好吗</code>
-            </div>
+            <div class="hint">💡 每行一个词条，英文和中文用 <strong>逗号</strong> 或 <strong>Tab</strong> 分隔<br>例如：<code>get up,起床</code> 或 <code>How are you?,你好吗</code></div>
             <textarea id="wordInput" placeholder="apple,苹果&#10;get up,起床&#10;How are you?,你好吗"></textarea>
             <div class="input-group">
                 <input id="groupNameInput" type="text" placeholder="分组名称">
                 <button class="btn btn-primary" id="importBtn">📥 导入</button>
             </div>
             <hr class="divider">
-            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <div style="display:flex;gap:4px;flex-wrap:wrap;">
                 <button class="btn btn-danger" id="clearBtn">🗑️ 清空分组</button>
                 <button class="btn btn-info" id="resetAllBtn">🔄 重置数据</button>
                 <button class="btn btn-purple" id="updateWordsBtn">📦 更新词库</button>
             </div>
         </div>
     </div>
-
     <script>
         // ================================================================
         //  1. 艾宾浩斯记忆系统
@@ -972,78 +1161,17 @@
         ];
         const LEVEL_LABELS = ['初次学习', '5分钟复习', '30分钟复习', '12小时复习', '1天复习', '2天复习', '4天复习', '7天复习', '15天复习', '已掌握 ✅'];
 
-        function isWordDueForReview(word) {
-            const now = Date.now();
-            const level = Math.min(word.level, EBBINGHAUS_INTERVALS.length);
-            if (level >= EBBINGHAUS_INTERVALS.length) return (now - word.last) >= 30 * 24 * 60 * 60 * 1000;
-            const interval = EBBINGHAUS_INTERVALS[level];
-            return word.last === 0 || (now - word.last) >= interval;
-        }
-
-        function getWordPriority(word) {
-            const now = Date.now();
-            const level = Math.min(word.level, EBBINGHAUS_INTERVALS.length - 1);
-            const interval = EBBINGHAUS_INTERVALS[level] || 30 * 24 * 60 * 60 * 1000;
-            const elapsed = now - word.last;
-            const ratio = Math.min(elapsed / interval, 3);
-            return Math.round(ratio * 33);
-        }
-
-        function getWordStage(word) {
-            const level = Math.min(word.level, EBBINGHAUS_INTERVALS.length);
-            return LEVEL_LABELS[level] || '已掌握 ✅';
-        }
-
-        function getPrioritizedReviewWords(group) {
-            const db = loadDB();
-            let words = db.filter(w => {
-                if (w.group !== group) return false;
-                return isWordDueForReview(w);
-            });
-            words = words.map(w => ({ ...w,
-                priority: getWordPriority(w),
-                stage: getWordStage(w),
-                daysSinceLast: w.last > 0 ? (Date.now() - w.last) / (24 * 60 * 60 * 1000) : 0
-            }));
-            words.sort((a, b) => {
-                if (a.last === 0 && b.last > 0) return -1;
-                if (a.last > 0 && b.last === 0) return 1;
-                return b.priority - a.priority;
-            });
-            return words;
-        }
-
-        function getLearningStats(group) {
-            const db = loadDB();
-            const groupWords = db.filter(w => w.group === group);
-            const total = groupWords.length;
-            const mastered = groupWords.filter(w => w.level >= EBBINGHAUS_INTERVALS.length).length;
-            const learning = groupWords.filter(w => w.level > 0 && w.level < EBBINGHAUS_INTERVALS.length).length;
-            const newWords = groupWords.filter(w => w.level === 0).length;
-            const avgLevel = total > 0 ? groupWords.reduce((sum, w) => sum + w.level, 0) / total : 0;
-            return {
-                total,
-                mastered,
-                learning,
-                newWords,
-                avgLevel: avgLevel.toFixed(1),
-                masteredPercent: total > 0 ? (mastered / total * 100).toFixed(1) : 0
-            };
-        }
-
         // ================================================================
-        //  2. 音效系统 (Web Audio)
+        //  2. 音效系统
         // ================================================================
         class SoundManager {
             constructor() { this.ctx = null; }
-
             init() {
                 if (!this.ctx) {
                     try { this.ctx = new(window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
                 }
                 return this.ctx;
             }
-
             play(type) {
                 try {
                     const ctx = this.init();
@@ -1077,9 +1205,7 @@
                     }
                 } catch (e) { console.log('音效:', e); }
             }
-
-            _playFlip(ctx, now) {
-                const osc = ctx.createOscillator();
+            _playFlip(ctx, now) { const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.connect(gain);
                 gain.connect(ctx.destination);
@@ -1089,11 +1215,8 @@
                 gain.gain.setValueAtTime(0.15, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
                 osc.start(now);
-                osc.stop(now + 0.07);
-            }
-
-            _playUnflip(ctx, now) {
-                const osc = ctx.createOscillator();
+                osc.stop(now + 0.07); }
+            _playUnflip(ctx, now) { const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.connect(gain);
                 gain.connect(ctx.destination);
@@ -1103,12 +1226,8 @@
                 gain.gain.setValueAtTime(0.12, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
                 osc.start(now);
-                osc.stop(now + 0.05);
-            }
-
-            _playMatch(ctx, now) {
-                [523, 659, 784].forEach((freq, i) => {
-                    const osc = ctx.createOscillator();
+                osc.stop(now + 0.05); }
+            _playMatch(ctx, now) { [523, 659, 784].forEach((freq, i) => { const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.connect(gain);
                     gain.connect(ctx.destination);
@@ -1117,13 +1236,8 @@
                     gain.gain.setValueAtTime(0.12, now + i * 0.07);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.1);
                     osc.start(now + i * 0.07);
-                    osc.stop(now + i * 0.07 + 0.1);
-                });
-            }
-
-            _playMatchCombo(ctx, now) {
-                [587, 740, 880, 1109].forEach((freq, i) => {
-                    const osc = ctx.createOscillator();
+                    osc.stop(now + i * 0.07 + 0.1); }); }
+            _playMatchCombo(ctx, now) { [587, 740, 880, 1109].forEach((freq, i) => { const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.connect(gain);
                     gain.connect(ctx.destination);
@@ -1132,12 +1246,8 @@
                     gain.gain.setValueAtTime(0.15, now + i * 0.06);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.09);
                     osc.start(now + i * 0.06);
-                    osc.stop(now + i * 0.06 + 0.09);
-                });
-            }
-
-            _playFail(ctx, now) {
-                const osc = ctx.createOscillator();
+                    osc.stop(now + i * 0.06 + 0.09); }); }
+            _playFail(ctx, now) { const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.connect(gain);
                 gain.connect(ctx.destination);
@@ -1147,12 +1257,8 @@
                 gain.gain.setValueAtTime(0.08, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
                 osc.start(now);
-                osc.stop(now + 0.2);
-            }
-
-            _playWin(ctx, now) {
-                [523, 659, 784, 1047, 1319].forEach((freq, i) => {
-                    const osc = ctx.createOscillator();
+                osc.stop(now + 0.2); }
+            _playWin(ctx, now) { [523, 659, 784, 1047, 1319].forEach((freq, i) => { const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.connect(gain);
                     gain.connect(ctx.destination);
@@ -1161,13 +1267,9 @@
                     gain.gain.setValueAtTime(0.15, now + i * 0.09);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.12);
                     osc.start(now + i * 0.09);
-                    osc.stop(now + i * 0.09 + 0.12);
-                });
-            }
-
-            _playPerfect(ctx, now) {
-                [523, 659, 784, 1047, 1319, 1568].forEach((freq, i) => {
-                    const osc = ctx.createOscillator();
+                    osc.stop(now + i * 0.09 + 0.12); }); }
+            _playPerfect(ctx, now) { [523, 659, 784, 1047, 1319, 1568].forEach((freq, i) => { const osc = ctx
+                        .createOscillator();
                     const gain = ctx.createGain();
                     osc.connect(gain);
                     gain.connect(ctx.destination);
@@ -1176,13 +1278,9 @@
                     gain.gain.setValueAtTime(0.15, now + i * 0.06);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.12);
                     osc.start(now + i * 0.06);
-                    osc.stop(now + i * 0.06 + 0.12);
-                });
-            }
-
-            _playLevelUp(ctx, now) {
-                [523, 659, 784, 1047, 1319, 1568, 1760].forEach((freq, i) => {
-                    const osc = ctx.createOscillator();
+                    osc.stop(now + i * 0.06 + 0.12); }); }
+            _playLevelUp(ctx, now) { [523, 659, 784, 1047, 1319, 1568, 1760].forEach((freq, i) => { const osc = ctx
+                        .createOscillator();
                     const gain = ctx.createGain();
                     osc.connect(gain);
                     gain.connect(ctx.destination);
@@ -1191,11 +1289,8 @@
                     gain.gain.setValueAtTime(0.18, now + i * 0.05);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.1);
                     osc.start(now + i * 0.05);
-                    osc.stop(now + i * 0.05 + 0.1);
-                });
-            }
+                    osc.stop(now + i * 0.05 + 0.1); }); }
         }
-
         const sound = new SoundManager();
 
         // ================================================================
@@ -1207,840 +1302,562 @@
             try {
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'en-US';
-                utterance.rate = 0.85;
+                utterance.rate = 0.9;
                 utterance.pitch = 1.0;
-                utterance.volume = 1.0;
-                const voices = window.speechSynthesis.getVoices();
-                const preferred = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes(
-                    'Samantha')));
-                if (preferred) utterance.voice = preferred;
+                utterance.volume = 0.8;
                 window.speechSynthesis.speak(utterance);
             } catch (e) { console.log('TTS:', e); }
         }
-
         if (window.speechSynthesis) {
             window.speechSynthesis.getVoices();
             window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
         }
 
         // ================================================================
-        //  4. 数据层 - 完整词库（包含所有单词、短语、短句）
+        //  4. 数据层 - 完整词库（已扩充OPD词汇）
         // ================================================================
-        const DB_KEY = 'word_match_game_v12';
+        const DB_KEY = 'word_match_game_v17';
+        let EXAMPLE_SENTENCES = {};
 
-        const ALL_WORDS = [
-            // ================================================================
-            //  一、基础词汇 (约120个)
-            // ================================================================
-            { group: "基础词汇", en: "apple", zh: "苹果" },
-            { group: "基础词汇", en: "banana", zh: "香蕉" },
-            { group: "基础词汇", en: "cat", zh: "猫" },
-            { group: "基础词汇", en: "dog", zh: "狗" },
-            { group: "基础词汇", en: "elephant", zh: "大象" },
-            { group: "基础词汇", en: "fish", zh: "鱼" },
-            { group: "基础词汇", en: "grape", zh: "葡萄" },
-            { group: "基础词汇", en: "house", zh: "房子" },
-            { group: "基础词汇", en: "book", zh: "书" },
-            { group: "基础词汇", en: "school", zh: "学校" },
-            { group: "基础词汇", en: "teacher", zh: "老师" },
-            { group: "基础词汇", en: "student", zh: "学生" },
-            { group: "基础词汇", en: "lion", zh: "狮子" },
-            { group: "基础词汇", en: "tiger", zh: "老虎" },
-            { group: "基础词汇", en: "rabbit", zh: "兔子" },
-            { group: "基础词汇", en: "panda", zh: "熊猫" },
-            { group: "基础词汇", en: "dolphin", zh: "海豚" },
-            { group: "基础词汇", en: "eagle", zh: "老鹰" },
-            { group: "基础词汇", en: "snake", zh: "蛇" },
-            { group: "基础词汇", en: "whale", zh: "鲸鱼" },
-            { group: "基础词汇", en: "red", zh: "红色" },
-            { group: "基础词汇", en: "blue", zh: "蓝色" },
-            { group: "基础词汇", en: "green", zh: "绿色" },
-            { group: "基础词汇", en: "yellow", zh: "黄色" },
-            { group: "基础词汇", en: "white", zh: "白色" },
-            { group: "基础词汇", en: "black", zh: "黑色" },
-            { group: "基础词汇", en: "pink", zh: "粉色" },
-            { group: "基础词汇", en: "orange", zh: "橙色" },
-            { group: "基础词汇", en: "pizza", zh: "披萨" },
-            { group: "基础词汇", en: "burger", zh: "汉堡" },
-            { group: "基础词汇", en: "sushi", zh: "寿司" },
-            { group: "基础词汇", en: "noodle", zh: "面条" },
-            { group: "基础词汇", en: "rice", zh: "米饭" },
-            { group: "基础词汇", en: "bread", zh: "面包" },
-            { group: "基础词汇", en: "cake", zh: "蛋糕" },
-            { group: "基础词汇", en: "milk", zh: "牛奶" },
-            { group: "基础词汇", en: "doctor", zh: "医生" },
-            { group: "基础词汇", en: "nurse", zh: "护士" },
-            { group: "基础词汇", en: "pilot", zh: "飞行员" },
-            { group: "基础词汇", en: "driver", zh: "司机" },
-            { group: "基础词汇", en: "farmer", zh: "农民" },
-            { group: "基础词汇", en: "cook", zh: "厨师" },
-            { group: "基础词汇", en: "singer", zh: "歌手" },
-            { group: "基础词汇", en: "dancer", zh: "舞者" },
-            { group: "基础词汇", en: "writer", zh: "作家" },
-            { group: "基础词汇", en: "artist", zh: "艺术家" },
-            { group: "基础词汇", en: "father", zh: "父亲" },
-            { group: "基础词汇", en: "mother", zh: "母亲" },
-            { group: "基础词汇", en: "brother", zh: "兄弟" },
-            { group: "基础词汇", en: "sister", zh: "姐妹" },
-            { group: "基础词汇", en: "uncle", zh: "叔叔" },
-            { group: "基础词汇", en: "aunt", zh: "阿姨" },
-            { group: "基础词汇", en: "grandpa", zh: "爷爷" },
-            { group: "基础词汇", en: "grandma", zh: "奶奶" },
-            { group: "基础词汇", en: "cousin", zh: "表兄妹" },
-            { group: "基础词汇", en: "baby", zh: "宝宝" },
-            { group: "基础词汇", en: "river", zh: "河流" },
-            { group: "基础词汇", en: "mountain", zh: "山" },
-            { group: "基础词汇", en: "forest", zh: "森林" },
-            { group: "基础词汇", en: "ocean", zh: "海洋" },
-            { group: "基础词汇", en: "desert", zh: "沙漠" },
-            { group: "基础词汇", en: "island", zh: "岛屿" },
-            { group: "基础词汇", en: "car", zh: "汽车" },
-            { group: "基础词汇", en: "bus", zh: "公交车" },
-            { group: "基础词汇", en: "train", zh: "火车" },
-            { group: "基础词汇", en: "plane", zh: "飞机" },
-            { group: "基础词汇", en: "ship", zh: "轮船" },
-            { group: "基础词汇", en: "bike", zh: "自行车" },
-            { group: "基础词汇", en: "subway", zh: "地铁" },
-            { group: "基础词汇", en: "taxi", zh: "出租车" },
-            { group: "基础词汇", en: "head", zh: "头" },
-            { group: "基础词汇", en: "hand", zh: "手" },
-            { group: "基础词汇", en: "foot", zh: "脚" },
-            { group: "基础词汇", en: "eye", zh: "眼睛" },
-            { group: "基础词汇", en: "ear", zh: "耳朵" },
-            { group: "基础词汇", en: "nose", zh: "鼻子" },
-            { group: "基础词汇", en: "mouth", zh: "嘴" },
-            { group: "基础词汇", en: "hair", zh: "头发" },
-            { group: "基础词汇", en: "sunny", zh: "晴朗的" },
-            { group: "基础词汇", en: "rainy", zh: "下雨的" },
-            { group: "基础词汇", en: "cloudy", zh: "多云的" },
-            { group: "基础词汇", en: "windy", zh: "有风的" },
-            { group: "基础词汇", en: "snowy", zh: "下雪的" },
-            { group: "基础词汇", en: "hot", zh: "热的" },
-            { group: "基础词汇", en: "cold", zh: "冷的" },
-            { group: "基础词汇", en: "warm", zh: "温暖的" },
-            { group: "基础词汇", en: "cool", zh: "凉爽的" },
-            { group: "基础词汇", en: "rainbow", zh: "彩虹" },
-            { group: "基础词汇", en: "classroom", zh: "教室" },
-            { group: "基础词汇", en: "library", zh: "图书馆" },
-            { group: "基础词汇", en: "desk", zh: "书桌" },
-            { group: "基础词汇", en: "chair", zh: "椅子" },
-            { group: "基础词汇", en: "pen", zh: "钢笔" },
-            { group: "基础词汇", en: "pencil", zh: "铅笔" },
-            { group: "基础词汇", en: "swim", zh: "游泳" },
-            { group: "基础词汇", en: "run", zh: "跑步" },
-            { group: "基础词汇", en: "jump", zh: "跳" },
-            { group: "基础词汇", en: "walk", zh: "走" },
-            { group: "基础词汇", en: "dance", zh: "跳舞" },
-            { group: "基础词汇", en: "happy", zh: "快乐的" },
-            { group: "基础词汇", en: "sad", zh: "悲伤的" },
-            { group: "基础词汇", en: "angry", zh: "生气的" },
-            { group: "基础词汇", en: "tired", zh: "疲惫的" },
-            { group: "基础词汇", en: "hungry", zh: "饥饿的" },
-            { group: "基础词汇", en: "thirsty", zh: "口渴的" },
-            { group: "基础词汇", en: "scared", zh: "害怕的" },
-            { group: "基础词汇", en: "brave", zh: "勇敢的" },
-            { group: "基础词汇", en: "kind", zh: "善良的" },
-            { group: "基础词汇", en: "smart", zh: "聪明的" },
+        function generateDefaultExample(en, zh) {
+            return { en: "Here is an example for \"" + en + "\".", zh: "这是\"" + zh + "\"的一个例句。" };
+        }
 
-            // ================================================================
-            //  二、OPD 单词
-            // ================================================================
-            { group: "OPD单词", en: "hello", zh: "你好" },
-            { group: "OPD单词", en: "hi", zh: "嗨" },
-            { group: "OPD单词", en: "name", zh: "姓名" },
-            { group: "OPD单词", en: "first", zh: "名" },
-            { group: "OPD单词", en: "middle", zh: "中间" },
-            { group: "OPD单词", en: "initial", zh: "首字母" },
-            { group: "OPD单词", en: "last", zh: "姓氏" },
-            { group: "OPD单词", en: "spell", zh: "拼写" },
-            { group: "OPD单词", en: "print", zh: "手写" },
-            { group: "OPD单词", en: "type", zh: "输入" },
-            { group: "OPD单词", en: "address", zh: "地址" },
-            { group: "OPD单词", en: "street", zh: "街道" },
-            { group: "OPD单词", en: "apartment", zh: "公寓" },
-            { group: "OPD单词", en: "city", zh: "城市" },
-            { group: "OPD单词", en: "state", zh: "州" },
-            { group: "OPD单词", en: "zip", zh: "邮编" },
-            { group: "OPD单词", en: "phone", zh: "电话" },
-            { group: "OPD单词", en: "work", zh: "工作" },
-            { group: "OPD单词", en: "home", zh: "住宅" },
-            { group: "OPD单词", en: "cell", zh: "移动" },
-            { group: "OPD单词", en: "gender", zh: "性别" },
-            { group: "OPD单词", en: "male", zh: "男性" },
-            { group: "OPD单词", en: "female", zh: "女性" },
-            { group: "OPD单词", en: "birth", zh: "出生" },
-            { group: "OPD单词", en: "place", zh: "地点" },
-            { group: "OPD单词", en: "signature", zh: "签名" },
-            { group: "OPD单词", en: "principal", zh: "校长" },
-            { group: "OPD单词", en: "assistant", zh: "助理" },
-            { group: "OPD单词", en: "counselor", zh: "辅导员" },
-            { group: "OPD单词", en: "classroom", zh: "教室" },
-            { group: "OPD单词", en: "teacher", zh: "教师" },
-            { group: "OPD单词", en: "instructor", zh: "讲师" },
-            { group: "OPD单词", en: "student", zh: "学生" },
-            { group: "OPD单词", en: "restroom", zh: "卫生间" },
-            { group: "OPD单词", en: "hallway", zh: "走廊" },
-            { group: "OPD单词", en: "locker", zh: "储物柜" },
-            { group: "OPD单词", en: "office", zh: "办公室" },
-            { group: "OPD单词", en: "clerk", zh: "办事员" },
-            { group: "OPD单词", en: "cafeteria", zh: "食堂" },
-            { group: "OPD单词", en: "lab", zh: "实验室" },
-            { group: "OPD单词", en: "library", zh: "图书馆" },
-            { group: "OPD单词", en: "auditorium", zh: "礼堂" },
-            { group: "OPD单词", en: "gym", zh: "体育馆" },
-            { group: "OPD单词", en: "coach", zh: "教练" },
-            { group: "OPD单词", en: "track", zh: "跑道" },
-            { group: "OPD单词", en: "school", zh: "学校" },
-            { group: "OPD单词", en: "whiteboard", zh: "白板" },
-            { group: "OPD单词", en: "blackboard", zh: "黑板" },
-            { group: "OPD单词", en: "screen", zh: "屏幕" },
-            { group: "OPD单词", en: "desk", zh: "书桌" },
-            { group: "OPD单词", en: "chair", zh: "椅子" },
-            { group: "OPD单词", en: "clock", zh: "时钟" },
-            { group: "OPD单词", en: "bookcase", zh: "书架" },
-            { group: "OPD单词", en: "map", zh: "地图" },
-            { group: "OPD单词", en: "alphabet", zh: "字母" },
-            { group: "OPD单词", en: "board", zh: "白板" },
-            { group: "OPD单词", en: "eraser", zh: "板擦" },
-            { group: "OPD单词", en: "pencil", zh: "铅笔" },
-            { group: "OPD单词", en: "pen", zh: "钢笔" },
-            { group: "OPD单词", en: "marker", zh: "记号笔" },
-            { group: "OPD单词", en: "notebook", zh: "笔记本" },
-            { group: "OPD单词", en: "textbook", zh: "教科书" },
-            { group: "OPD单词", en: "workbook", zh: "练习册" },
-            { group: "OPD单词", en: "dictionary", zh: "词典" },
-            { group: "OPD单词", en: "vocabulary", zh: "词汇" },
-            { group: "OPD单词", en: "recording", zh: "录音" },
-            { group: "OPD单词", en: "question", zh: "问题" },
-            { group: "OPD单词", en: "answer", zh: "答案" },
-            { group: "OPD单词", en: "group", zh: "小组" },
-            { group: "OPD单词", en: "goal", zh: "目标" },
-            { group: "OPD单词", en: "test", zh: "试卷" },
-            { group: "OPD单词", en: "mistake", zh: "错误" },
-            { group: "OPD单词", en: "paper", zh: "纸张" },
-            { group: "OPD单词", en: "snack", zh: "零食" },
-            { group: "OPD单词", en: "sunny", zh: "晴朗" },
-            { group: "OPD单词", en: "rainy", zh: "下雨" },
-            { group: "OPD单词", en: "cloudy", zh: "多云" },
-            { group: "OPD单词", en: "windy", zh: "刮风" },
-            { group: "OPD单词", en: "snowy", zh: "下雪" },
-            { group: "OPD单词", en: "hot", zh: "炎热" },
-            { group: "OPD单词", en: "cold", zh: "寒冷" },
-            { group: "OPD单词", en: "warm", zh: "温暖" },
-            { group: "OPD单词", en: "cool", zh: "凉爽" },
-            { group: "OPD单词", en: "rainbow", zh: "彩虹" },
-            { group: "OPD单词", en: "thermometer", zh: "温度计" },
-            { group: "OPD单词", en: "degree", zh: "度数" },
-            { group: "OPD单词", en: "zero", zh: "零" },
-            { group: "OPD单词", en: "one", zh: "一" },
-            { group: "OPD单词", en: "two", zh: "二" },
-            { group: "OPD单词", en: "three", zh: "三" },
-            { group: "OPD单词", en: "four", zh: "四" },
-            { group: "OPD单词", en: "five", zh: "五" },
-            { group: "OPD单词", en: "six", zh: "六" },
-            { group: "OPD单词", en: "seven", zh: "七" },
-            { group: "OPD单词", en: "eight", zh: "八" },
-            { group: "OPD单词", en: "nine", zh: "九" },
-            { group: "OPD单词", en: "ten", zh: "十" },
-            { group: "OPD单词", en: "time", zh: "时间" },
-            { group: "OPD单词", en: "hour", zh: "小时" },
-            { group: "OPD单词", en: "minute", zh: "分钟" },
-            { group: "OPD单词", en: "second", zh: "秒" },
-            { group: "OPD单词", en: "morning", zh: "早上" },
-            { group: "OPD单词", en: "afternoon", zh: "下午" },
-            { group: "OPD单词", en: "evening", zh: "傍晚" },
-            { group: "OPD单词", en: "night", zh: "夜晚" },
-            { group: "OPD单词", en: "calendar", zh: "日历" },
-            { group: "OPD单词", en: "day", zh: "天" },
-            { group: "OPD单词", en: "week", zh: "星期" },
-            { group: "OPD单词", en: "month", zh: "月份" },
-            { group: "OPD单词", en: "year", zh: "年份" },
-            { group: "OPD单词", en: "big", zh: "大的" },
-            { group: "OPD单词", en: "small", zh: "小的" },
-            { group: "OPD单词", en: "long", zh: "长的" },
-            { group: "OPD单词", en: "short", zh: "短的" },
-            { group: "OPD单词", en: "tall", zh: "高的" },
-            { group: "OPD单词", en: "heavy", zh: "重的" },
-            { group: "OPD单词", en: "light", zh: "轻的" },
-            { group: "OPD单词", en: "red", zh: "红色" },
-            { group: "OPD单词", en: "blue", zh: "蓝色" },
-            { group: "OPD单词", en: "green", zh: "绿色" },
-            { group: "OPD单词", en: "yellow", zh: "黄色" },
-            { group: "OPD单词", en: "white", zh: "白色" },
-            { group: "OPD单词", en: "black", zh: "黑色" },
-            { group: "OPD单词", en: "pink", zh: "粉色" },
-            { group: "OPD单词", en: "orange", zh: "橙色" },
-            { group: "OPD单词", en: "in", zh: "在…内" },
-            { group: "OPD单词", en: "on", zh: "在…上" },
-            { group: "OPD单词", en: "under", zh: "在…下" },
-            { group: "OPD单词", en: "next", zh: "旁边" },
-            { group: "OPD单词", en: "between", zh: "中间" },
-            { group: "OPD单词", en: "money", zh: "金钱" },
-            { group: "OPD单词", en: "dollar", zh: "美元" },
-            { group: "OPD单词", en: "quarter", zh: "25美分" },
-            { group: "OPD单词", en: "half", zh: "一半" },
-            { group: "OPD单词", en: "nickel", zh: "5美分" },
-            { group: "OPD单词", en: "dime", zh: "10美分" },
-            { group: "OPD单词", en: "penny", zh: "1美分" },
-            { group: "OPD单词", en: "shop", zh: "购物" },
-            { group: "OPD单词", en: "store", zh: "商店" },
-            { group: "OPD单词", en: "price", zh: "价格" },
-            { group: "OPD单词", en: "cheap", zh: "便宜的" },
-            { group: "OPD单词", en: "expensive", zh: "昂贵的" },
-            { group: "OPD单词", en: "adult", zh: "成年人" },
-            { group: "OPD单词", en: "child", zh: "孩童" },
-            { group: "OPD单词", en: "baby", zh: "婴儿" },
-            { group: "OPD单词", en: "thin", zh: "瘦的" },
-            { group: "OPD单词", en: "fat", zh: "胖的" },
-            { group: "OPD单词", en: "young", zh: "年轻的" },
-            { group: "OPD单词", en: "old", zh: "年老的" },
-            { group: "OPD单词", en: "curly", zh: "卷曲的" },
-            { group: "OPD单词", en: "straight", zh: "直的" },
-            { group: "OPD单词", en: "father", zh: "父亲" },
-            { group: "OPD单词", en: "mother", zh: "母亲" },
-            { group: "OPD单词", en: "brother", zh: "兄弟" },
-            { group: "OPD单词", en: "sister", zh: "姐妹" },
-            { group: "OPD单词", en: "uncle", zh: "叔叔" },
-            { group: "OPD单词", en: "aunt", zh: "阿姨" },
-            { group: "OPD单词", en: "grandpa", zh: "爷爷" },
-            { group: "OPD单词", en: "grandma", zh: "奶奶" },
-            { group: "OPD单词", en: "cousin", zh: "表兄妹" },
-            { group: "OPD单词", en: "feed", zh: "喂食" },
-            { group: "OPD单词", en: "bathe", zh: "洗澡" },
-            { group: "OPD单词", en: "wake", zh: "醒来" },
-            { group: "OPD单词", en: "brush", zh: "刷" },
-            { group: "OPD单词", en: "wash", zh: "清洗" },
-            { group: "OPD单词", en: "happy", zh: "开心的" },
-            { group: "OPD单词", en: "sad", zh: "难过的" },
-            { group: "OPD单词", en: "angry", zh: "生气的" },
-            { group: "OPD单词", en: "tired", zh: "疲惫的" },
-            { group: "OPD单词", en: "hungry", zh: "饥饿的" },
-            { group: "OPD单词", en: "thirsty", zh: "口渴的" },
-            { group: "OPD单词", en: "scared", zh: "害怕的" },
-            { group: "OPD单词", en: "brave", zh: "勇敢的" },
-            { group: "OPD单词", en: "kind", zh: "善良的" },
-            { group: "OPD单词", en: "smart", zh: "聪明的" },
-            { group: "OPD单词", en: "document", zh: "证件" },
-            { group: "OPD单词", en: "party", zh: "派对" },
-            { group: "OPD单词", en: "house", zh: "独栋房屋" },
-            { group: "OPD单词", en: "rent", zh: "租赁" },
-            { group: "OPD单词", en: "landlord", zh: "房东" },
-            { group: "OPD单词", en: "tenant", zh: "租客" },
-            { group: "OPD单词", en: "yard", zh: "庭院" },
-            { group: "OPD单词", en: "grass", zh: "草地" },
-            { group: "OPD单词", en: "tree", zh: "树木" },
-            { group: "OPD单词", en: "flower", zh: "花朵" },
-            { group: "OPD单词", en: "kitchen", zh: "厨房" },
-            { group: "OPD单词", en: "refrigerator", zh: "冰箱" },
-            { group: "OPD单词", en: "stove", zh: "炉灶" },
-            { group: "OPD单词", en: "table", zh: "餐桌" },
-            { group: "OPD单词", en: "sofa", zh: "沙发" },
-            { group: "OPD单词", en: "television", zh: "电视" },
-            { group: "OPD单词", en: "shower", zh: "淋浴" },
-            { group: "OPD单词", en: "tub", zh: "浴缸" },
-            { group: "OPD单词", en: "bedroom", zh: "卧室" },
-            { group: "OPD单词", en: "bed", zh: "床" },
-            { group: "OPD单词", en: "pillow", zh: "枕头" },
-            { group: "OPD单词", en: "housework", zh: "家务" },
-            { group: "OPD单词", en: "clean", zh: "打扫" },
-            { group: "OPD单词", en: "soap", zh: "肥皂" },
-            { group: "OPD单词", en: "towel", zh: "毛巾" },
-            { group: "OPD单词", en: "repair", zh: "修理" },
-            { group: "OPD单词", en: "leak", zh: "漏水" },
-            { group: "OPD单词", en: "broken", zh: "破损的" },
-            { group: "OPD单词", en: "fruit", zh: "水果" },
-            { group: "OPD单词", en: "vegetable", zh: "蔬菜" },
-            { group: "OPD单词", en: "tomato", zh: "番茄" },
-            { group: "OPD单词", en: "potato", zh: "土豆" },
-            { group: "OPD单词", en: "container", zh: "容器" },
-            { group: "OPD单词", en: "package", zh: "包装" },
-            { group: "OPD单词", en: "weight", zh: "重量" },
-            { group: "OPD单词", en: "knife", zh: "刀具" },
-            { group: "OPD单词", en: "plate", zh: "盘子" },
-            { group: "OPD单词", en: "menu", zh: "菜单" },
-            { group: "OPD单词", en: "cook", zh: "厨师" },
-            { group: "OPD单词", en: "server", zh: "服务员" },
-            { group: "OPD单词", en: "dishwasher", zh: "洗碗工" },
-            { group: "OPD单词", en: "freezer", zh: "冰柜" },
-            { group: "OPD单词", en: "chef", zh: "主厨" },
-            { group: "OPD单词", en: "diner", zh: "食客" },
-            { group: "OPD单词", en: "buffet", zh: "自助餐" },
-            { group: "OPD单词", en: "runner", zh: "传菜员" },
-            { group: "OPD单词", en: "pizza", zh: "披萨" },
-            { group: "OPD单词", en: "burger", zh: "汉堡" },
-            { group: "OPD单词", en: "rice", zh: "米饭" },
-            { group: "OPD单词", en: "bread", zh: "面包" },
-            { group: "OPD单词", en: "milk", zh: "牛奶" },
-            { group: "OPD单词", en: "sushi", zh: "寿司" },
-            { group: "OPD单词", en: "noodle", zh: "面条" },
-            { group: "OPD单词", en: "soup", zh: "汤" },
-            { group: "OPD单词", en: "steak", zh: "牛排" },
-            { group: "OPD单词", en: "chicken", zh: "鸡肉" },
-            { group: "OPD单词", en: "egg", zh: "鸡蛋" },
-            { group: "OPD单词", en: "cheese", zh: "奶酪" },
-            { group: "OPD单词", en: "butter", zh: "黄油" },
-            { group: "OPD单词", en: "jam", zh: "果酱" },
-            { group: "OPD单词", en: "shirt", zh: "衬衫" },
-            { group: "OPD单词", en: "pants", zh: "长裤" },
-            { group: "OPD单词", en: "jacket", zh: "外套" },
-            { group: "OPD单词", en: "suit", zh: "西装" },
-            { group: "OPD单词", en: "coat", zh: "大衣" },
-            { group: "OPD单词", en: "swimsuit", zh: "泳衣" },
-            { group: "OPD单词", en: "pajamas", zh: "睡衣" },
-            { group: "OPD单词", en: "uniform", zh: "工装" },
-            { group: "OPD单词", en: "shoe", zh: "鞋子" },
-            { group: "OPD单词", en: "hat", zh: "帽子" },
-            { group: "OPD单词", en: "soft", zh: "柔软的" },
-            { group: "OPD单词", en: "rough", zh: "粗糙的" },
-            { group: "OPD单词", en: "cotton", zh: "棉" },
-            { group: "OPD单词", en: "linen", zh: "亚麻" },
-            { group: "OPD单词", en: "wool", zh: "羊毛" },
-            { group: "OPD单词", en: "silk", zh: "丝绸" },
-            { group: "OPD单词", en: "leather", zh: "皮革" },
-            { group: "OPD单词", en: "denim", zh: "牛仔布" },
-            { group: "OPD单词", en: "suede", zh: "麂皮" },
-            { group: "OPD单词", en: "velvet", zh: "丝绒" },
-            { group: "OPD单词", en: "sew", zh: "缝纫" },
-            { group: "OPD单词", en: "shorten", zh: "改短" },
-            { group: "OPD单词", en: "symptom", zh: "症状" },
-            { group: "OPD单词", en: "injury", zh: "外伤" },
-            { group: "OPD单词", en: "pain", zh: "疼痛" },
-            { group: "OPD单词", en: "fever", zh: "发烧" },
-            { group: "OPD单词", en: "doctor", zh: "医生" },
-            { group: "OPD单词", en: "nurse", zh: "护士" },
-            { group: "OPD单词", en: "pharmacy", zh: "药房" },
-            { group: "OPD单词", en: "medicine", zh: "药品" },
-            { group: "OPD单词", en: "pill", zh: "药片" },
-            { group: "OPD单词", en: "exercise", zh: "运动" },
-            { group: "OPD单词", en: "sleep", zh: "睡觉" },
-            { group: "OPD单词", en: "bandage", zh: "绷带" },
-            { group: "OPD单词", en: "toothbrush", zh: "牙刷" },
-            { group: "OPD单词", en: "toothpaste", zh: "牙膏" },
-            { group: "OPD单词", en: "patient", zh: "病人" },
-            { group: "OPD单词", en: "insurance", zh: "保险" },
-            { group: "OPD单词", en: "crosswalk", zh: "人行横道" },
-            { group: "OPD单词", en: "mall", zh: "商场" },
-            { group: "OPD单词", en: "cash", zh: "现金" },
-            { group: "OPD单词", en: "letter", zh: "信件" },
-            { group: "OPD单词", en: "license", zh: "驾照" },
-            { group: "OPD单词", en: "soldier", zh: "士兵" },
-            { group: "OPD单词", en: "vote", zh: "投票" },
-            { group: "OPD单词", en: "lawyer", zh: "律师" },
-            { group: "OPD单词", en: "police", zh: "警察" },
-            { group: "OPD单词", en: "theft", zh: "偷窃" },
-            { group: "OPD单词", en: "fire", zh: "火灾" },
-            { group: "OPD单词", en: "flood", zh: "洪水" },
-            { group: "OPD单词", en: "trash", zh: "垃圾" },
-            { group: "OPD单词", en: "computer", zh: "电脑" },
-            { group: "OPD单词", en: "internet", zh: "互联网" },
-            { group: "OPD单词", en: "car", zh: "小汽车" },
-            { group: "OPD单词", en: "bus", zh: "公交车" },
-            { group: "OPD单词", en: "train", zh: "火车" },
-            { group: "OPD单词", en: "plane", zh: "飞机" },
-            { group: "OPD单词", en: "ship", zh: "轮船" },
-            { group: "OPD单词", en: "bike", zh: "自行车" },
-            { group: "OPD单词", en: "subway", zh: "地铁" },
-            { group: "OPD单词", en: "taxi", zh: "出租车" },
-            { group: "OPD单词", en: "truck", zh: "卡车" },
-            { group: "OPD单词", en: "motorcycle", zh: "摩托车" },
-            { group: "OPD单词", en: "station", zh: "车站" },
-            { group: "OPD单词", en: "stop", zh: "停止" },
-            { group: "OPD单词", en: "engine", zh: "发动机" },
-            { group: "OPD单词", en: "gas", zh: "汽油" },
-            { group: "OPD单词", en: "wheel", zh: "车轮" },
-            { group: "OPD单词", en: "window", zh: "车窗" },
-            { group: "OPD单词", en: "airport", zh: "机场" },
-            { group: "OPD单词", en: "ticket", zh: "机票" },
-            { group: "OPD单词", en: "gate", zh: "登机口" },
-            { group: "OPD单词", en: "resume", zh: "简历" },
-            { group: "OPD单词", en: "interview", zh: "面试" },
-            { group: "OPD单词", en: "colleague", zh: "同事" },
-            { group: "OPD单词", en: "company", zh: "公司" },
-            { group: "OPD单词", en: "manager", zh: "经理" },
-            { group: "OPD单词", en: "factory", zh: "工厂" },
-            { group: "OPD单词", en: "cow", zh: "奶牛" },
-            { group: "OPD单词", en: "laptop", zh: "笔记本电脑" },
-            { group: "OPD单词", en: "hotel", zh: "旅馆" },
-            { group: "OPD单词", en: "tool", zh: "工具" },
-            { group: "OPD单词", en: "hammer", zh: "锤子" },
-            { group: "OPD单词", en: "helmet", zh: "安全帽" },
-            { group: "OPD单词", en: "math", zh: "数学" },
-            { group: "OPD单词", en: "science", zh: "科学" },
-            { group: "OPD单词", en: "experiment", zh: "实验" },
-            { group: "OPD单词", en: "president", zh: "总统" },
-            { group: "OPD单词", en: "country", zh: "国家" },
-            { group: "OPD单词", en: "search", zh: "搜索" },
-            { group: "OPD单词", en: "mountain", zh: "山" },
-            { group: "OPD单词", en: "river", zh: "河流" },
-            { group: "OPD单词", en: "star", zh: "星星" },
-            { group: "OPD单词", en: "leaf", zh: "树叶" },
-            { group: "OPD单词", en: "rose", zh: "玫瑰" },
-            { group: "OPD单词", en: "fish", zh: "鱼" },
-            { group: "OPD单词", en: "snake", zh: "蛇" },
-            { group: "OPD单词", en: "bird", zh: "鸟类" },
-            { group: "OPD单词", en: "insect", zh: "昆虫" },
-            { group: "OPD单词", en: "bee", zh: "蜜蜂" },
-            { group: "OPD单词", en: "eagle", zh: "老鹰" },
-            { group: "OPD单词", en: "rabbit", zh: "兔子" },
-            { group: "OPD单词", en: "lion", zh: "狮子" },
-            { group: "OPD单词", en: "tiger", zh: "老虎" },
-            { group: "OPD单词", en: "panda", zh: "熊猫" },
-            { group: "OPD单词", en: "elephant", zh: "大象" },
-            { group: "OPD单词", en: "whale", zh: "鲸鱼" },
-            { group: "OPD单词", en: "plant", zh: "植物" },
-            { group: "OPD单词", en: "hobby", zh: "爱好" },
-            { group: "OPD单词", en: "game", zh: "游戏" },
-            { group: "OPD单词", en: "ball", zh: "球" },
-            { group: "OPD单词", en: "camera", zh: "相机" },
-            { group: "OPD单词", en: "movie", zh: "电影" },
-            { group: "OPD单词", en: "music", zh: "音乐" },
-            { group: "OPD单词", en: "sing", zh: "唱歌" },
-            { group: "OPD单词", en: "dance", zh: "跳舞" },
-            { group: "OPD单词", en: "holiday", zh: "节日" },
-            { group: "OPD单词", en: "learn", zh: "学习" },
-            { group: "OPD单词", en: "teach", zh: "教授" },
-            { group: "OPD单词", en: "read", zh: "阅读" },
-            { group: "OPD单词", en: "write", zh: "书写" },
-            { group: "OPD单词", en: "listen", zh: "聆听" },
-            { group: "OPD单词", en: "speak", zh: "说话" },
-            { group: "OPD单词", en: "draw", zh: "绘画" },
-            { group: "OPD单词", en: "cut", zh: "裁剪" },
-            { group: "OPD单词", en: "fix", zh: "修理" },
-            { group: "OPD单词", en: "buy", zh: "购买" },
-            { group: "OPD单词", en: "sell", zh: "售卖" },
-            { group: "OPD单词", en: "eat", zh: "吃" },
-            { group: "OPD单词", en: "drink", zh: "喝" },
-            { group: "OPD单词", en: "run", zh: "跑步" },
-            { group: "OPD单词", en: "jump", zh: "跳跃" },
-            { group: "OPD单词", en: "swim", zh: "游泳" },
-            { group: "OPD单词", en: "walk", zh: "行走" },
-            { group: "OPD单词", en: "climb", zh: "攀爬" },
-            { group: "OPD单词", en: "ride", zh: "骑行" },
-            { group: "OPD单词", en: "throw", zh: "投掷" },
-            { group: "OPD单词", en: "catch", zh: "接住" },
-            { group: "OPD单词", en: "play", zh: "玩耍" },
-            { group: "OPD单词", en: "study", zh: "学习" },
-
-            // ================================================================
-            //  三、OPD 短语
-            // ================================================================
-            { group: "OPD短语", en: "meet and greeting", zh: "见面问候" },
-            { group: "OPD短语", en: "introduce yourself", zh: "自我介绍" },
-            { group: "OPD短语", en: "raise your hand", zh: "举手" },
-            { group: "OPD短语", en: "talk to the teacher", zh: "和老师交谈" },
-            { group: "OPD短语", en: "listen to a recording", zh: "听录音" },
-            { group: "OPD短语", en: "stand up", zh: "站起来" },
-            { group: "OPD短语", en: "sit down", zh: "坐下" },
-            { group: "OPD短语", en: "take a seat", zh: "入座" },
-            { group: "OPD短语", en: "open your book", zh: "打开书本" },
-            { group: "OPD短语", en: "close your book", zh: "合上书本" },
-            { group: "OPD短语", en: "pick up the pencil", zh: "拿起铅笔" },
-            { group: "OPD短语", en: "put down the pencil", zh: "放下铅笔" },
-            { group: "OPD短语", en: "look up the word", zh: "查单词" },
-            { group: "OPD短语", en: "read the definition", zh: "阅读释义" },
-            { group: "OPD短语", en: "translate the word", zh: "翻译单词" },
-            { group: "OPD短语", en: "work in a group", zh: "小组合作" },
-            { group: "OPD短语", en: "help a classmate", zh: "帮助同学" },
-            { group: "OPD短语", en: "ask a question", zh: "提出问题" },
-            { group: "OPD短语", en: "answer a question", zh: "回答问题" },
-            { group: "OPD短语", en: "share a book", zh: "共用书本" },
-            { group: "OPD短语", en: "read a book", zh: "读书" },
-            { group: "OPD短语", en: "unscramble the words", zh: "重组单词" },
-            { group: "OPD短语", en: "put sentences in order", zh: "句子排序" },
-            { group: "OPD短语", en: "label the picture", zh: "标注图片" },
-            { group: "OPD短语", en: "check the correct boxes", zh: "勾选正确选项" },
-            { group: "OPD短语", en: "set goals", zh: "设定目标" },
-            { group: "OPD短语", en: "participate in class", zh: "课堂参与" },
-            { group: "OPD短语", en: "study at home", zh: "居家自习" },
-            { group: "OPD短语", en: "take a test", zh: "参加考试" },
-            { group: "OPD短语", en: "correct the mistake", zh: "订正错误" },
-            { group: "OPD短语", en: "erase the mistake", zh: "擦掉错误" },
-            { group: "OPD短语", en: "bubble in the answer", zh: "填涂答题卡" },
-            { group: "OPD短语", en: "hand in your test", zh: "上交试卷" },
-            { group: "OPD短语", en: "check your work", zh: "检查作答" },
-            { group: "OPD短语", en: "submit your test", zh: "线上提交试卷" },
-            { group: "OPD短语", en: "clear off your desk", zh: "清理书桌" },
-            { group: "OPD短语", en: "work on your own", zh: "独立完成" },
-            { group: "OPD短语", en: "carry the books", zh: "搬书本" },
-            { group: "OPD短语", en: "take a break", zh: "休息片刻" },
-            { group: "OPD短语", en: "buy a snack", zh: "购买零食" },
-            { group: "OPD短语", en: "make a call", zh: "拨打电话" },
-            { group: "OPD短语", en: "answer the phone", zh: "接电话" },
-            { group: "OPD短语", en: "hang up", zh: "挂断电话" },
-            { group: "OPD短语", en: "long hair", zh: "长发" },
-            { group: "OPD短语", en: "short hair", zh: "短发" },
-            { group: "OPD短语", en: "curly hair", zh: "卷发" },
-            { group: "OPD短语", en: "straight hair", zh: "直发" },
-            { group: "OPD短语", en: "family reunion", zh: "家庭聚会" },
-            { group: "OPD短语", en: "daily routine", zh: "日常作息" },
-            { group: "OPD短语", en: "life event", zh: "人生大事" },
-            { group: "OPD短语", en: "childcare and parenting", zh: "育儿工作" },
-            { group: "OPD短语", en: "find a home", zh: "找房子" },
-            { group: "OPD短语", en: "house and yard", zh: "房屋庭院" },
-            { group: "OPD短语", en: "dining area", zh: "用餐区域" },
-            { group: "OPD短语", en: "food preparation", zh: "食物制作" },
-            { group: "OPD短语", en: "food safety", zh: "食品安全" },
-            { group: "OPD短语", en: "kitchen utensil", zh: "厨房用具" },
-            { group: "OPD短语", en: "fast food restaurant", zh: "快餐店" },
-            { group: "OPD短语", en: "coffee shop", zh: "咖啡店" },
-            { group: "OPD短语", en: "short-order cook", zh: "快餐厨师" },
-            { group: "OPD短语", en: "walk-in freezer", zh: "立式冷冻柜" },
-            { group: "OPD短语", en: "sous-chef", zh: "副主厨" },
-            { group: "OPD短语", en: "head chef", zh: "主厨" },
-            { group: "OPD短语", en: "buffet table", zh: "自助取餐台" },
-            { group: "OPD短语", en: "banquet room", zh: "宴会厅" },
-            { group: "OPD短语", en: "line cook", zh: "炉头厨师" },
-            { group: "OPD短语", en: "wait staff", zh: "全体服务生" },
-            { group: "OPD短语", en: "everyday clothes", zh: "日常服装" },
-            { group: "OPD短语", en: "casual clothes", zh: "休闲装" },
-            { group: "OPD短语", en: "work clothes", zh: "工作服" },
-            { group: "OPD短语", en: "formal clothes", zh: "正装" },
-            { group: "OPD短语", en: "seasonal clothing", zh: "四季服饰" },
-            { group: "OPD短语", en: "underwear and sleepwear", zh: "内衣睡衣" },
-            { group: "OPD短语", en: "shoes and accessories", zh: "鞋履配饰" },
-            { group: "OPD短语", en: "describe clothes", zh: "描述衣物" },
-            { group: "OPD短语", en: "make clothes", zh: "缝制衣物" },
-            { group: "OPD短语", en: "make alterations", zh: "修改衣服" },
-            { group: "OPD短语", en: "dental care", zh: "牙科护理" },
-            { group: "OPD短语", en: "health insurance", zh: "医疗保险" },
-            { group: "OPD短语", en: "medical emergency", zh: "医疗急症" },
-            { group: "OPD短语", en: "public safety", zh: "公共安全" },
-            { group: "OPD短语", en: "cyber safety", zh: "网络安全" },
-            { group: "OPD短语", en: "natural disaster", zh: "自然灾害" },
-            { group: "OPD短语", en: "emergency procedure", zh: "应急流程" },
-            { group: "OPD短语", en: "community cleanup", zh: "社区清扫" },
-            { group: "OPD短语", en: "public transportation", zh: "公共交通" },
-            { group: "OPD短语", en: "traffic sign", zh: "交通标识" },
-            { group: "OPD短语", en: "directions and maps", zh: "方向地图" },
-            { group: "OPD短语", en: "parts of a car", zh: "汽车零件" },
-            { group: "OPD短语", en: "road trip", zh: "公路自驾游" },
-            { group: "OPD短语", en: "job search", zh: "求职找工作" },
-            { group: "OPD短语", en: "career planning", zh: "职业规划" },
-            { group: "OPD短语", en: "office skills", zh: "办公技能" },
-            { group: "OPD短语", en: "soft skills", zh: "职场软技能" },
-            { group: "OPD短语", en: "interview skills", zh: "面试技巧" },
-            { group: "OPD短语", en: "first day on the job", zh: "入职第一天" },
-            { group: "OPD短语", en: "inside a company", zh: "公司内部" },
-            { group: "OPD短语", en: "manufacturing work", zh: "制造业工作" },
-            { group: "OPD短语", en: "landscaping and gardening", zh: "景观园艺" },
-            { group: "OPD短语", en: "farming and ranching", zh: "农牧养殖" },
-            { group: "OPD短语", en: "information technology", zh: "信息技术" },
-            { group: "OPD短语", en: "food service", zh: "餐饮服务" },
-            { group: "OPD短语", en: "building supply", zh: "建材" },
-            { group: "OPD短语", en: "construction work", zh: "建筑施工" },
-            { group: "OPD短语", en: "job safety", zh: "职场安全" },
-            { group: "OPD短语", en: "bad day at work", zh: "工作不顺" },
-            { group: "OPD短语", en: "schools and subjects", zh: "学校科目" },
-            { group: "OPD短语", en: "mathematics class", zh: "数学课" },
-            { group: "OPD短语", en: "science experiment", zh: "科学实验" },
-            { group: "OPD短语", en: "geography habitat", zh: "地理栖息地" },
-            { group: "OPD短语", en: "marine life", zh: "海洋生物" },
-            { group: "OPD短语", en: "amphibian and reptile", zh: "两栖爬行动物" },
-            { group: "OPD短语", en: "domestic animal", zh: "家畜" },
-            { group: "OPD短语", en: "mammal animal", zh: "哺乳动物" },
-            { group: "OPD短语", en: "graduation ceremony", zh: "毕业典礼" },
-            { group: "OPD短语", en: "hobbies and games", zh: "爱好游戏" },
-            { group: "OPD短语", en: "electronics and photography", zh: "电子摄影" },
-            { group: "OPD短语", en: "music performance", zh: "音乐演奏" },
-            { group: "OPD短语", en: "holiday celebration", zh: "节日庆祝" },
-            { group: "OPD短语", en: "3-ring binder", zh: "三孔活页夹" },
-            { group: "OPD短语", en: "permanent marker", zh: "记号笔" },
-            { group: "OPD短语", en: "pencil sharpener", zh: "削笔刀" },
-            { group: "OPD短语", en: "social security number", zh: "社保号码" },
-            { group: "OPD短语", en: "street address", zh: "街道地址" },
-            { group: "OPD短语", en: "apartment number", zh: "公寓房号" },
-            { group: "OPD短语", en: "area code", zh: "区号" },
-            { group: "OPD短语", en: "phone number", zh: "电话号码" },
-            { group: "OPD短语", en: "home phone", zh: "住宅电话" },
-            { group: "OPD短语", en: "cell phone", zh: "手机" },
-            { group: "OPD短语", en: "date of birth", zh: "出生日期" },
-            { group: "OPD短语", en: "place of birth", zh: "出生地" },
-            { group: "OPD短语", en: "registration form", zh: "注册表格" },
-            { group: "OPD短语", en: "name tag", zh: "姓名牌" },
-            { group: "OPD短语", en: "address label", zh: "地址标签" },
-            { group: "OPD短语", en: "country map", zh: "国家地图" },
-            { group: "OPD短语", en: "class timetable", zh: "课程表" },
-            { group: "OPD短语", en: "school event", zh: "校园活动" },
-            { group: "OPD短语", en: "sports meeting", zh: "运动会" },
-            { group: "OPD短语", en: "spring concert", zh: "春季音乐会" },
-            { group: "OPD短语", en: "basketball court", zh: "篮球场" },
-            { group: "OPD短语", en: "running track", zh: "跑道" },
-            { group: "OPD短语", en: "library room", zh: "图书室" },
-            { group: "OPD短语", en: "storage locker", zh: "储物柜" },
-            { group: "OPD短语", en: "hallway passage", zh: "走廊通道" },
-            { group: "OPD短语", en: "audio recording", zh: "听力录音" },
-            { group: "OPD短语", en: "daily conversation", zh: "日常对话" },
-            { group: "OPD短语", en: "greeting words", zh: "问候用语" },
-            { group: "OPD短语", en: "farewell words", zh: "告别用语" },
-            { group: "OPD短语", en: "self-introduction", zh: "自我介绍" },
-            { group: "OPD短语", en: "introduce others", zh: "介绍他人" },
-            { group: "OPD短语", en: "polite phrases", zh: "礼貌用语" },
-            { group: "OPD短语", en: "emergency call", zh: "紧急来电" },
-            { group: "OPD短语", en: "dial 911", zh: "拨打911" },
-            { group: "OPD短语", en: "voice mail message", zh: "语音留言" },
-            { group: "OPD短语", en: "text message", zh: "短信" },
-            { group: "OPD短语", en: "missed call", zh: "未接来电" },
-            { group: "OPD短语", en: "weather forecast", zh: "天气预报" },
-            { group: "OPD短语", en: "daily temperature", zh: "每日气温" },
-            { group: "OPD短语", en: "fresh produce", zh: "生鲜蔬果" },
-            { group: "OPD短语", en: "raw ingredients", zh: "生鲜原料" },
-            { group: "OPD短语", en: "restaurant staff", zh: "餐厅全体员工" },
-            { group: "OPD短语", en: "cold storage", zh: "立式冰柜" },
-            { group: "OPD短语", en: "kitchen storage", zh: "后厨储藏" },
-            { group: "OPD短语", en: "chef team", zh: "厨师团队" },
-            { group: "OPD短语", en: "front desk", zh: "前厅" },
-            { group: "OPD短语", en: "private dining", zh: "包厢" },
-            { group: "OPD短语", en: "food prep station", zh: "备餐操作台" },
-            { group: "OPD短语", en: "cleaning attendant", zh: "保洁员" },
-            { group: "OPD短语", en: "fast food kitchen", zh: "快餐后厨" },
-            { group: "OPD短语", en: "fabric material", zh: "面料材质" },
-            { group: "OPD短语", en: "cloth texture", zh: "布料质感" },
-            { group: "OPD短语", en: "clothing modification", zh: "改衣" },
-            { group: "OPD短语", en: "hand sewing", zh: "手工缝制" },
-            { group: "OPD短语", en: "oral care products", zh: "口腔护理" },
-            { group: "OPD短语", en: "hospital ward", zh: "病房" },
-            { group: "OPD短语", en: "medical consultation", zh: "问诊" },
-            { group: "OPD短语", en: "health screening", zh: "体检" },
-            { group: "OPD短语", en: "first aid kit", zh: "急救包" },
-            { group: "OPD短语", en: "fever relief", zh: "退烧药品" },
-            { group: "OPD短语", en: "pain medicine", zh: "止痛药物" },
-            { group: "OPD短语", en: "pharmacy counter", zh: "药房柜台" },
-            { group: "OPD短语", en: "downtown area", zh: "市中心" },
-            { group: "OPD短语", en: "city intersection", zh: "十字路口" },
-            { group: "OPD短语", en: "public transit station", zh: "公交站台" },
-            { group: "OPD短语", en: "airport terminal", zh: "机场航站楼" },
-            { group: "OPD短语", en: "vehicle parts", zh: "汽车配件" },
-            { group: "OPD短语", en: "car maintenance service", zh: "车辆保养" },
-            { group: "OPD短语", en: "gas station", zh: "加油站" },
-            { group: "OPD短语", en: "career resume", zh: "求职简历" },
-            { group: "OPD短语", en: "job application form", zh: "工作申请表" },
-            { group: "OPD短语", en: "workplace colleague", zh: "同事伙伴" },
-            { group: "OPD短语", en: "office equipment", zh: "办公设备" },
-            { group: "OPD短语", en: "hotel service staff", zh: "酒店服务人员" },
-            { group: "OPD短语", en: "construction tools", zh: "施工工具" },
-            { group: "OPD短语", en: "garden planting", zh: "园艺种植" },
-            { group: "OPD短语", en: "farm livestock", zh: "农场牲畜" },
-            { group: "OPD短语", en: "factory workshop", zh: "工厂车间" },
-            { group: "OPD短语", en: "company management", zh: "公司管理层" },
-            { group: "OPD短语", en: "work accident", zh: "工作意外" },
-            { group: "OPD短语", en: "wild animals", zh: "野生动物" },
-            { group: "OPD短语", en: "aquatic life", zh: "水生生物" },
-            { group: "OPD短语", en: "reptile species", zh: "爬行类" },
-            { group: "OPD短语", en: "bird species", zh: "鸟类" },
-            { group: "OPD短语", en: "insect type", zh: "昆虫" },
-            { group: "OPD短语", en: "flower blossom", zh: "花卉" },
-            { group: "OPD短语", en: "tree foliage", zh: "树叶" },
-            { group: "OPD短语", en: "celestial body", zh: "天体" },
-            { group: "OPD短语", en: "geographic landform", zh: "地理地貌" },
-
-            // ================================================================
-            //  四、OPD 短句
-            // ================================================================
-            { group: "OPD短句", en: "Hello.", zh: "你好。" },
-            { group: "OPD短句", en: "Hi.", zh: "嗨。" },
-            { group: "OPD短句", en: "How are you?", zh: "你好吗？" },
-            { group: "OPD短句", en: "Fine, thanks.", zh: "很好，谢谢。" },
-            { group: "OPD短句", en: "Good morning.", zh: "早上好。" },
-            { group: "OPD短句", en: "Good afternoon.", zh: "下午好。" },
-            { group: "OPD短句", en: "Good evening.", zh: "晚上好。" },
-            { group: "OPD短句", en: "Goodbye.", zh: "再见。" },
-            { group: "OPD短句", en: "Good night.", zh: "晚安。" },
-            { group: "OPD短句", en: "Nice to meet you.", zh: "很高兴认识你。" },
-            { group: "OPD短句", en: "Hi, I'm Tom.", zh: "你好，我是Tom。" },
-            { group: "OPD短句", en: "Fred, this is Jan.", zh: "Fred，这是Jan。" },
-            { group: "OPD短句", en: "Nice to meet you, Jan.", zh: "很高兴认识你Jan。" },
-            { group: "OPD短句", en: "Good evening, everyone.", zh: "大家晚上好。" },
-            { group: "OPD短句", en: "What is your name?", zh: "你叫什么名字？" },
-            { group: "OPD短句", en: "Please spell your name.", zh: "请拼写你的名字。" },
-            { group: "OPD短句", en: "My first name is Carlos.", zh: "我的名叫Carlos。" },
-            { group: "OPD短句", en: "Where are you from?", zh: "你来自哪里？" },
-            { group: "OPD短句", en: "I'm from China.", zh: "我来自中国。" },
-            { group: "OPD短句", en: "I'm from Mexico.", zh: "我来自墨西哥。" },
-            { group: "OPD短句", en: "I'm from Korea.", zh: "我来自韩国。" },
-            { group: "OPD短句", en: "Can I share your book?", zh: "我能借你的书吗？" },
-            { group: "OPD短句", en: "Sure.", zh: "当然。" },
-            { group: "OPD短句", en: "Will you help me?", zh: "你能帮我吗？" },
-            { group: "OPD短句", en: "I'm sorry.", zh: "对不起。" },
-            { group: "OPD短句", en: "That's OK.", zh: "没关系。" },
-            { group: "OPD短句", en: "That's a great sweater!", zh: "这件毛衣真好看！" },
-            { group: "OPD短句", en: "Thank you.", zh: "谢谢。" },
-            { group: "OPD短句", en: "I can't hear you.", zh: "我听不见你说话。" },
-            { group: "OPD短句", en: "Can you hear me?", zh: "你能听见我吗？" },
-            { group: "OPD短句", en: "What do you see in the pictures?", zh: "图片里你看到了什么？" },
-            { group: "OPD短句", en: "Read the story.", zh: "阅读短文。" },
-            { group: "OPD短句", en: "What do you think?", zh: "你怎么看？" },
-            { group: "OPD短句", en: "Make new conversations.", zh: "编写新对话。" },
-            { group: "OPD短句", en: "Start a conversation.", zh: "开启对话。" },
-            { group: "OPD短句", en: "Make small talk.", zh: "闲聊。" },
-            { group: "OPD短句", en: "Compliment each other.", zh: "互相赞美。" },
-            { group: "OPD短句", en: "Silence them.", zh: "静音。" },
-            { group: "OPD短句", en: "Turn them off.", zh: "关机。" },
-            { group: "OPD短句", en: "Put them away.", zh: "收起来。" },
-            { group: "OPD短句", en: "Correct errors.", zh: "修改错题。" },
-            { group: "OPD短句", en: "Check answers.", zh: "核对答案。" },
-            { group: "OPD短句", en: "Take turns.", zh: "轮流发言。" },
-            { group: "OPD短句", en: "Look up the word in dictionary.", zh: "在词典查词。" },
-            { group: "OPD短句", en: "Read word meaning.", zh: "阅读词义。" },
-            { group: "OPD短句", en: "Translate into Chinese.", zh: "翻译成中文。" },
-            { group: "OPD短句", en: "Write vocabulary down.", zh: "抄写单词。" },
-            { group: "OPD短句", en: "Practice dialogue.", zh: "对话练习。" },
-            { group: "OPD短句", en: "Ask classmates for help.", zh: "向同学求助。" },
-            { group: "OPD短句", en: "Share textbooks.", zh: "共用课本。" },
-            { group: "OPD短句", en: "Dictate sentences.", zh: "句子听写。" },
-            { group: "OPD短句", en: "Unscramble letters.", zh: "字母重组。" },
-            { group: "OPD短句", en: "Match words and pictures.", zh: "图文配对。" },
-            { group: "OPD短句", en: "Complete multiple choice.", zh: "完成选择题。" },
-            { group: "OPD短句", en: "Fill answer sheet.", zh: "填答题卡。" },
-            { group: "OPD短句", en: "Submit exam online.", zh: "线上交卷。" },
-            { group: "OPD短句", en: "Review mistakes.", zh: "复盘错题。" },
-            { group: "OPD短句", en: "Erase wrong answers.", zh: "擦掉错误答案。" },
-            { group: "OPD短句", en: "Bring school supplies.", zh: "带学习用品。" },
-            { group: "OPD短句", en: "Put away stationery.", zh: "收好文具。" },
-            { group: "OPD短句", en: "Complete test alone.", zh: "独自完成考试。" },
-            { group: "OPD短句", en: "No copying.", zh: "禁止抄袭。" },
-            { group: "OPD短句", en: "Turn off mobile phones.", zh: "关闭手机。" },
-            { group: "OPD短句", en: "Silence cell phones.", zh: "手机静音。" },
-            { group: "OPD短句", en: "Store phones away.", zh: "收好手机。" },
-            { group: "OPD短句", en: "Tell me about your job.", zh: "跟我说说你的工作。" },
-            { group: "OPD短句", en: "It's great. I fix computers.", zh: "很不错，我修电脑。" },
-            { group: "OPD短句", en: "Describe your daily routine.", zh: "描述你的日常作息。" },
-            { group: "OPD短句", en: "I wake up early every morning.", zh: "我每天早起。" },
-            { group: "OPD短句", en: "I brush my teeth and wash my face.", zh: "我刷牙洗脸。" },
-            { group: "OPD短句", en: "We hold a family reunion party.", zh: "我们举办家庭聚会。" },
-            { group: "OPD短句", en: "I want to rent a cheap apartment.", zh: "我想租便宜的公寓。" },
-            { group: "OPD短句", en: "I buy fresh fruit and vegetables every week.", zh: "我每周买新鲜蔬果。" },
-            { group: "OPD短句", en: "Cook simple meals in the kitchen.", zh: "在厨房简单做饭。" },
-            { group: "OPD短句", en: "Wash dishes after every meal.", zh: "每餐饭后洗碗。" },
-            { group: "OPD短句", en: "This cotton shirt feels very soft.", zh: "这件棉衬衫手感柔软。" },
-            { group: "OPD短句", en: "I sew broken clothes by hand.", zh: "我手工缝补破衣服。" },
-            { group: "OPD短句", en: "Go to the hospital if you have a fever.", zh: "发烧就去医院。" },
-            { group: "OPD短句", en: "Learn basic first aid for accidents.", zh: "学习基础应急急救。" },
-            { group: "OPD短句", en: "Call 911 when there is a fire.", zh: "发生火灾拨打911。" },
-            { group: "OPD短句", en: "Check traffic signs before driving.", zh: "开车前看懂交通标识。" },
-            { group: "OPD短句", en: "Fill out the registration form completely.", zh: "完整填写注册表格。" },
-            { group: "OPD短句", en: "Sign your name on the signature line.", zh: "在签名栏写全名。" },
-            { group: "OPD短句", en: "Maintain your car regularly to avoid breakdowns.", zh: "定期保养车辆防止故障。" },
-            { group: "OPD短句", en: "Practice interview dialogue at home.", zh: "在家练习面试对话。" },
-            { group: "OPD短句", en: "Follow safety rules on construction sites.", zh: "工地遵守安全规范。" },
-            { group: "OPD短句", en: "Plant flowers and trees in the garden.", zh: "在花园种花种树。" },
-            { group: "OPD短句", en: "Different animals live in different habitats.", zh: "不同动物栖息在不同环境。" },
-            { group: "OPD短句", en: "We have a graduation ceremony at the end of term.", zh: "期末举办毕业典礼。" },
-            { group: "OPD短句", en: "Listen to music and sing songs in free time.", zh: "空闲听歌唱歌。" },
-            { group: "OPD短句", en: "Play ball games on weekends.", zh: "周末打球。" },
-            { group: "OPD短句", en: "Draw pictures to memorize new words.", zh: "画图记忆新单词。" },
-            { group: "OPD短句", en: "Buy stationery before the new semester.", zh: "开学前购买文具。" },
-            { group: "OPD短句", en: "Eat balanced fruit and vegetable meals every day.", zh: "每日均衡食用蔬果。" },
-            { group: "OPD短句", en: "Drink enough water while studying.", zh: "学习时多喝水。" },
-            { group: "OPD短句", en: "Run and swim for daily exercise.", zh: "跑步游泳作为日常锻炼。" },
-            { group: "OPD短句", en: "Ride a bike in the community park.", zh: "在小区公园骑行。" },
-            { group: "OPD短句", en: "Throw rubbish into the trash can.", zh: "垃圾扔进垃圾桶。" },
-            { group: "OPD短句", en: "Catch falling items carefully to avoid breaking.", zh: "小心接住掉落物品防止摔坏。" }
+        // ===== 基础词汇 =====
+        const BASE_WORDS = [
+            { en: "apple", zh: "苹果" }, { en: "banana", zh: "香蕉" }, { en: "cat", zh: "猫" }, { en: "dog", zh: "狗" },
+            { en: "elephant", zh: "大象" }, { en: "fish", zh: "鱼" }, { en: "grape", zh: "葡萄" }, { en: "house",
+                zh: "房子" },
+            { en: "book", zh: "书" }, { en: "school", zh: "学校" }, { en: "teacher", zh: "老师" }, { en: "student",
+                zh: "学生" },
+            { en: "lion", zh: "狮子" }, { en: "tiger", zh: "老虎" }, { en: "rabbit", zh: "兔子" }, { en: "panda",
+                zh: "熊猫" },
+            { en: "dolphin", zh: "海豚" }, { en: "eagle", zh: "老鹰" }, { en: "snake", zh: "蛇" }, { en: "whale",
+                zh: "鲸鱼" },
+            { en: "red", zh: "红色" }, { en: "blue", zh: "蓝色" }, { en: "green", zh: "绿色" }, { en: "yellow",
+                zh: "黄色" },
+            { en: "white", zh: "白色" }, { en: "black", zh: "黑色" }, { en: "pink", zh: "粉色" }, { en: "orange",
+                zh: "橙色" },
+            { en: "pizza", zh: "披萨" }, { en: "burger", zh: "汉堡" }, { en: "sushi", zh: "寿司" }, { en: "noodle",
+                zh: "面条" },
+            { en: "rice", zh: "米饭" }, { en: "bread", zh: "面包" }, { en: "cake", zh: "蛋糕" }, { en: "milk",
+                zh: "牛奶" },
+            { en: "doctor", zh: "医生" }, { en: "nurse", zh: "护士" }, { en: "pilot", zh: "飞行员" }, { en: "driver",
+                zh: "司机" },
+            { en: "farmer", zh: "农民" }, { en: "cook", zh: "厨师" }, { en: "singer", zh: "歌手" }, { en: "dancer",
+                zh: "舞者" },
+            { en: "writer", zh: "作家" }, { en: "artist", zh: "艺术家" }, { en: "father", zh: "父亲" }, { en: "mother",
+                zh: "母亲" },
+            { en: "brother", zh: "兄弟" }, { en: "sister", zh: "姐妹" }, { en: "uncle", zh: "叔叔" }, { en: "aunt",
+                zh: "阿姨" },
+            { en: "grandpa", zh: "爷爷" }, { en: "grandma", zh: "奶奶" }, { en: "cousin", zh: "表兄妹" }, { en: "baby",
+                zh: "宝宝" },
+            { en: "river", zh: "河流" }, { en: "mountain", zh: "山" }, { en: "forest", zh: "森林" }, { en: "ocean",
+                zh: "海洋" },
+            { en: "desert", zh: "沙漠" }, { en: "island", zh: "岛屿" }, { en: "car", zh: "汽车" }, { en: "bus",
+                zh: "公交车" },
+            { en: "train", zh: "火车" }, { en: "plane", zh: "飞机" }, { en: "ship", zh: "轮船" }, { en: "bike",
+                zh: "自行车" },
+            { en: "subway", zh: "地铁" }, { en: "taxi", zh: "出租车" }, { en: "head", zh: "头" }, { en: "hand",
+            zh: "手" },
+            { en: "foot", zh: "脚" }, { en: "eye", zh: "眼睛" }, { en: "ear", zh: "耳朵" }, { en: "nose", zh: "鼻子" },
+            { en: "mouth", zh: "嘴" }, { en: "hair", zh: "头发" }, { en: "sunny", zh: "晴朗的" }, { en: "rainy",
+                zh: "下雨的" },
+            { en: "cloudy", zh: "多云的" }, { en: "windy", zh: "有风的" }, { en: "snowy", zh: "下雪的" }, { en: "hot",
+                zh: "热的" },
+            { en: "cold", zh: "冷的" }, { en: "warm", zh: "温暖的" }, { en: "cool", zh: "凉爽的" }, { en: "rainbow",
+                zh: "彩虹" },
+            { en: "classroom", zh: "教室" }, { en: "library", zh: "图书馆" }, { en: "desk", zh: "书桌" }, { en: "chair",
+                zh: "椅子" },
+            { en: "pen", zh: "钢笔" }, { en: "pencil", zh: "铅笔" }, { en: "swim", zh: "游泳" }, { en: "run",
+            zh: "跑步" },
+            { en: "jump", zh: "跳" }, { en: "walk", zh: "走" }, { en: "dance", zh: "跳舞" }, { en: "happy",
+                zh: "快乐的" },
+            { en: "sad", zh: "悲伤的" }, { en: "angry", zh: "生气的" }, { en: "tired", zh: "疲惫的" }, { en: "hungry",
+                zh: "饥饿的" },
+            { en: "thirsty", zh: "口渴的" }, { en: "scared", zh: "害怕的" }, { en: "brave", zh: "勇敢的" }, { en: "kind",
+                zh: "善良的" },
+            { en: "smart", zh: "聪明的" }
         ];
+
+        // ===== OPD 单词（大幅扩充至500+） =====
+        const OPD_WORDS = [
+            // 基础社交
+            { en: "hello", zh: "你好" }, { en: "hi", zh: "嗨" }, { en: "goodbye", zh: "再见" }, { en: "thanks",
+                zh: "谢谢" },
+            { en: "sorry", zh: "对不起" }, { en: "please", zh: "请" }, { en: "name", zh: "姓名" }, { en: "first",
+                zh: "名" },
+            { en: "middle", zh: "中间" }, { en: "initial", zh: "首字母" }, { en: "last", zh: "姓氏" }, { en: "spell",
+                zh: "拼写" },
+            { en: "print", zh: "手写" }, { en: "type", zh: "输入" }, { en: "address", zh: "地址" }, { en: "street",
+                zh: "街道" },
+            { en: "apartment", zh: "公寓" }, { en: "city", zh: "城市" }, { en: "state", zh: "州" }, { en: "zip",
+                zh: "邮编" },
+            { en: "phone", zh: "电话" }, { en: "work", zh: "工作" }, { en: "home", zh: "住宅" }, { en: "cell",
+                zh: "移动" },
+            { en: "gender", zh: "性别" }, { en: "male", zh: "男性" }, { en: "female", zh: "女性" }, { en: "birth",
+                zh: "出生" },
+            { en: "place", zh: "地点" }, { en: "signature", zh: "签名" },
+            // 学校与教育
+            { en: "principal", zh: "校长" }, { en: "assistant", zh: "助理" }, { en: "counselor", zh: "辅导员" },
+            { en: "instructor", zh: "讲师" },
+            { en: "restroom", zh: "卫生间" }, { en: "hallway", zh: "走廊" }, { en: "locker", zh: "储物柜" },
+            { en: "office", zh: "办公室" },
+            { en: "clerk", zh: "办事员" }, { en: "cafeteria", zh: "食堂" }, { en: "lab", zh: "实验室" },
+            { en: "auditorium", zh: "礼堂" },
+            { en: "gym", zh: "体育馆" }, { en: "coach", zh: "教练" }, { en: "track", zh: "跑道" }, { en: "whiteboard",
+                zh: "白板" },
+            { en: "blackboard", zh: "黑板" }, { en: "screen", zh: "屏幕" }, { en: "clock", zh: "时钟" },
+            { en: "bookcase", zh: "书架" },
+            { en: "map", zh: "地图" }, { en: "alphabet", zh: "字母" }, { en: "board", zh: "白板" }, { en: "eraser",
+                zh: "板擦" },
+            { en: "marker", zh: "记号笔" }, { en: "notebook", zh: "笔记本" }, { en: "textbook", zh: "教科书" },
+            { en: "workbook", zh: "练习册" },
+            { en: "dictionary", zh: "词典" }, { en: "vocabulary", zh: "词汇" }, { en: "recording", zh: "录音" },
+            { en: "question", zh: "问题" },
+            { en: "answer", zh: "答案" }, { en: "group", zh: "小组" }, { en: "goal", zh: "目标" }, { en: "test",
+                zh: "试卷" },
+            { en: "mistake", zh: "错误" }, { en: "paper", zh: "纸张" }, { en: "snack", zh: "零食" }, { en: "homework",
+                zh: "家庭作业" },
+            { en: "exam", zh: "考试" }, { en: "grade", zh: "成绩" }, { en: "score", zh: "分数" }, { en: "pass",
+                zh: "通过" },
+            { en: "fail", zh: "不及格" }, { en: "study", zh: "学习" }, { en: "read", zh: "阅读" }, { en: "write",
+                zh: "书写" },
+            { en: "listen", zh: "聆听" }, { en: "speak", zh: "说话" }, { en: "learn", zh: "学习" }, { en: "teach",
+                zh: "教授" },
+            // 天气与自然
+            { en: "weather", zh: "天气" }, { en: "season", zh: "季节" }, { en: "spring", zh: "春天" },
+            { en: "summer", zh: "夏天" },
+            { en: "autumn", zh: "秋天" }, { en: "winter", zh: "冬天" }, { en: "storm", zh: "风暴" },
+            { en: "thunder", zh: "雷声" },
+            { en: "lightning", zh: "闪电" }, { en: "fog", zh: "雾" }, { en: "ice", zh: "冰" }, { en: "snowflake",
+                zh: "雪花" },
+            // 数字与时间
+            { en: "zero", zh: "零" }, { en: "one", zh: "一" }, { en: "two", zh: "二" }, { en: "three", zh: "三" },
+            { en: "four", zh: "四" }, { en: "five", zh: "五" }, { en: "six", zh: "六" }, { en: "seven", zh: "七" },
+            { en: "eight", zh: "八" }, { en: "nine", zh: "九" }, { en: "ten", zh: "十" }, { en: "time", zh: "时间" },
+            { en: "hour", zh: "小时" }, { en: "minute", zh: "分钟" }, { en: "second", zh: "秒" }, { en: "morning",
+                zh: "早上" },
+            { en: "afternoon", zh: "下午" }, { en: "evening", zh: "傍晚" }, { en: "night", zh: "夜晚" },
+            { en: "calendar", zh: "日历" },
+            { en: "day", zh: "天" }, { en: "week", zh: "星期" }, { en: "month", zh: "月份" }, { en: "year",
+            zh: "年份" },
+            { en: "today", zh: "今天" }, { en: "tomorrow", zh: "明天" }, { en: "yesterday", zh: "昨天" },
+            { en: "weekend", zh: "周末" },
+            // 形容词
+            { en: "big", zh: "大的" }, { en: "small", zh: "小的" }, { en: "long", zh: "长的" }, { en: "short",
+                zh: "短的" },
+            { en: "tall", zh: "高的" }, { en: "heavy", zh: "重的" }, { en: "light", zh: "轻的" }, { en: "fast",
+                zh: "快的" },
+            { en: "slow", zh: "慢的" }, { en: "new", zh: "新的" }, { en: "old", zh: "旧的" }, { en: "young",
+                zh: "年轻的" },
+            { en: "beautiful", zh: "美丽的" }, { en: "ugly", zh: "丑陋的" }, { en: "rich", zh: "富有的" },
+            { en: "poor", zh: "贫穷的" },
+            { en: "easy", zh: "容易的" }, { en: "difficult", zh: "困难的" }, { en: "cheap", zh: "便宜的" },
+            { en: "expensive", zh: "昂贵的" },
+            // 颜色
+            { en: "purple", zh: "紫色" }, { en: "brown", zh: "棕色" }, { en: "gray", zh: "灰色" }, { en: "gold",
+                zh: "金色" },
+            { en: "silver", zh: "银色" }, { en: "color", zh: "颜色" },
+            // 位置与方向
+            { en: "in", zh: "在…内" }, { en: "on", zh: "在…上" }, { en: "under", zh: "在…下" }, { en: "next",
+                zh: "旁边" },
+            { en: "between", zh: "中间" }, { en: "behind", zh: "后面" }, { en: "front", zh: "前面" },
+            { en: "left", zh: "左" },
+            { en: "right", zh: "右" }, { en: "up", zh: "上" }, { en: "down", zh: "下" }, { en: "inside", zh: "内部" },
+            { en: "outside", zh: "外部" }, { en: "here", zh: "这里" }, { en: "there", zh: "那里" },
+            { en: "everywhere", zh: "到处" },
+            // 金钱与购物
+            { en: "money", zh: "金钱" }, { en: "dollar", zh: "美元" }, { en: "quarter", zh: "25美分" },
+            { en: "half", zh: "一半" },
+            { en: "nickel", zh: "5美分" }, { en: "dime", zh: "10美分" }, { en: "penny", zh: "1美分" },
+            { en: "shop", zh: "购物" },
+            { en: "store", zh: "商店" }, { en: "price", zh: "价格" }, { en: "cash", zh: "现金" },
+            { en: "credit", zh: "信用卡" },
+            { en: "receipt", zh: "收据" }, { en: "discount", zh: "折扣" }, { en: "sale", zh: "促销" },
+            { en: "buy", zh: "购买" },
+            { en: "sell", zh: "售卖" }, { en: "cost", zh: "花费" }, { en: "save", zh: "节省" }, { en: "spend",
+                zh: "花费" },
+            // 家庭与亲属
+            { en: "daughter", zh: "女儿" }, { en: "son", zh: "儿子" }, { en: "wife", zh: "妻子" },
+            { en: "husband", zh: "丈夫" },
+            { en: "parent", zh: "父母" }, { en: "child", zh: "孩子" }, { en: "family", zh: "家庭" },
+            { en: "relative", zh: "亲戚" },
+            { en: "friend", zh: "朋友" }, { en: "neighbor", zh: "邻居" }, { en: "classmate", zh: "同学" },
+            // 人体与健康
+            { en: "face", zh: "脸" }, { en: "arm", zh: "手臂" }, { en: "leg", zh: "腿" }, { en: "finger",
+                zh: "手指" },
+            { en: "toe", zh: "脚趾" }, { en: "neck", zh: "脖子" }, { en: "shoulder", zh: "肩膀" },
+            { en: "knee", zh: "膝盖" },
+            { en: "back", zh: "背部" }, { en: "stomach", zh: "胃" }, { en: "heart", zh: "心脏" },
+            { en: "bone", zh: "骨头" },
+            { en: "health", zh: "健康" }, { en: "exercise", zh: "运动" }, { en: "sleep", zh: "睡觉" },
+            { en: "eat", zh: "吃" },
+            { en: "drink", zh: "喝" }, { en: "symptom", zh: "症状" }, { en: "injury", zh: "外伤" },
+            { en: "pain", zh: "疼痛" },
+            { en: "fever", zh: "发烧" }, { en: "medicine", zh: "药品" }, { en: "pill", zh: "药片" },
+            { en: "bandage", zh: "绷带" },
+            // 食物与餐饮
+            { en: "fruit", zh: "水果" }, { en: "vegetable", zh: "蔬菜" }, { en: "tomato", zh: "番茄" },
+            { en: "potato", zh: "土豆" },
+            { en: "meat", zh: "肉类" }, { en: "chicken", zh: "鸡肉" }, { en: "beef", zh: "牛肉" },
+            { en: "pork", zh: "猪肉" },
+            { en: "egg", zh: "鸡蛋" }, { en: "cheese", zh: "奶酪" }, { en: "butter", zh: "黄油" },
+            { en: "jam", zh: "果酱" },
+            { en: "soup", zh: "汤" }, { en: "steak", zh: "牛排" }, { en: "salad", zh: "沙拉" },
+            { en: "dessert", zh: "甜点" },
+            { en: "coffee", zh: "咖啡" }, { en: "tea", zh: "茶" }, { en: "juice", zh: "果汁" },
+            { en: "water", zh: "水" },
+            // 衣物与时尚
+            { en: "shirt", zh: "衬衫" }, { en: "pants", zh: "长裤" }, { en: "jacket", zh: "外套" },
+            { en: "suit", zh: "西装" },
+            { en: "coat", zh: "大衣" }, { en: "dress", zh: "连衣裙" }, { en: "skirt", zh: "裙子" },
+            { en: "tie", zh: "领带" },
+            { en: "belt", zh: "腰带" }, { en: "swimsuit", zh: "泳衣" }, { en: "pajamas", zh: "睡衣" },
+            { en: "uniform", zh: "工装" },
+            { en: "shoe", zh: "鞋子" }, { en: "hat", zh: "帽子" }, { en: "glove", zh: "手套" },
+            { en: "scarf", zh: "围巾" },
+            { en: "sock", zh: "袜子" }, { en: "jeans", zh: "牛仔裤" }, { en: "fashion", zh: "时尚" },
+            { en: "style", zh: "风格" },
+            // 交通与出行
+            { en: "truck", zh: "卡车" }, { en: "motorcycle", zh: "摩托车" }, { en: "station", zh: "车站" },
+            { en: "stop", zh: "停止" },
+            { en: "engine", zh: "发动机" }, { en: "gas", zh: "汽油" }, { en: "wheel", zh: "车轮" },
+            { en: "window", zh: "车窗" },
+            { en: "airport", zh: "机场" }, { en: "ticket", zh: "机票" }, { en: "gate", zh: "登机口" },
+            { en: "travel", zh: "旅行" },
+            { en: "trip", zh: "行程" },
+            // 职业与工作
+            { en: "lawyer", zh: "律师" }, { en: "police", zh: "警察" }, { en: "soldier", zh: "士兵" },
+            { en: "manager", zh: "经理" },
+            { en: "engineer", zh: "工程师" }, { en: "scientist", zh: "科学家" }, { en: "athlete", zh: "运动员" },
+            { en: "actor", zh: "演员" }, { en: "model", zh: "模特" },
+            // 动物与自然
+            { en: "cow", zh: "奶牛" }, { en: "sheep", zh: "绵羊" }, { en: "horse", zh: "马" }, { en: "bird",
+                zh: "鸟" },
+            { en: "insect", zh: "昆虫" }, { en: "bee", zh: "蜜蜂" }, { en: "butterfly", zh: "蝴蝶" },
+            { en: "spider", zh: "蜘蛛" },
+            { en: "monkey", zh: "猴子" }, { en: "bear", zh: "熊" }, { en: "wolf", zh: "狼" }, { en: "deer",
+                zh: "鹿" },
+            { en: "fox", zh: "狐狸" }, { en: "mouse", zh: "老鼠" }, { en: "planet", zh: "行星" },
+            { en: "moon", zh: "月亮" },
+            { en: "sun", zh: "太阳" }, { en: "star", zh: "星星" }, { en: "plant", zh: "植物" }, { en: "tree",
+                zh: "树" },
+            { en: "flower", zh: "花" }, { en: "grass", zh: "草" }, { en: "leaf", zh: "树叶" }, { en: "rose",
+                zh: "玫瑰" },
+            // 家居与建筑
+            { en: "kitchen", zh: "厨房" }, { en: "refrigerator", zh: "冰箱" }, { en: "stove", zh: "炉灶" },
+            { en: "table", zh: "餐桌" },
+            { en: "sofa", zh: "沙发" }, { en: "television", zh: "电视" }, { en: "shower", zh: "淋浴" },
+            { en: "tub", zh: "浴缸" },
+            { en: "bedroom", zh: "卧室" }, { en: "bed", zh: "床" }, { en: "pillow", zh: "枕头" },
+            { en: "house", zh: "房屋" },
+            { en: "room", zh: "房间" }, { en: "door", zh: "门" }, { en: "floor", zh: "地板" },
+            { en: "wall", zh: "墙壁" },
+            { en: "roof", zh: "屋顶" },
+            // 技术与互联网
+            { en: "computer", zh: "电脑" }, { en: "laptop", zh: "笔记本电脑" }, { en: "keyboard", zh: "键盘" },
+            { en: "mouse", zh: "鼠标" },
+            { en: "internet", zh: "互联网" }, { en: "website", zh: "网站" }, { en: "email", zh: "电子邮件" },
+            { en: "password", zh: "密码" },
+            { en: "download", zh: "下载" }, { en: "upload", zh: "上传" }, { en: "search", zh: "搜索" },
+            { en: "click", zh: "点击" },
+            // 休闲与娱乐
+            { en: "game", zh: "游戏" }, { en: "ball", zh: "球" }, { en: "camera", zh: "相机" },
+            { en: "movie", zh: "电影" },
+            { en: "music", zh: "音乐" }, { en: "sing", zh: "唱歌" }, { en: "dance", zh: "跳舞" },
+            { en: "draw", zh: "绘画" },
+            { en: "play", zh: "玩耍" }, { en: "hobby", zh: "爱好" }, { en: "sport", zh: "运动" },
+            { en: "team", zh: "团队" },
+            // 动词补充
+            { en: "push", zh: "推" }, { en: "pull", zh: "拉" }, { en: "cut", zh: "裁剪" }, { en: "fix", zh: "修理" },
+            { en: "break", zh: "打破" }, { en: "build", zh: "建造" }, { en: "clean", zh: "打扫" },
+            { en: "wash", zh: "清洗" },
+            { en: "brush", zh: "刷" }, { en: "bake", zh: "烘焙" }, { en: "fry", zh: "油炸" },
+            { en: "boil", zh: "煮沸" },
+            { en: "grill", zh: "烧烤" }
+        ];
+
+        // ===== OPD 短语 =====
+        const OPD_PHRASES = [
+            { en: "raise your hand", zh: "举手" }, { en: "talk to the teacher", zh: "和老师交谈" },
+            { en: "listen to a recording", zh: "听录音" }, { en: "stand up", zh: "站起来" },
+            { en: "sit down", zh: "坐下" }, { en: "take a seat", zh: "入座" },
+            { en: "open your book", zh: "打开书本" }, { en: "close your book", zh: "合上书本" },
+            { en: "pick up the pencil", zh: "拿起铅笔" }, { en: "put down the pencil", zh: "放下铅笔" },
+            { en: "look up the word", zh: "查单词" }, { en: "read the definition", zh: "阅读释义" },
+            { en: "translate the word", zh: "翻译单词" }, { en: "work in a group", zh: "小组合作" },
+            { en: "help a classmate", zh: "帮助同学" }, { en: "ask a question", zh: "提出问题" },
+            { en: "answer a question", zh: "回答问题" }, { en: "share a book", zh: "共用书本" },
+            { en: "read a book", zh: "读书" }, { en: "unscramble the words", zh: "重组单词" },
+            { en: "put sentences in order", zh: "句子排序" }, { en: "label the picture", zh: "标注图片" },
+            { en: "check the correct boxes", zh: "勾选正确选项" }, { en: "set goals", zh: "设定目标" },
+            { en: "participate in class", zh: "课堂参与" }, { en: "study at home", zh: "居家自习" },
+            { en: "take a test", zh: "参加考试" }, { en: "correct the mistake", zh: "订正错误" },
+            { en: "erase the mistake", zh: "擦掉错误" }, { en: "hand in your test", zh: "上交试卷" },
+            { en: "check your work", zh: "检查作答" }, { en: "work on your own", zh: "独立完成" },
+            { en: "carry the books", zh: "搬书本" }, { en: "make a call", zh: "拨打电话" },
+            { en: "answer the phone", zh: "接电话" }, { en: "hang up", zh: "挂断电话" },
+            { en: "take a break", zh: "休息片刻" }, { en: "buy a snack", zh: "购买零食" },
+            { en: "have lunch", zh: "吃午餐" }, { en: "have dinner", zh: "吃晚餐" },
+            { en: "make friends", zh: "交朋友" }, { en: "say hello", zh: "打招呼" },
+            { en: "say goodbye", zh: "道别" }, { en: "apologize to someone", zh: "向某人道歉" },
+            { en: "thank someone", zh: "感谢某人" }, { en: "family reunion", zh: "家庭聚会" },
+            { en: "daily routine", zh: "日常作息" }, { en: "life event", zh: "人生大事" },
+            { en: "childcare and parenting", zh: "育儿工作" }, { en: "find a home", zh: "找房子" },
+            { en: "house and yard", zh: "房屋庭院" }, { en: "dining area", zh: "用餐区域" },
+            { en: "food preparation", zh: "食物制作" }, { en: "food safety", zh: "食品安全" },
+            { en: "kitchen utensil", zh: "厨房用具" }, { en: "long hair", zh: "长发" },
+            { en: "short hair", zh: "短发" }, { en: "curly hair", zh: "卷发" },
+            { en: "straight hair", zh: "直发" }, { en: "blonde hair", zh: "金发" },
+            { en: "brown hair", zh: "棕发" }, { en: "black hair", zh: "黑发" },
+            { en: "gray hair", zh: "白发" }, { en: "tall man", zh: "高个子男人" },
+            { en: "short woman", zh: "矮个子女人" }, { en: "beautiful girl", zh: "美丽的女孩" },
+            { en: "handsome boy", zh: "帅气的男孩" }, { en: "everyday clothes", zh: "日常服装" },
+            { en: "casual clothes", zh: "休闲装" }, { en: "work clothes", zh: "工作服" },
+            { en: "formal clothes", zh: "正装" }, { en: "seasonal clothing", zh: "四季服饰" },
+            { en: "underwear and sleepwear", zh: "内衣睡衣" }, { en: "shoes and accessories", zh: "鞋履配饰" },
+            { en: "describe clothes", zh: "描述衣物" }, { en: "make clothes", zh: "缝制衣物" },
+            { en: "make alterations", zh: "修改衣服" }, { en: "fast food restaurant", zh: "快餐店" },
+            { en: "coffee shop", zh: "咖啡店" }, { en: "short-order cook", zh: "快餐厨师" },
+            { en: "walk-in freezer", zh: "立式冷冻柜" }, { en: "sous-chef", zh: "副主厨" },
+            { en: "head chef", zh: "主厨" }, { en: "buffet table", zh: "自助取餐台" },
+            { en: "banquet room", zh: "宴会厅" }, { en: "line cook", zh: "炉头厨师" },
+            { en: "wait staff", zh: "全体服务生" }, { en: "food prep station", zh: "备餐操作台" },
+            { en: "front desk", zh: "前台" }, { en: "private dining", zh: "包间" },
+            { en: "dental care", zh: "牙科护理" }, { en: "health insurance", zh: "医疗保险" },
+            { en: "medical emergency", zh: "医疗急症" }, { en: "first aid kit", zh: "急救包" },
+            { en: "fever relief", zh: "退烧药品" }, { en: "pain medicine", zh: "止痛药物" },
+            { en: "pharmacy counter", zh: "药房柜台" }, { en: "hospital ward", zh: "病房" },
+            { en: "medical consultation", zh: "问诊" }, { en: "health screening", zh: "体检" },
+            { en: "oral care products", zh: "口腔护理" }, { en: "public safety", zh: "公共安全" },
+            { en: "cyber safety", zh: "网络安全" }, { en: "natural disaster", zh: "自然灾害" },
+            { en: "emergency procedure", zh: "应急流程" }, { en: "community cleanup", zh: "社区清扫" },
+            { en: "call 911", zh: "拨打911" }, { en: "dial the police", zh: "报警" },
+            { en: "call for help", zh: "呼救" }, { en: "public transportation", zh: "公共交通" },
+            { en: "traffic sign", zh: "交通标识" }, { en: "directions and maps", zh: "方向地图" },
+            { en: "parts of a car", zh: "汽车零件" }, { en: "road trip", zh: "公路自驾游" },
+            { en: "city intersection", zh: "十字路口" }, { en: "public transit station", zh: "公交站台" },
+            { en: "airport terminal", zh: "机场航站楼" }, { en: "vehicle parts", zh: "汽车配件" },
+            { en: "car maintenance service", zh: "车辆保养" }, { en: "gas station", zh: "加油站" },
+            { en: "job search", zh: "求职找工作" }, { en: "career planning", zh: "职业规划" },
+            { en: "office skills", zh: "办公技能" }, { en: "soft skills", zh: "职场软技能" },
+            { en: "interview skills", zh: "面试技巧" }, { en: "first day on the job", zh: "入职第一天" },
+            { en: "inside a company", zh: "公司内部" }, { en: "manufacturing work", zh: "制造业工作" },
+            { en: "career resume", zh: "求职简历" }, { en: "job application form", zh: "工作申请表" },
+            { en: "workplace colleague", zh: "同事伙伴" }, { en: "office equipment", zh: "办公设备" },
+            { en: "company management", zh: "公司管理层" }, { en: "work accident", zh: "工作意外" },
+            { en: "building supply", zh: "建材" }, { en: "construction work", zh: "建筑施工" },
+            { en: "job safety", zh: "职场安全" }, { en: "bad day at work", zh: "工作不顺" },
+            { en: "construction tools", zh: "施工工具" }, { en: "follow safety rules", zh: "遵守安全规范" },
+            { en: "schools and subjects", zh: "学校科目" }, { en: "mathematics class", zh: "数学课" },
+            { en: "science experiment", zh: "科学实验" }, { en: "geography habitat", zh: "地理栖息地" },
+            { en: "marine life", zh: "海洋生物" }, { en: "amphibian and reptile", zh: "两栖爬行动物" },
+            { en: "domestic animal", zh: "家畜" }, { en: "mammal animal", zh: "哺乳动物" },
+            { en: "graduation ceremony", zh: "毕业典礼" }, { en: "hobbies and games", zh: "爱好游戏" },
+            { en: "electronics and photography", zh: "电子摄影" }, { en: "music performance", zh: "音乐演奏" },
+            { en: "holiday celebration", zh: "节日庆祝" }, { en: "3-ring binder", zh: "三孔活页夹" },
+            { en: "permanent marker", zh: "记号笔" }, { en: "pencil sharpener", zh: "削笔刀" },
+            { en: "bring school supplies", zh: "带学习用品" }, { en: "put away stationery", zh: "收好文具" },
+            { en: "complete test alone", zh: "独自完成考试" }, { en: "social security number", zh: "社保号码" },
+            { en: "street address", zh: "街道地址" }, { en: "apartment number", zh: "公寓房号" },
+            { en: "area code", zh: "区号" }, { en: "phone number", zh: "电话号码" },
+            { en: "home phone", zh: "住宅电话" }, { en: "cell phone", zh: "手机" },
+            { en: "date of birth", zh: "出生日期" }, { en: "place of birth", zh: "出生地" },
+            { en: "registration form", zh: "注册表格" }, { en: "name tag", zh: "姓名牌" },
+            { en: "address label", zh: "地址标签" }, { en: "country map", zh: "国家地图" },
+            { en: "class timetable", zh: "课程表" }, { en: "school event", zh: "校园活动" },
+            { en: "sports meeting", zh: "运动会" }, { en: "spring concert", zh: "春季音乐会" },
+            { en: "basketball court", zh: "篮球场" }, { en: "running track", zh: "跑道" },
+            { en: "library room", zh: "图书室" }, { en: "storage locker", zh: "储物柜" },
+            { en: "hallway passage", zh: "走廊通道" }, { en: "audio recording", zh: "听力录音" },
+            { en: "daily conversation", zh: "日常对话" }, { en: "greeting words", zh: "问候用语" },
+            { en: "farewell words", zh: "告别用语" }, { en: "self-introduction", zh: "自我介绍" },
+            { en: "introduce others", zh: "介绍他人" }, { en: "polite phrases", zh: "礼貌用语" },
+            { en: "emergency call", zh: "紧急来电" }, { en: "voice mail message", zh: "语音留言" },
+            { en: "text message", zh: "短信" }, { en: "missed call", zh: "未接来电" },
+            { en: "weather forecast", zh: "天气预报" }, { en: "daily temperature", zh: "每日气温" },
+            { en: "fresh produce", zh: "生鲜蔬果" }, { en: "raw ingredients", zh: "生鲜原料" },
+            { en: "restaurant staff", zh: "餐厅全体员工" }, { en: "cold storage", zh: "立式冰柜" },
+            { en: "kitchen storage", zh: "后厨储藏" }, { en: "chef team", zh: "厨师团队" },
+            { en: "cleaning attendant", zh: "保洁员" }, { en: "fast food kitchen", zh: "快餐后厨" },
+            { en: "fabric material", zh: "面料材质" }, { en: "cloth texture", zh: "布料质感" },
+            { en: "clothing modification", zh: "改衣" }, { en: "hand sewing", zh: "手工缝制" },
+            { en: "downtown area", zh: "市中心" }, { en: "hotel service staff", zh: "酒店服务人员" },
+            { en: "garden planting", zh: "园艺种植" }, { en: "farm livestock", zh: "农场牲畜" },
+            { en: "factory workshop", zh: "工厂车间" }, { en: "wild animals", zh: "野生动物" },
+            { en: "aquatic life", zh: "水生生物" }, { en: "reptile species", zh: "爬行类" },
+            { en: "bird species", zh: "鸟类" }, { en: "insect type", zh: "昆虫" },
+            { en: "flower blossom", zh: "花卉" }, { en: "tree foliage", zh: "树叶" },
+            { en: "celestial body", zh: "天体" }, { en: "geographic landform", zh: "地理地貌" },
+            { en: "wake up", zh: "醒来" }, { en: "get up", zh: "起床" },
+            { en: "go to bed", zh: "上床睡觉" }, { en: "brush teeth", zh: "刷牙" },
+            { en: "wash face", zh: "洗脸" }, { en: "take a shower", zh: "淋浴" },
+            { en: "get dressed", zh: "穿衣" }, { en: "go to school", zh: "去上学" },
+            { en: "go to work", zh: "去上班" }, { en: "come home", zh: "回家" },
+            { en: "have breakfast", zh: "吃早餐" }, { en: "do homework", zh: "做作业" },
+            { en: "watch TV", zh: "看电视" }, { en: "listen to music", zh: "听音乐" },
+            { en: "write a letter", zh: "写信" }, { en: "take a walk", zh: "散步" },
+            { en: "ride a bike", zh: "骑自行车" }, { en: "drive a car", zh: "开车" },
+            { en: "take the bus", zh: "乘公交车" }, { en: "take the subway", zh: "乘地铁" },
+            { en: "take a taxi", zh: "乘出租车" }, { en: "go shopping", zh: "去购物" },
+            { en: "cook dinner", zh: "做晚饭" }, { en: "clean the room", zh: "打扫房间" },
+            { en: "do the dishes", zh: "洗碗" }, { en: "do the laundry", zh: "洗衣服" },
+            { en: "make the bed", zh: "铺床" }
+        ];
+
+        // ===== OPD 短句 =====
+        const OPD_SENTENCES = [
+            { en: "Hello.", zh: "你好。" }, { en: "Hi.", zh: "嗨。" },
+            { en: "How are you?", zh: "你好吗？" }, { en: "Fine, thanks.", zh: "很好，谢谢。" },
+            { en: "Good morning.", zh: "早上好。" }, { en: "Good afternoon.", zh: "下午好。" },
+            { en: "Good evening.", zh: "晚上好。" }, { en: "Goodbye.", zh: "再见。" },
+            { en: "Good night.", zh: "晚安。" }, { en: "Nice to meet you.", zh: "很高兴认识你。" },
+            { en: "How is it going?", zh: "最近怎么样？" }, { en: "What's new?", zh: "有什么新鲜事吗？" },
+            { en: "Take care.", zh: "保重。" }, { en: "See you later.", zh: "待会见。" },
+            { en: "See you tomorrow.", zh: "明天见。" }, { en: "Hi, I'm Tom.", zh: "你好，我是Tom。" },
+            { en: "Fred, this is Jan.", zh: "Fred，这是Jan。" }, { en: "Nice to meet you, Jan.", zh: "很高兴认识你Jan。" },
+            { en: "Good evening, everyone.", zh: "大家晚上好。" }, { en: "What is your name?", zh: "你叫什么名字？" },
+            { en: "Please spell your name.", zh: "请拼写你的名字。" }, { en: "My first name is Carlos.", zh: "我的名叫Carlos。" },
+            { en: "Where are you from?", zh: "你来自哪里？" }, { en: "I'm from China.", zh: "我来自中国。" },
+            { en: "I'm from Mexico.", zh: "我来自墨西哥。" }, { en: "I'm from Korea.", zh: "我来自韩国。" },
+            { en: "I'm from Japan.", zh: "我来自日本。" }, { en: "I'm from the USA.", zh: "我来自美国。" },
+            { en: "I'm from the UK.", zh: "我来自英国。" }, { en: "I'm from Canada.", zh: "我来自加拿大。" },
+            { en: "Can I share your book?", zh: "我能借你的书吗？" }, { en: "Sure.", zh: "当然。" },
+            { en: "Will you help me?", zh: "你能帮我吗？" }, { en: "I'm sorry.", zh: "对不起。" },
+            { en: "That's OK.", zh: "没关系。" }, { en: "That's a great sweater!", zh: "这件毛衣真好看！" },
+            { en: "Thank you.", zh: "谢谢。" }, { en: "You're welcome.", zh: "不用谢。" },
+            { en: "Excuse me.", zh: "打扰了。" }, { en: "I don't understand.", zh: "我不明白。" },
+            { en: "Can you repeat that?", zh: "你能重复一遍吗？" }, { en: "What time is it?", zh: "现在几点了？" },
+            { en: "It's 3 o'clock.", zh: "现在3点了。" }, { en: "What's the weather like?", zh: "天气怎么样？" },
+            { en: "It's sunny today.", zh: "今天天气晴朗。" }, { en: "It's raining outside.", zh: "外面在下雨。" },
+            { en: "How much is it?", zh: "多少钱？" }, { en: "I'm hungry.", zh: "我饿了。" },
+            { en: "I'm thirsty.", zh: "我渴了。" }, { en: "I'm tired.", zh: "我累了。" },
+            { en: "I can't hear you.", zh: "我听不见你说话。" }, { en: "Can you hear me?", zh: "你能听见我吗？" },
+            { en: "What do you see in the pictures?", zh: "图片里你看到了什么？" },
+            { en: "Read the story.", zh: "阅读短文。" }, { en: "What do you think?", zh: "你怎么看？" },
+            { en: "Make new conversations.", zh: "编写新对话。" }, { en: "Start a conversation.", zh: "开启对话。" },
+            { en: "Make small talk.", zh: "闲聊。" }, { en: "Compliment each other.", zh: "互相赞美。" },
+            { en: "Silence them.", zh: "静音。" }, { en: "Turn them off.", zh: "关机。" },
+            { en: "Put them away.", zh: "收起来。" }, { en: "Correct errors.", zh: "修改错题。" },
+            { en: "Check answers.", zh: "核对答案。" }, { en: "Take turns.", zh: "轮流发言。" },
+            { en: "Look up the word in dictionary.", zh: "在词典查词。" }, { en: "Read word meaning.", zh: "阅读词义。" },
+            { en: "Translate into Chinese.", zh: "翻译成中文。" }, { en: "Write vocabulary down.", zh: "抄写单词。" },
+            { en: "Practice dialogue.", zh: "对话练习。" }, { en: "Ask classmates for help.", zh: "向同学求助。" },
+            { en: "Share textbooks.", zh: "共用课本。" }, { en: "Dictate sentences.", zh: "句子听写。" },
+            { en: "Unscramble letters.", zh: "字母重组。" }, { en: "Match words and pictures.", zh: "图文配对。" },
+            { en: "Complete multiple choice.", zh: "完成选择题。" }, { en: "Fill answer sheet.", zh: "填答题卡。" },
+            { en: "Submit exam online.", zh: "线上交卷。" }, { en: "Review mistakes.", zh: "复盘错题。" },
+            { en: "Erase wrong answers.", zh: "擦掉错误答案。" }, { en: "No copying.", zh: "禁止抄袭。" },
+            { en: "Turn off mobile phones.", zh: "关闭手机。" }, { en: "Silence cell phones.", zh: "手机静音。" },
+            { en: "Store phones away.", zh: "收好手机。" }, { en: "Tell me about your job.", zh: "跟我说说你的工作。" },
+            { en: "It's great. I fix computers.", zh: "很不错，我修电脑。" },
+            { en: "Describe your daily routine.", zh: "描述你的日常作息。" },
+            { en: "I wake up early every morning.", zh: "我每天早起。" },
+            { en: "I brush my teeth and wash my face.", zh: "我刷牙洗脸。" },
+            { en: "We hold a family reunion party.", zh: "我们举办家庭聚会。" },
+            { en: "I want to rent a cheap apartment.", zh: "我想租便宜的公寓。" },
+            { en: "I buy fresh fruit and vegetables every week.", zh: "我每周买新鲜蔬果。" },
+            { en: "Cook simple meals in the kitchen.", zh: "在厨房简单做饭。" },
+            { en: "Wash dishes after every meal.", zh: "每餐饭后洗碗。" },
+            { en: "This cotton shirt feels very soft.", zh: "这件棉衬衫手感柔软。" },
+            { en: "I sew broken clothes by hand.", zh: "我手工缝补破衣服。" },
+            { en: "Go to the hospital if you have a fever.", zh: "发烧就去医院。" },
+            { en: "Learn basic first aid for accidents.", zh: "学习基础应急急救。" },
+            { en: "Call 911 when there is a fire.", zh: "发生火灾拨打911。" },
+            { en: "Check traffic signs before driving.", zh: "开车前看懂交通标识。" },
+            { en: "Fill out the registration form completely.", zh: "完整填写注册表格。" },
+            { en: "Sign your name on the signature line.", zh: "在签名栏写全名。" },
+            { en: "Maintain your car regularly to avoid breakdowns.", zh: "定期保养车辆防止故障。" },
+            { en: "Practice interview dialogue at home.", zh: "在家练习面试对话。" },
+            { en: "Plant flowers and trees in the garden.", zh: "在花园种花种树。" },
+            { en: "Different animals live in different habitats.", zh: "不同动物栖息在不同环境。" },
+            { en: "We have a graduation ceremony at the end of term.", zh: "期末举办毕业典礼。" },
+            { en: "Listen to music and sing songs in free time.", zh: "空闲听歌唱歌。" },
+            { en: "Play ball games on weekends.", zh: "周末打球。" },
+            { en: "Draw pictures to memorize new words.", zh: "画图记忆新单词。" },
+            { en: "Buy stationery before the new semester.", zh: "开学前购买文具。" },
+            { en: "Eat balanced fruit and vegetable meals every day.", zh: "每日均衡食用蔬果。" },
+            { en: "Drink enough water while studying.", zh: "学习时多喝水。" },
+            { en: "Run and swim for daily exercise.", zh: "跑步游泳作为日常锻炼。" },
+            { en: "Ride a bike in the community park.", zh: "在小区公园骑行。" },
+            { en: "Throw rubbish into the trash can.", zh: "垃圾扔进垃圾桶。" },
+            { en: "Catch falling items carefully to avoid breaking.", zh: "小心接住掉落物品防止摔坏。" },
+            { en: "I like to play basketball.", zh: "我喜欢打篮球。" },
+            { en: "She is a good teacher.", zh: "她是一位好老师。" },
+            { en: "He works in a hospital.", zh: "他在医院工作。" },
+            { en: "We live in a big city.", zh: "我们住在大城市。" },
+            { en: "They are my best friends.", zh: "他们是我最好的朋友。" },
+            { en: "I have two brothers.", zh: "我有两个兄弟。" },
+            { en: "My sister is a doctor.", zh: "我姐姐是医生。" },
+            { en: "The weather is nice today.", zh: "今天天气很好。" },
+            { en: "I want to go to the park.", zh: "我想去公园。" },
+            { en: "Can you help me with this?", zh: "你能帮我做这个吗？" },
+            { en: "I need to buy some food.", zh: "我需要买些食物。" },
+            { en: "This is a beautiful flower.", zh: "这是一朵美丽的花。" },
+            { en: "The cat is sleeping on the bed.", zh: "猫在床上睡觉。" },
+            { en: "The dog is running in the park.", zh: "狗在公园里跑。" },
+            { en: "I like to read books.", zh: "我喜欢读书。" },
+            { en: "She likes to sing songs.", zh: "她喜欢唱歌。" },
+            { en: "We are going to the cinema.", zh: "我们要去看电影。" },
+            { en: "He is playing the guitar.", zh: "他在弹吉他。" },
+            { en: "I study English every day.", zh: "我每天学习英语。" },
+            { en: "She speaks Chinese very well.", zh: "她中文说得很好。" },
+            { en: "I want to travel to Europe.", zh: "我想去欧洲旅行。" },
+            { en: "This is my favorite restaurant.", zh: "这是我最喜欢的餐厅。" },
+            { en: "I like pizza and pasta.", zh: "我喜欢披萨和意大利面。" },
+            { en: "We live in a small town.", zh: "我们住在小镇上。" },
+            { en: "He is a very famous singer.", zh: "他是一位非常有名的歌手。" },
+            { en: "I'm learning to drive.", zh: "我在学开车。" },
+            { en: "She is wearing a blue dress.", zh: "她穿着蓝色连衣裙。" },
+            { en: "I love my family very much.", zh: "我非常爱我的家人。" },
+            { en: "I'm going to visit my grandparents.", zh: "我要去看望我的祖父母。" },
+            { en: "This room is very clean.", zh: "这个房间很干净。" },
+            { en: "I need to buy some new clothes.", zh: "我需要买一些新衣服。" },
+            { en: "She has long brown hair.", zh: "她有长长的棕色头发。" },
+            { en: "He is tall and handsome.", zh: "他又高又帅。" },
+            { en: "I'm very happy today.", zh: "我今天非常开心。" }
+        ];
+
+        // ===== 构建完整词库 =====
+        function buildFullWordList() {
+            const all = [];
+            BASE_WORDS.forEach(w => { all.push({ group: "基础词汇", en: w.en, zh: w.zh });
+                if (!EXAMPLE_SENTENCES[w.en]) EXAMPLE_SENTENCES[w.en] = generateDefaultExample(w.en, w.zh); });
+            OPD_WORDS.forEach(w => { all.push({ group: "OPD单词", en: w.en, zh: w.zh });
+                if (!EXAMPLE_SENTENCES[w.en]) EXAMPLE_SENTENCES[w.en] = generateDefaultExample(w.en, w.zh); });
+            OPD_PHRASES.forEach(w => { all.push({ group: "OPD短语", en: w.en, zh: w.zh });
+                if (!EXAMPLE_SENTENCES[w.en]) EXAMPLE_SENTENCES[w.en] = generateDefaultExample(w.en, w.zh); });
+            OPD_SENTENCES.forEach(w => { all.push({ group: "OPD短句", en: w.en, zh: w.zh });
+                if (!EXAMPLE_SENTENCES[w.en]) EXAMPLE_SENTENCES[w.en] = { en: w.en, zh: w.zh }; });
+            return all;
+        }
+        const ALL_WORDS = buildFullWordList();
 
         // ================================================================
         //  5. 数据操作函数
         // ================================================================
+        const EXAMPLES_KEY = 'word_match_examples_v2';
+
+        function saveExamples() {
+            try { localStorage.setItem(EXAMPLES_KEY, JSON.stringify(EXAMPLE_SENTENCES)); } catch (e) { console.error(
+                    '保存例句失败:', e); }
+        }
+
+        function loadExamples() {
+            try {
+                const data = localStorage.getItem(EXAMPLES_KEY);
+                if (data) {
+                    const saved = JSON.parse(data);
+                    Object.keys(saved).forEach(key => {
+                        if (!EXAMPLE_SENTENCES[key]) EXAMPLE_SENTENCES[key] = saved[key];
+                    });
+                }
+            } catch (e) { console.error('加载例句失败:', e); }
+        }
+
         function loadDB() {
+            loadExamples();
             try {
                 const data = localStorage.getItem(DB_KEY);
                 if (data) {
@@ -2048,15 +1865,14 @@
                     if (db && db.length > 0) {
                         const existingGroups = [...new Set(db.map(w => w.group))];
                         const allGroups = [...new Set(ALL_WORDS.map(w => w.group))];
-                        if (existingGroups.length < allGroups.length) {
-                            return mergeWords(db);
-                        }
+                        if (existingGroups.length < allGroups.length) return mergeWords(db);
                         return db;
                     }
                 }
                 const db = ALL_WORDS.map(w => ({ ...w, level: 0, last: 0, totalReviews: 0, correctCount: 0,
                     wrongCount: 0, consecutiveCorrect: 0 }));
                 saveDB(db);
+                saveExamples();
                 return db;
             } catch (e) {
                 console.error('加载数据失败:', e);
@@ -2082,9 +1898,7 @@
         }
 
         function saveDB(db) {
-            try {
-                localStorage.setItem(DB_KEY, JSON.stringify(db));
-            } catch (e) { console.error('保存数据失败:', e); }
+            try { localStorage.setItem(DB_KEY, JSON.stringify(db)); } catch (e) { console.error('保存数据失败:', e); }
         }
 
         function updateWordMemory(en, success) {
@@ -2116,6 +1930,8 @@
         // ================================================================
         //  6. 游戏状态
         // ================================================================
+        let gameMode = 'normal';
+
         class GameState {
             constructor() {
                 this.cards = [];
@@ -2129,6 +1945,8 @@
                 this.currentLevel = 1;
                 this.usedWords = [];
                 this.isLevelComplete = false;
+                this.reviewPage = 0;
+                this.reviewViewed = [];
             }
             reset() {
                 this.cards = [];
@@ -2145,8 +1963,32 @@
         // ================================================================
         //  7. UI 渲染
         // ================================================================
-        let longPressTimer = null;
-        let isLongPress = false;
+        const MODE_CONFIG = {
+            'normal': { name: '普通', className: 'normal', emoji: '📖', statusMsg: '消消乐配对学习' },
+            'review': { name: '复习列表', className: 'review', emoji: '📝', statusMsg: '卡片式复习 + 例句' },
+            'ebbinghaus': { name: '艾宾浩斯', className: 'eb', emoji: '🧠', statusMsg: '按记忆曲线智能复习' }
+        };
+
+        function toggleMode() {
+            const modes = ['normal', 'review', 'ebbinghaus'];
+            const currentIndex = modes.indexOf(gameMode);
+            const nextIndex = (currentIndex + 1) % modes.length;
+            gameMode = modes[nextIndex];
+            const config = MODE_CONFIG[gameMode];
+            const modeDisplay = document.getElementById('modeDisplay');
+            modeDisplay.textContent = config.name;
+            modeDisplay.className = 'mode-name ' + config.className;
+            if (gameMode !== 'review') {
+                game.usedWords = [];
+                game.currentLevel = 1;
+                game.reviewPage = 0;
+                game.reviewViewed = [];
+            }
+            game.reset();
+            loadLevel();
+            setStatus(config.emoji + ' ' + config.statusMsg, 'info', config.name);
+            speakText(config.name + '模式');
+        }
 
         function renderGroups() {
             const db = loadDB();
@@ -2158,7 +2000,6 @@
                 const opt = document.createElement('option');
                 opt.value = g;
                 const count = db.filter(w => w.group === g).length;
-                const mastered = db.filter(w => w.group === g && w.level >= EBBINGHAUS_INTERVALS.length).length;
                 opt.textContent = g + ' (' + count + '个)';
                 select.appendChild(opt);
             });
@@ -2172,11 +2013,34 @@
             if (!group) return;
             const totalAll = db.length;
             const groupWords = db.filter(w => w.group === group);
-            const stats = getLearningStats(group);
-            const reviewWords = groupWords.filter(w => isWordDueForReview(w));
+            let reviewWords = [];
+            if (gameMode === 'ebbinghaus') {
+                reviewWords = groupWords.filter(w => isWordDueForReview(w));
+            }
             document.getElementById('totalCount').textContent = totalAll;
-            document.getElementById('remainCount').textContent = reviewWords.length;
-            document.getElementById('masteryRate').textContent = stats.masteredPercent + '%';
+            document.getElementById('remainCount').textContent = gameMode === 'ebbinghaus' ? reviewWords.length : '--';
+        }
+
+        function isWordDueForReview(word) {
+            const now = Date.now();
+            const level = Math.min(word.level, EBBINGHAUS_INTERVALS.length);
+            if (level >= EBBINGHAUS_INTERVALS.length) return (now - word.last) >= 30 * 24 * 60 * 60 * 1000;
+            const interval = EBBINGHAUS_INTERVALS[level];
+            return word.last === 0 || (now - word.last) >= interval;
+        }
+
+        function getWordPriority(word) {
+            const now = Date.now();
+            const level = Math.min(word.level, EBBINGHAUS_INTERVALS.length - 1);
+            const interval = EBBINGHAUS_INTERVALS[level] || 30 * 24 * 60 * 60 * 1000;
+            const elapsed = now - word.last;
+            const ratio = Math.min(elapsed / interval, 3);
+            return Math.round(ratio * 33);
+        }
+
+        function getWordStage(word) {
+            const level = Math.min(word.level, EBBINGHAUS_INTERVALS.length);
+            return LEVEL_LABELS[level] || '已掌握 ✅';
         }
 
         function setStatus(message, type = '', badge = '') {
@@ -2213,50 +2077,194 @@
             game.currentGroup = select.value;
             game.currentLevel = 1;
             game.usedWords = [];
+            game.reviewPage = 0;
+            game.reviewViewed = [];
             game.reset();
+            loadReviewProgress();
             loadLevel();
         }
 
+        function loadReviewProgress() {
+            try {
+                const key = 'review_progress_' + game.currentGroup;
+                const data = localStorage.getItem(key);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    game.reviewPage = parsed.page || 0;
+                    game.reviewViewed = parsed.viewed || [];
+                }
+            } catch (e) { console.log('加载复习进度失败:', e); }
+        }
+
+        function saveReviewProgress() {
+            try {
+                const key = 'review_progress_' + game.currentGroup;
+                localStorage.setItem(key, JSON.stringify({
+                    page: game.reviewPage,
+                    viewed: game.reviewViewed
+                }));
+            } catch (e) { console.log('保存复习进度失败:', e); }
+        }
+
+        function resetReview() {
+            game.reviewPage = 0;
+            game.reviewViewed = [];
+            saveReviewProgress();
+            loadLevel();
+            setStatus('🔄 已重置复习列表', 'info');
+            speakText('已重置复习列表');
+        }
+
+        // ================================================================
+        //  8. 核心: loadLevel
+        // ================================================================
         function loadLevel() {
             const grid = document.getElementById('gameGrid');
             grid.innerHTML = '';
-
             const group = document.getElementById('groupSelect').value;
-
-            // 短句分组特殊样式
-            grid.classList.remove('grid-short-sentence');
-            if (group === 'OPD短句') {
-                grid.classList.add('grid-short-sentence');
-            }
-
+            grid.classList.remove('grid-short-sentence', 'grid-review-list');
+            if (group === 'OPD短句' && gameMode !== 'review') grid.classList.add('grid-short-sentence');
+            if (gameMode === 'review') grid.classList.add('grid-review-list');
             if (!group) {
                 grid.innerHTML =
-                    `<div class="empty-state"><span class="emoji">📚</span><p>请选择一个分组</p></div>`;
+                `<div class="empty-state"><span class="emoji">📚</span><p>请选择一个分组</p></div>`;
                 return;
             }
 
-            let words = getPrioritizedReviewWords(group);
-            updateStats();
-            const stats = getLearningStats(group);
+            const db = loadDB();
+            let availableWords = db.filter(w => w.group === group);
+            if (gameMode === 'ebbinghaus') {
+                const reviewWords = availableWords.filter(w => isWordDueForReview(w));
+                if (reviewWords.length > 0) {
+                    reviewWords.sort((a, b) => {
+                        const pa = getWordPriority(a);
+                        const pb = getWordPriority(b);
+                        return pb - pa;
+                    });
+                    availableWords = reviewWords;
+                }
+                if (availableWords.length === 0) availableWords = db.filter(w => w.group === group);
+            }
+            if (gameMode !== 'review') {
+                let words = availableWords.filter(w => !game.usedWords.includes(w.en));
+                if (words.length < 2) { game.usedWords = [];
+                    words = availableWords; }
+                availableWords = words;
+            }
 
-            if (words.length === 0) {
+            // 复习模式
+            if (gameMode === 'review') {
+                const totalWords = availableWords.length;
+                const cardsPerPage = 4;
+                if (totalWords === 0) {
+                    grid.innerHTML =
+                        `<div class="review-complete"><span class="emoji">📚</span><p>暂无词条，请先导入词库！</p></div>`;
+                    setStatus('📚 请先导入词库', 'info');
+                    return;
+                }
+                const totalPages = Math.ceil(totalWords / cardsPerPage);
+                if (game.reviewPage >= totalPages) game.reviewPage = totalPages - 1;
+                if (game.reviewPage < 0) game.reviewPage = 0;
+                const startIdx = game.reviewPage * cardsPerPage;
+                const endIdx = Math.min(startIdx + cardsPerPage, totalWords);
+                const pageWords = availableWords.slice(startIdx, endIdx);
+                pageWords.forEach(w => { if (!game.reviewViewed.includes(w.en)) game.reviewViewed.push(w.en); });
+                saveReviewProgress();
+
+                if (pageWords.length === 0) {
+                    grid.innerHTML =
+                        `<div class="review-complete"><span class="emoji">🎉</span><p>所有词条已复习完毕！</p><span class="sub">共 ${totalWords} 个词条</span><div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><button class="btn btn-purple" onclick="resetReview()">🔄 重新复习</button></div></div>`;
+                    setStatus('🎉 复习完成！共 ' + totalWords + ' 个词条', 'success', '已掌握 ✅');
+                    return;
+                }
+
+                pageWords.forEach((w, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'review-card';
+                    const example = EXAMPLE_SENTENCES[w.en] || generateDefaultExample(w.en, w.zh);
+                    const globalIdx = startIdx + idx + 1;
+                    const leftDiv = document.createElement('div');
+                    leftDiv.className = 'card-left';
+                    leftDiv.innerHTML =
+                        `<span class="en-part">${globalIdx}. ${w.en}</span><span style="font-size:9px;color:#9ca3af;">💬 ${example.en.substring(0, 30)}${example.en.length > 30 ? '...' : ''}</span>`;
+                    const rightDiv = document.createElement('div');
+                    rightDiv.className = 'card-right';
+                    rightDiv.innerHTML =
+                        `<span class="zh-part">${w.zh}</span><span style="font-size:9px;color:#9ca3af;">📌 ${example.zh.substring(0, 20)}${example.zh.length > 20 ? '...' : ''}</span>`;
+                    const speakerBtn = document.createElement('button');
+                    speakerBtn.className = 'speaker-btn';
+                    speakerBtn.textContent = '🔊';
+                    speakerBtn.dataset.en = w.en;
+                    speakerBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        speakText(w.en);
+                        setStatus('🔊 ' + w.en, 'info', '🔊 朗读');
+                    });
+                    let pressTimer = null;
+                    let isPressLong = false;
+                    card.addEventListener('pointerdown', () => {
+                        isPressLong = false;
+                        pressTimer = setTimeout(() => {
+                            isPressLong = true;
+                            speakText(w.en);
+                            setStatus('🔊 ' + w.en, 'info', '🔊 朗读');
+                            if (navigator.vibrate) navigator.vibrate(15);
+                        }, 350);
+                    });
+                    card.addEventListener('pointerup', () => { clearTimeout(pressTimer); });
+                    card.addEventListener('pointerleave', () => { clearTimeout(pressTimer); });
+                    card.appendChild(leftDiv);
+                    card.appendChild(rightDiv);
+                    card.appendChild(speakerBtn);
+                    const indexBadge = document.createElement('span');
+                    indexBadge.className = 'card-index';
+                    indexBadge.textContent = globalIdx;
+                    card.appendChild(indexBadge);
+                    grid.appendChild(card);
+                });
+
+                const navDiv = document.createElement('div');
+                navDiv.style.cssText =
+                    'grid-column:1/-1;display:flex;gap:8px;justify-content:center;padding:10px 0;flex-wrap:wrap;align-items:center;';
+                navDiv.innerHTML = `
+                    <button class="btn btn-primary" id="reviewPrevBtn" ${game.reviewPage === 0 ? 'disabled' : ''}>⬅ 上一页</button>
+                    <span style="display:flex;align-items:center;color:#6b7280;font-size:13px;">第 ${game.reviewPage + 1} / ${totalPages} 页 · 共 ${totalWords} 个词条<span style="margin-left:8px;font-size:11px;color:#9ca3af;">(已浏览 ${game.reviewViewed.length} 个)</span></span>
+                    <button class="btn btn-success" id="reviewNextBtn" ${game.reviewPage >= totalPages - 1 ? 'disabled' : ''}>下一页 ➡</button>
+                    ${game.reviewPage >= totalPages - 1 ? '<button class="btn btn-purple" onclick="resetReview()">🔄 重新复习</button>' : ''}
+                `;
+                grid.appendChild(navDiv);
+                const nextBtn = document.getElementById('reviewNextBtn');
+                const prevBtn = document.getElementById('reviewPrevBtn');
+                if (nextBtn) nextBtn.addEventListener('click', () => { if (game.reviewPage < totalPages - 1) { game
+                            .reviewPage++;
+                        loadLevel(); } });
+                if (prevBtn) prevBtn.addEventListener('click', () => { if (game.reviewPage > 0) { game.reviewPage--;
+                        loadLevel(); } });
+                updateStats();
+                setStatus(
+                    `🎯 复习列表 · 第 ${game.reviewPage + 1}/${totalPages} 页 · ${pageWords.length} 个词条`,
+                    'info', '复习列表');
+                return;
+            }
+
+            // 普通模式 & 艾宾浩斯模式
+            if (availableWords.length === 0) {
                 grid.innerHTML =
-                    `<div class="empty-state"><span class="emoji">🎉</span><p>所有词条已复习完毕！</p><p style="font-size:12px;color:#9ca3af;">掌握率 ${stats.masteredPercent}% · 平均等级 ${stats.avgLevel}</p></div>`;
-                setStatus('🎉 今日复习完成！', 'success', '已掌握 ✅');
+                `<div class="empty-state"><span class="emoji">🎉</span><p>所有词条已完成！</p></div>`;
+                setStatus('🎉 全部完成！', 'success', '已掌握 ✅');
                 return;
             }
 
-            let available = words.filter(w => !game.usedWords.includes(w.en));
-
-            // 短句分组取4个，其他取8个
-            const maxPairs = group === 'OPD短句' ? 4 : 8;
-            if (available.length < maxPairs) {
-                game.usedWords = [];
-                available = words;
+            let maxPairs = gameMode === 'ebbinghaus' ? (group === 'OPD短句' ? 4 : 6) : (group === 'OPD短句' ? 4 : 8);
+            const selected = availableWords.slice(0, Math.min(maxPairs, availableWords.length));
+            if (selected.length === 0) {
+                grid.innerHTML =
+                `<div class="empty-state"><span class="emoji">🎉</span><p>所有词条已完成！</p></div>`;
+                setStatus('🎉 全部完成！', 'success', '已掌握 ✅');
+                return;
             }
-            const selected = available.slice(0, maxPairs);
-            selected.forEach(w => game.usedWords.push(w.en));
 
+            selected.forEach(w => game.usedWords.push(w.en));
             game.totalPairs = selected.length;
             game.matchedPairs = 0;
             game.matchCount = 0;
@@ -2267,8 +2275,30 @@
                 cards.push({ id: w.en, text: w.en, type: 'en', pairId: w.en });
                 cards.push({ id: w.en + '_zh', text: w.zh, type: 'zh', pairId: w.en });
             });
-
             game.cards = cards.sort(() => 0.5 - Math.random());
+
+            const enCards = game.cards.filter(c => c.type === 'en');
+            const zhCards = game.cards.filter(c => c.type === 'zh');
+            for (let i = enCards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));
+                [enCards[i], enCards[j]] = [enCards[j], enCards[i]]; }
+            for (let i = zhCards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));
+                [zhCards[i], zhCards[j]] = [zhCards[j], zhCards[i]]; }
+
+            const reorderedCards = [];
+            const enCount = enCards.length;
+            const zhCount = zhCards.length;
+            const totalCards = enCount + zhCount;
+            const cols = 4;
+            const rows = Math.ceil(totalCards / cols);
+            let enIdx = 0,
+                zhIdx = 0;
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < 2; col++) { if (enIdx < enCount) reorderedCards.push(enCards[enIdx++]);
+                    else if (zhIdx < zhCount) reorderedCards.push(zhCards[zhIdx++]); }
+                for (let col = 2; col < 4; col++) { if (zhIdx < zhCount) reorderedCards.push(zhCards[zhIdx++]);
+                    else if (enIdx < enCount) reorderedCards.push(enCards[enIdx++]); }
+            }
+            game.cards = reorderedCards;
 
             game.cards.forEach((card, index) => {
                 const div = document.createElement('div');
@@ -2280,7 +2310,7 @@
                 div.dataset.en = card.type === 'en' ? card.text : card.pairId;
 
                 const wordData = selected.find(w => w.en === card.pairId);
-                if (wordData) {
+                if (wordData && gameMode === 'ebbinghaus') {
                     const level = Math.min(wordData.level, EBBINGHAUS_INTERVALS.length);
                     const label = LEVEL_LABELS[level] || '已掌握';
                     const badge = document.createElement('span');
@@ -2289,6 +2319,11 @@
                     div.appendChild(badge);
                 }
 
+                const langTag = document.createElement('span');
+                langTag.className = 'card-lang-tag';
+                langTag.textContent = card.type === 'en' ? '🇬🇧 EN' : '🇨🇳 中文';
+                div.appendChild(langTag);
+
                 if (card.type === 'en') {
                     const speaker = document.createElement('span');
                     speaker.className = 'speaker-icon';
@@ -2296,19 +2331,22 @@
                     div.appendChild(speaker);
                 }
 
+                let pressTimer = null;
+                let isPressLong = false;
+
                 div.onclick = (e) => {
-                    if (isLongPress) { isLongPress = false; return; }
+                    if (isPressLong) { isPressLong = false; return; }
                     flipCard(div);
                 };
 
                 div.addEventListener('pointerdown', (e) => {
-                    isLongPress = false;
-                    longPressTimer = setTimeout(() => {
-                        isLongPress = true;
+                    isPressLong = false;
+                    pressTimer = setTimeout(() => {
+                        isPressLong = true;
                         let finalText = div.dataset.en || div.textContent;
                         if (div.dataset.type === 'zh') {
                             const found = game.cards.find(c => c.pairId === div.dataset.pairId && c
-                            .type === 'en');
+                                .type === 'en');
                             if (found) finalText = found.text;
                         }
                         speakText(finalText);
@@ -2317,18 +2355,20 @@
                     }, 350);
                 });
 
-                div.addEventListener('pointerup', () => { clearTimeout(longPressTimer); });
-                div.addEventListener('pointerleave', () => { clearTimeout(longPressTimer); });
+                div.addEventListener('pointerup', () => { clearTimeout(pressTimer); });
+                div.addEventListener('pointerleave', () => { clearTimeout(pressTimer); });
 
                 grid.appendChild(div);
             });
 
             updateStats();
-            const urgentCount = selected.filter(w => w.priority > 70).length;
-            const badgeText = urgentCount > 0 ? '⚠️ ' + urgentCount + '个紧急' : '📖 按计划复习';
-            setStatus('🎯 第' + game.currentLevel + '关 · ' + selected.length + '个词条', 'info', badgeText);
+            const modeText = MODE_CONFIG[gameMode].name;
+            setStatus(`🎯 ${modeText}模式 · 第${game.currentLevel}关 · ${selected.length}个词条`, 'info', modeText);
         }
 
+        // ================================================================
+        //  9. 翻牌逻辑
+        // ================================================================
         function flipCard(cardEl) {
             if (game.locked || cardEl.classList.contains('matched') || cardEl.classList.contains('hidden') || game
                 .isLevelComplete) return;
@@ -2361,8 +2401,8 @@
                         setStatus('🔥 连续 ' + game.matchCount + ' 次！', 'success', '🔥 连击');
                     } else {
                         sound.play('match');
-                        setStatus('✅ 匹配！(' + (game.matchedPairs + 1) + '/' + game.totalPairs + ')', 'success',
-                            '✨ 成功');
+                        setStatus('✅ 匹配！(' + (game.matchedPairs + 1) + '/' + game.totalPairs + ')',
+                        'success', '✨ 成功');
                     }
 
                     c1.classList.add('matched');
@@ -2379,7 +2419,8 @@
 
                     game.matched.add(c1.dataset.pairId);
                     game.matchedPairs++;
-                    updateWordMemory(c1.dataset.pairId, true);
+
+                    if (gameMode === 'ebbinghaus') updateWordMemory(c1.dataset.pairId, true);
                     updateStats();
 
                     setTimeout(() => {
@@ -2390,17 +2431,14 @@
 
                         if (game.matchedPairs === game.totalPairs) {
                             game.isLevelComplete = true;
-                            if (game.matchCount === game.totalPairs) {
-                                sound.play('perfect');
-                                setStatus('🌟 完美通关！', 'success', '🏆 完美');
-                            } else {
-                                sound.play('win');
-                            }
+                            if (game.matchCount === game.totalPairs) { sound.play('perfect');
+                                setStatus('🌟 完美通关！', 'success', '🏆 完美'); } else { sound.play(
+                                'win'); }
                             setTimeout(() => showLevelComplete(), 400);
                         } else {
                             const remain = game.totalPairs - game.matchedPairs;
-                            if (game.matchCount >= 3) setStatus('🔥 连击 ' + game.matchCount + ' 次！还剩 ' +
-                                remain + ' 对', 'success', '🔥 连击');
+                            if (game.matchCount >= 3) setStatus('🔥 连击 ' + game.matchCount +
+                                ' 次！还剩 ' + remain + ' 对', 'success', '🔥 连击');
                             else setStatus('💡 继续配对，还剩 ' + remain + ' 对', '', '📖 复习');
                         }
                     }, 500);
@@ -2409,8 +2447,8 @@
                     c1.classList.add('fail');
                     c2.classList.add('fail');
                     game.matchCount = 0;
-                    updateWordMemory(c1.dataset.pairId, false);
-                    updateWordMemory(c2.dataset.pairId, false);
+                    if (gameMode === 'ebbinghaus') { updateWordMemory(c1.dataset.pairId, false);
+                        updateWordMemory(c2.dataset.pairId, false); }
                     setStatus('❌ 不匹配，再试一次', 'error', '😅 再试');
 
                     setTimeout(() => {
@@ -2427,20 +2465,24 @@
             }
         }
 
+        // ================================================================
+        //  10. 通关与辅助函数
+        // ================================================================
         function showLevelComplete() {
             const grid = document.getElementById('gameGrid');
-            const words = getPrioritizedReviewWords(game.currentGroup);
-            const remaining = words.filter(w => !game.usedWords.includes(w.en));
-            const stats = getLearningStats(game.currentGroup);
-
-            grid.innerHTML = `
-                <div class="next-level-btn">
-                    <button onclick="continueToNextLevel()">🚀 下一关 (剩余 ${remaining.length} 个)</button>
-                </div>
-                <div style="grid-column:1/-1;text-align:center;padding:14px;font-size:14px;color:#6b7280;">
-                    🎉 第 ${game.currentLevel} 关完成！掌握率 ${stats.masteredPercent}%
-                </div>
-            `;
+            const group = document.getElementById('groupSelect').value;
+            const db = loadDB();
+            let availableWords = db.filter(w => w.group === group);
+            if (gameMode === 'ebbinghaus') {
+                const reviewWords = availableWords.filter(w => isWordDueForReview(w));
+                if (reviewWords.length > 0) { reviewWords.sort((a, b) => { const pa = getWordPriority(a);
+                        const pb = getWordPriority(b); return pb - pa; });
+                    availableWords = reviewWords; }
+                if (availableWords.length === 0) availableWords = db.filter(w => w.group === group);
+            }
+            let remaining = availableWords.filter(w => !game.usedWords.includes(w.en)).length;
+            grid.innerHTML =
+                `<div class="next-level-btn"><button onclick="continueToNextLevel()">🚀 下一关</button><div class="info-text">剩余 ${remaining} 个词条待复习</div></div>`;
             sound.play('levelup');
             showCelebration();
             setStatus('🎉 第 ' + game.currentLevel + ' 关完成！', 'success', '🌟 进步');
@@ -2458,7 +2500,6 @@
             document.body.appendChild(container);
             const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6'];
             const emojis = ['🎉', '⭐', '🌟', '🎊', '💪', '🔥'];
-
             for (let i = 0; i < 50; i++) {
                 const el = document.createElement('div');
                 el.className = 'confetti';
@@ -2474,73 +2515,63 @@
         }
 
         // ================================================================
-        //  8. 管理功能
+        //  11. 管理功能
         // ================================================================
         function handleFileUpload(file) {
             const statusEl = document.getElementById('uploadStatus');
             const reader = new FileReader();
-
             reader.onload = function(e) {
                 try {
                     const content = e.target.result;
                     let words = [];
                     const ext = file.name.split('.').pop().toLowerCase();
-
                     if (ext === 'json') {
                         const data = JSON.parse(content);
-                        if (Array.isArray(data)) {
-                            words = data.map(item => ({ en: item.en || item.english || item.word || '',
-                                zh: item.zh || item.chinese || item.mean || '' })).filter(w => w.en && w
-                            .zh);
-                        }
+                        if (Array.isArray(data)) { words = data.map(item => ({ en: item.en || item
+                                    .english || item.word || '', zh: item.zh || item.chinese || item
+                                    .mean || '', example_en: item.example_en || '',
+                                example_zh: item.example_zh || '' })).filter(w => w.en && w.zh); }
                     } else if (ext === 'csv' || ext === 'txt') {
                         const lines = content.split('\n').filter(l => l.trim());
-                        words = lines.map(line => {
-                            const parts = line.split(/[,，\t]+/);
-                            if (parts.length >= 2) return { en: parts[0].trim(), zh: parts[1].trim() };
-                            return null;
-                        }).filter(w => w && w.en && w.zh);
+                        words = lines.map(line => { const parts = line.split(/[,，\t]+/); if (parts
+                                .length >= 2) return { en: parts[0].trim(), zh: parts[1].trim() };
+                            return null; }).filter(w => w && w.en && w.zh);
                     } else {
                         statusEl.textContent = '⚠️ 不支持的文件格式';
                         statusEl.className = 'upload-status error';
                         return;
                     }
-
-                    if (words.length === 0) {
-                        statusEl.textContent = '⚠️ 未识别到有效词条';
-                        statusEl.className = 'upload-status error';
-                        return;
-                    }
+                    if (words.length === 0) { statusEl.textContent = '⚠️ 未识别到有效词条';
+                        statusEl.className = 'upload-status error'; return; }
 
                     const group = document.getElementById('groupSelect').value || '导入词汇';
                     const db = loadDB();
                     let added = 0,
                         existed = 0;
-
                     words.forEach(w => {
                         if (!db.some(item => item.en === w.en && item.group === group)) {
                             db.push({ group, en: w.en, zh: w.zh, level: 0, last: 0, totalReviews: 0,
                                 correctCount: 0, wrongCount: 0, consecutiveCorrect: 0 });
+                            if (!EXAMPLE_SENTENCES[w.en]) {
+                                if (w.example_en && w.example_zh) EXAMPLE_SENTENCES[w.en] = { en: w
+                                        .example_en, zh: w.example_zh };
+                                else EXAMPLE_SENTENCES[w.en] = generateDefaultExample(w.en, w.zh);
+                            }
                             added++;
-                        } else existed++;
+                        } else { existed++; }
                     });
-
-                    if (added === 0) {
-                        statusEl.textContent = '⚠️ 所有词条已存在';
-                        statusEl.className = 'upload-status error';
-                        return;
-                    }
-
+                    if (added === 0) { statusEl.textContent = '⚠️ 所有词条已存在';
+                        statusEl.className = 'upload-status error'; return; }
                     saveDB(db);
-                    statusEl.textContent = '✅ 导入 ' + added + ' 个词条' + (existed > 0 ? '，' + existed + ' 个已存在' : '');
+                    saveExamples();
+                    statusEl.textContent = '✅ 导入 ' + added + ' 个词条' + (existed > 0 ? '，' + existed +
+                        ' 个已存在' : '');
                     statusEl.className = 'upload-status success';
                     renderGroups();
                     initGame();
                     updateStats();
-                } catch (error) {
-                    statusEl.textContent = '❌ 解析失败: ' + error.message;
-                    statusEl.className = 'upload-status error';
-                }
+                } catch (error) { statusEl.textContent = '❌ 解析失败: ' + error.message;
+                    statusEl.className = 'upload-status error'; }
             };
             reader.readAsText(file);
         }
@@ -2548,30 +2579,28 @@
         function importWords() {
             const text = document.getElementById('wordInput').value.trim();
             const group = document.getElementById('groupNameInput').value.trim();
-
             if (!text || !group) { alert('请填写分组名称和词条！'); return; }
-
             const db = loadDB();
             let count = 0;
             const lines = text.split('\n').filter(l => l.trim());
-
             lines.forEach(line => {
                 const parts = line.split(/[,，\t]+/);
                 if (parts.length >= 2) {
-                    const en = parts[0].trim(),
-                        zh = parts[1].trim();
+                    const en = parts[0].trim();
+                    const zh = parts[1].trim();
                     if (en && zh && !db.some(w => w.en === en && w.group === group)) {
                         db.push({ group, en, zh, level: 0, last: 0, totalReviews: 0, correctCount: 0,
                             wrongCount: 0, consecutiveCorrect: 0 });
+                        if (!EXAMPLE_SENTENCES[en]) EXAMPLE_SENTENCES[en] = generateDefaultExample(en,
+                            zh);
                         count++;
                     }
                 }
             });
-
             if (count === 0) { alert('没有新词条可导入'); return; }
-
             saveDB(db);
-            alert('✅ 导入 ' + count + ' 个词条到 "' + group + '"');
+            saveExamples();
+            alert('✅ 导入 ' + count + ' 个词条到 "' + group + '"（已自动生成例句）');
             document.getElementById('wordInput').value = '';
             document.getElementById('groupNameInput').value = '';
             renderGroups();
@@ -2583,7 +2612,6 @@
             const group = document.getElementById('groupSelect').value;
             if (!group) { alert('请选择分组'); return; }
             if (!confirm('清空 "' + group + '" 分组？')) return;
-
             let db = loadDB();
             db = db.filter(w => w.group !== group);
             saveDB(db);
@@ -2595,88 +2623,99 @@
 
         function resetAll() {
             if (!confirm('⚠️ 重置所有数据？')) return;
-
             const db = ALL_WORDS.map(w => ({ ...w, level: 0, last: 0, totalReviews: 0, correctCount: 0,
                 wrongCount: 0, consecutiveCorrect: 0 }));
             saveDB(db);
+            EXAMPLE_SENTENCES = {};
+            ALL_WORDS.forEach(w => { if (!EXAMPLE_SENTENCES[w.en]) EXAMPLE_SENTENCES[w.en] =
+                    generateDefaultExample(w.en, w.zh); });
+            saveExamples();
             renderGroups();
             initGame();
             updateStats();
-            setStatus('🔄 已重置', 'success');
+            setStatus('🔄 已重置所有数据', 'info');
+            alert('✅ 已重置所有数据！');
         }
 
         function updateWords() {
             if (!confirm('📦 更新词库？')) return;
-
             const db = loadDB();
-            const oldCount = db.length;
-            const newDB = mergeWords(db);
-            const newCount = newDB.length;
-
+            let added = 0;
+            ALL_WORDS.forEach(w => {
+                if (!db.some(item => item.en === w.en && item.group === w.group)) {
+                    db.push({ ...w, level: 0, last: 0, totalReviews: 0, correctCount: 0, wrongCount: 0,
+                        consecutiveCorrect: 0 });
+                    if (!EXAMPLE_SENTENCES[w.en]) EXAMPLE_SENTENCES[w.en] = generateDefaultExample(w.en,
+                        w.zh);
+                    added++;
+                }
+            });
+            if (added === 0) { alert('词库已是最新！'); return; }
+            saveDB(db);
+            saveExamples();
             renderGroups();
             initGame();
             updateStats();
-            setStatus('✅ 新增 ' + (newCount - oldCount) + ' 个词条', 'success');
-            alert('✅ 更新完成\n原有 ' + oldCount + ' 个\n新增 ' + (newCount - oldCount) + ' 个\n共 ' + newCount + ' 个');
+            setStatus('✅ 已更新 ' + added + ' 个词条', 'success');
+            alert('✅ 已添加 ' + added + ' 个新词条！');
         }
 
         // ================================================================
-        //  9. 键盘快捷键
+        //  12. 事件绑定
         // ================================================================
-        document.addEventListener('keydown', (e) => {
-            const tag = e.target.tagName;
-            if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-
-            if (e.key === 'r' || e.key === 'R') { initGame();
-                setStatus('🔄 已重新开始'); }
-            if (e.key === 'Enter' && game.isLevelComplete) continueToNextLevel();
-            if (e.key === 'Escape') document.getElementById('managePanel').classList.remove('active');
-        });
-
-        // ================================================================
-        //  10. 初始化
-        // ================================================================
-        window.onload = function() {
-            console.log('🐴 小小马单词消消乐');
-            console.log('📚 总词条: ' + ALL_WORDS.length);
-
-            document.addEventListener('click', () => { sound.init(); }, { once: true });
-            if (window.speechSynthesis) window.speechSynthesis.getVoices();
-
-            loadDB();
+        document.addEventListener('DOMContentLoaded', () => {
             renderGroups();
             initGame();
-            updateStats();
 
-            document.getElementById('groupSelect').addEventListener('change', function() { initGame();
-                updateStats(); });
-            document.getElementById('restartBtn').addEventListener('click', function() { initGame();
-                setStatus('🔄 已重新开始'); });
-            document.getElementById('manageBtn').addEventListener('click', function() {
+            document.getElementById('modeSwitch').addEventListener('click', toggleMode);
+
+            document.getElementById('groupSelect').addEventListener('change', () => {
+                game.usedWords = [];
+                game.currentLevel = 1;
+                game.reviewPage = 0;
+                game.reviewViewed = [];
+                game.reset();
+                loadLevel();
+                updateStats();
+            });
+
+            document.getElementById('restartBtn').addEventListener('click', () => {
+                game.usedWords = [];
+                game.currentLevel = 1;
+                game.reviewPage = 0;
+                game.reviewViewed = [];
+                game.reset();
+                loadLevel();
+                setStatus('🔄 重新开始', 'info');
+                speakText('重新开始');
+            });
+
+            document.getElementById('manageBtn').addEventListener('click', () => {
                 const panel = document.getElementById('managePanel');
                 panel.classList.toggle('active');
-                setStatus(panel.classList.contains('active') ? '📚 词库管理' : '💡 回到游戏', panel.classList.contains(
-                    'active') ? 'info' : '');
             });
 
-            document.getElementById('uploadBtn').addEventListener('click', function() { document.getElementById(
-                    'uploadInput').click(); });
-            document.getElementById('uploadInput').addEventListener('change', function(e) {
-                if (e.target.files[0]) handleFileUpload(e.target.files[0]);
-                this.value = '';
+            document.getElementById('uploadBtn').addEventListener('click', () => {
+                document.getElementById('uploadInput').click();
             });
+            document.getElementById('uploadInput').addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                    e.target.value = '';
+                }
+            });
+
             document.getElementById('importBtn').addEventListener('click', importWords);
             document.getElementById('clearBtn').addEventListener('click', clearGroup);
             document.getElementById('resetAllBtn').addEventListener('click', resetAll);
             document.getElementById('updateWordsBtn').addEventListener('click', updateWords);
-            document.getElementById('groupNameInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') importWords();
+
+            document.getElementById('wordInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.ctrlKey) importWords();
             });
 
-            console.log('📖 R=重新开始 Enter=下一关 Esc=关闭面板');
-            console.log('🔊 长按卡片发音');
-        };
+            updateStats();
+        });
     </script>
-
 </body>
 </html>
