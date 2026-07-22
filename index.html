@@ -28,13 +28,13 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
-            padding: 14px;
-            max-width: 500px;
+            padding: 14px 14px 10px 14px;
+            max-width: 520px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideUp 0.5s ease;
-            height: 98vh;
-            max-height: 860px;
+            height: 100vh;
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -45,7 +45,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 头部 - 加大 ===== */
+        /* ===== 头部 - 更大 ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -55,7 +55,7 @@
             gap: 6px;
         }
         .title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
@@ -68,7 +68,7 @@
         .title .horse-icon {
             -webkit-text-fill-color: initial;
             background: none;
-            font-size: 26px;
+            font-size: 28px;
         }
         .controls {
             display: flex;
@@ -79,7 +79,7 @@
             padding: 7px 24px 7px 12px;
             border: 2px solid #fcd34d;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             color: #78350f;
@@ -102,7 +102,7 @@
             padding: 7px 14px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -112,7 +112,7 @@
             gap: 3px;
             touch-action: manipulation;
             white-space: nowrap;
-            min-height: 38px;
+            min-height: 40px;
         }
         .btn:active { transform: scale(0.92); }
         .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); }
@@ -121,9 +121,8 @@
         .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .btn-info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .btn-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-        .btn-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
 
-        /* ===== 统计栏 - 加大 ===== */
+        /* ===== 统计栏 - 更大 ===== */
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1.2fr;
@@ -139,7 +138,7 @@
             flex-direction: column;
             align-items: center;
             gap: 1px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             color: #4b5563;
         }
@@ -147,13 +146,13 @@
             background: #fff;
             padding: 0 10px;
             border-radius: 14px;
-            font-size: 20px;
+            font-size: 22px;
             color: #1f2937;
-            min-width: 24px;
+            min-width: 26px;
             text-align: center;
             font-weight: 700;
         }
-        .stat-item .label { font-size: 10px; color: #6b7280; }
+        .stat-item .label { font-size: 11px; color: #6b7280; }
         .stat-item.highlight .number { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
         .stat-item.warning .number { background: #f59e0b; color: #fff; }
         .mode-switch-item {
@@ -163,30 +162,30 @@
             border-radius: 8px;
         }
         .mode-switch-item:active { transform: scale(0.95); background: rgba(0,0,0,0.05); }
-        .mode-switch-item .mode-label { font-size: 10px; color: #6b7280; text-align: center; }
+        .mode-switch-item .mode-label { font-size: 11px; color: #6b7280; text-align: center; }
         .mode-switch-item .mode-name {
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 700;
             color: #1f2937;
             background: #fff;
             padding: 0 10px;
             border-radius: 10px;
-            min-width: 46px;
+            min-width: 48px;
             text-align: center;
         }
         .mode-switch-item .mode-name.normal { color: #10b981; }
         .mode-switch-item .mode-name.review { color: #f59e0b; }
         .mode-switch-item .mode-name.eb { color: #7c3aed; }
 
-        /* ===== 状态栏 - 加大 ===== */
+        /* ===== 状态栏 - 更大 ===== */
         .status-bar {
             padding: 7px 12px;
             border-radius: 8px;
             background: #f0f4ff;
             color: #4b5563;
-            font-size: 13px;
+            font-size: 14px;
             margin-bottom: 8px;
-            min-height: 34px;
+            min-height: 36px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -197,7 +196,7 @@
         .status-bar .badge {
             padding: 2px 10px;
             border-radius: 8px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             white-space: nowrap;
         }
@@ -208,27 +207,30 @@
         .status-bar.error { background: #fecaca; color: #991b1b; }
         .status-bar.info { background: #dbeafe; color: #1e40af; }
 
-        /* ===== 游戏网格 ===== */
+        /* ===== 游戏网格 - 占满剩余空间 ===== */
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
-            margin: 4px 0;
             flex: 1;
             min-height: 0;
             align-content: start;
+        }
+        /* 当管理面板打开时隐藏游戏网格 */
+        .grid.hidden {
+            display: none;
         }
         .grid-short-sentence {
             grid-template-columns: 1fr !important;
             gap: 8px !important;
         }
         .grid-short-sentence .card {
-            font-size: 19px !important;
+            font-size: 20px !important;
             padding: 12px 20px !important;
             border-radius: 12px !important;
             aspect-ratio: auto !important;
-            min-height: 58px !important;
-            height: 62px !important;
+            min-height: 60px !important;
+            height: 64px !important;
             flex-direction: row !important;
             justify-content: center !important;
             gap: 8px !important;
@@ -250,8 +252,8 @@
             background: linear-gradient(135deg, #f9fafb, #f3f4f6);
             border: 2px solid #e5e7eb;
             border-radius: 12px !important;
-            min-height: 60px !important;
-            height: 64px !important;
+            min-height: 62px !important;
+            height: 66px !important;
             aspect-ratio: auto !important;
             width: 100% !important;
             cursor: default !important;
@@ -277,14 +279,14 @@
         }
         .grid-review-list .review-card .en-part {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 17px;
             color: #1f2937;
             text-align: left;
             line-height: 1.2;
         }
         .grid-review-list .review-card .zh-part {
             font-weight: 500;
-            font-size: 15px;
+            font-size: 16px;
             color: #4b5563;
             text-align: right;
             line-height: 1.2;
@@ -325,7 +327,7 @@
         .review-complete {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 30px 16px;
+            padding: 20px 16px;
             color: #6b7280;
             display: flex;
             flex-direction: column;
@@ -334,10 +336,10 @@
             height: 100%;
         }
         .review-complete .emoji { font-size: 44px; display: block; margin-bottom: 6px; }
-        .review-complete p { font-size: 16px; }
-        .review-complete .sub { font-size: 14px; color: #9ca3af; margin-top: 4px; }
+        .review-complete p { font-size: 17px; }
+        .review-complete .sub { font-size: 15px; color: #9ca3af; margin-top: 4px; }
 
-        /* ===== 卡片 ===== */
+        /* ===== 卡片 - 更大 ===== */
         .card {
             aspect-ratio: 1;
             background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
@@ -350,7 +352,7 @@
             text-align: center;
             padding: 6px;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 17px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
@@ -448,39 +450,41 @@
             opacity: 1;
         }
 
-        /* ===== 面板 - 修复滚动问题 ===== */
+        /* ===== 管理面板 - 全屏显示在卡片区域 ===== */
         .panel {
-            margin-top: 8px;
+            flex: 1;
             background: #f9fafb;
             border-radius: 12px;
-            padding: 12px;
+            padding: 12px 14px;
             display: none;
             animation: slideUp 0.3s ease;
-            flex-shrink: 0;
-            max-height: 50vh;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain;
+            min-height: 0;
         }
-        .panel.active { display: block; }
+        .panel.active {
+            display: block;
+        }
         .panel-title { 
-            font-size: 15px; 
+            font-size: 16px; 
             font-weight: 700; 
             color: #1f2937; 
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             position: sticky;
             top: 0;
             background: #f9fafb;
-            padding: 4px 0;
+            padding: 4px 0 8px 0;
             z-index: 10;
+            border-bottom: 2px solid #e5e7eb;
         }
         .panel textarea {
             width: 100%;
-            height: 60px;
-            padding: 8px;
+            height: 70px;
+            padding: 8px 10px;
             border: 2px solid #e5e7eb;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 14px;
             resize: vertical;
             font-family: inherit;
         }
@@ -488,7 +492,7 @@
         .panel .input-group {
             display: flex;
             gap: 6px;
-            margin: 8px 0;
+            margin: 10px 0;
             flex-wrap: wrap;
         }
         .panel .input-group input {
@@ -496,30 +500,30 @@
             padding: 8px 12px;
             border: 2px solid #e5e7eb;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 14px;
             min-width: 70px;
-            min-height: 38px;
+            min-height: 40px;
         }
         .panel .input-group input:focus { outline: none; border-color: #667eea; }
         .panel .hint { 
-            font-size: 12px; 
+            font-size: 13px; 
             color: #6b7280; 
-            margin-bottom: 6px; 
+            margin-bottom: 8px; 
             line-height: 1.5;
         }
-        .panel .divider { border: none; border-top: 2px solid #e5e7eb; margin: 10px 0; }
+        .panel .divider { border: none; border-top: 2px solid #e5e7eb; margin: 12px 0; }
         .upload-section {
             background: #f0fdf4;
             border: 2px dashed #10b981;
             border-radius: 8px;
-            padding: 10px;
-            margin: 6px 0;
+            padding: 12px;
+            margin: 8px 0;
         }
         .upload-section .upload-title { 
             font-weight: 700; 
             color: #065f46; 
-            margin-bottom: 4px; 
-            font-size: 13px; 
+            margin-bottom: 6px; 
+            font-size: 14px; 
             display: flex; 
             align-items: center; 
             gap: 4px; 
@@ -534,32 +538,34 @@
         .upload-section .upload-status {
             padding: 6px 10px;
             border-radius: 4px;
-            font-size: 12px;
-            min-height: 28px;
+            font-size: 13px;
+            min-height: 30px;
             background: #f3f4f6;
             color: #4b5563;
-            margin-top: 4px;
+            margin-top: 6px;
         }
         .upload-section .upload-status.success { background: #d1fae5; color: #065f46; }
         .upload-section .upload-status.error { background: #fecaca; color: #991b1b; }
 
-        /* 面板底部按钮区域 - 确保可见 */
         .panel-actions {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
-            padding-top: 4px;
+            padding: 4px 0;
         }
         .panel-actions .btn {
             flex: 1;
             min-width: 80px;
             justify-content: center;
+            font-size: 14px;
+            padding: 8px 12px;
+            min-height: 42px;
         }
 
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 30px 16px;
+            padding: 20px 16px;
             color: #6b7280;
             display: flex;
             flex-direction: column;
@@ -567,8 +573,8 @@
             align-items: center;
             height: 100%;
         }
-        .empty-state .emoji { font-size: 38px; display: block; margin-bottom: 6px; }
-        .empty-state p { font-size: 15px; }
+        .empty-state .emoji { font-size: 40px; display: block; margin-bottom: 6px; }
+        .empty-state p { font-size: 16px; }
 
         .next-level-btn {
             grid-column: 1 / -1;
@@ -582,7 +588,7 @@
         }
         .next-level-btn button {
             padding: 14px 32px;
-            font-size: 18px;
+            font-size: 20px;
             border: none;
             border-radius: 12px;
             background: linear-gradient(135deg, #10b981, #059669);
@@ -592,11 +598,11 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
             touch-action: manipulation;
-            min-height: 48px;
+            min-height: 50px;
         }
         .next-level-btn button:active { transform: scale(0.93); }
         .next-level-btn .info-text { 
-            font-size: 14px; 
+            font-size: 15px; 
             color: #6b7280; 
             margin-top: 6px; 
         }
@@ -614,7 +620,7 @@
         }
         .score-popup {
             position: fixed;
-            font-size: 34px;
+            font-size: 36px;
             font-weight: 900;
             color: #10b981;
             pointer-events: none;
@@ -644,108 +650,113 @@
             align-items: center;
         }
         .nav-buttons .nav-info {
-            font-size: 14px;
+            font-size: 15px;
             color: #6b7280;
             text-align: center;
             font-weight: 600;
         }
         .nav-buttons .btn {
-            font-size: 14px;
+            font-size: 15px;
             padding: 6px 14px;
-            min-height: 36px;
+            min-height: 38px;
         }
 
-        /* ===== 响应式 ===== */
+        /* ===== 响应式 - 大屏手机 ===== */
         @media (min-width: 500px) {
-            .container { padding: 18px; max-height: 920px; }
-            .card { font-size: 18px; min-height: 68px; }
+            .container { padding: 18px 18px 12px 18px; max-height: 100vh; }
+            .card { font-size: 19px; min-height: 70px; }
             .grid { gap: 10px; }
-            .title { font-size: 24px; }
-            .stat-item .number { font-size: 22px; }
+            .title { font-size: 26px; }
+            .stat-item .number { font-size: 24px; }
         }
 
+        /* ===== 响应式 - 小屏手机 ===== */
         @media (max-width: 420px) {
-            .container { padding: 10px; border-radius: 12px; height: 100vh; max-height: 100vh; }
-            .title { font-size: 19px; }
+            .container { padding: 10px 10px 6px 10px; border-radius: 12px; height: 100vh; max-height: 100vh; }
+            .title { font-size: 20px; }
             .title .horse-icon { font-size: 22px; }
-            .custom-select { font-size: 12px; padding: 5px 20px 5px 8px; min-width: 70px; max-width: 110px; }
-            .btn { font-size: 12px; padding: 5px 10px; min-height: 34px; }
+            .custom-select { font-size: 13px; padding: 5px 20px 5px 8px; min-width: 70px; max-width: 110px; }
+            .btn { font-size: 13px; padding: 5px 10px; min-height: 36px; }
             .stats { padding: 5px 8px; gap: 4px; }
-            .stat-item .number { font-size: 17px; min-width: 20px; padding: 0 6px; }
-            .stat-item .label { font-size: 9px; }
-            .mode-switch-item .mode-name { font-size: 13px; padding: 0 6px; min-width: 38px; }
+            .stat-item .number { font-size: 19px; min-width: 20px; padding: 0 6px; }
+            .stat-item .label { font-size: 10px; }
+            .mode-switch-item .mode-name { font-size: 15px; padding: 0 6px; min-width: 40px; }
             .grid { gap: 6px; }
-            .card { font-size: 14px; min-height: 52px; border-radius: 10px; border-width: 2px; padding: 4px; }
+            .card { font-size: 15px; min-height: 54px; border-radius: 10px; border-width: 2px; padding: 4px; }
             .card .level-badge { font-size: 6px; }
             .card .speaker-icon { font-size: 10px; }
             .card .card-lang-tag { font-size: 7px !important; }
-            .grid-short-sentence .card { font-size: 16px !important; min-height: 50px !important; height: 54px !important; padding: 8px 14px !important; }
+            .grid-short-sentence .card { font-size: 17px !important; min-height: 52px !important; height: 56px !important; padding: 8px 14px !important; }
             .grid-review-list { gap: 6px !important; grid-template-columns: 1fr !important; }
-            .grid-review-list .review-card { padding: 10px 14px !important; min-height: 54px !important; height: 58px !important; }
-            .grid-review-list .review-card .en-part { font-size: 14px !important; }
-            .grid-review-list .review-card .zh-part { font-size: 13px !important; }
-            .grid-review-list .review-card .speaker-btn { font-size: 15px !important; }
-            .status-bar { font-size: 12px; padding: 5px 8px; min-height: 28px; }
-            .status-bar .badge { font-size: 10px; padding: 1px 6px; }
-            .score-popup { font-size: 28px; }
-            .panel { padding: 10px; max-height: 45vh; }
-            .panel-title { font-size: 14px; }
-            .panel textarea { height: 50px; font-size: 12px; padding: 6px; }
-            .panel .input-group input { font-size: 12px; padding: 6px 10px; min-height: 34px; }
-            .panel .hint { font-size: 11px; }
-            .nav-buttons .btn { font-size: 12px; padding: 5px 12px; min-height: 32px; }
-            .nav-buttons .nav-info { font-size: 13px; }
-            .next-level-btn button { padding: 12px 24px; font-size: 16px; min-height: 44px; }
-            .next-level-btn .info-text { font-size: 13px; }
-            .panel-actions .btn { min-width: 60px; font-size: 11px; padding: 5px 8px; }
+            .grid-review-list .review-card { padding: 10px 14px !important; min-height: 56px !important; height: 60px !important; }
+            .grid-review-list .review-card .en-part { font-size: 15px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 14px !important; }
+            .grid-review-list .review-card .speaker-btn { font-size: 16px !important; }
+            .status-bar { font-size: 13px; padding: 5px 8px; min-height: 30px; }
+            .status-bar .badge { font-size: 11px; padding: 1px 6px; }
+            .score-popup { font-size: 30px; }
+            .panel { padding: 10px 12px; }
+            .panel-title { font-size: 15px; }
+            .panel textarea { height: 55px; font-size: 13px; padding: 6px 8px; }
+            .panel .input-group input { font-size: 13px; padding: 6px 10px; min-height: 36px; }
+            .panel .hint { font-size: 12px; }
+            .panel-actions .btn { font-size: 12px; padding: 6px 10px; min-height: 36px; }
+            .nav-buttons .btn { font-size: 13px; padding: 5px 12px; min-height: 34px; }
+            .nav-buttons .nav-info { font-size: 14px; }
+            .next-level-btn button { padding: 12px 24px; font-size: 18px; min-height: 46px; }
+            .next-level-btn .info-text { font-size: 14px; }
+            .upload-section .upload-title { font-size: 13px; }
+            .upload-section .upload-status { font-size: 12px; }
         }
 
         @media (max-width: 360px) {
-            .container { padding: 6px; border-radius: 10px; }
-            .title { font-size: 16px; }
-            .custom-select { font-size: 10px; padding: 4px 16px 4px 6px; min-width: 60px; }
-            .btn { font-size: 10px; padding: 4px 8px; min-height: 30px; border-radius: 6px; }
+            .container { padding: 6px 6px 4px 6px; border-radius: 10px; }
+            .title { font-size: 17px; }
+            .custom-select { font-size: 11px; padding: 4px 16px 4px 6px; min-width: 60px; }
+            .btn { font-size: 11px; padding: 4px 8px; min-height: 32px; border-radius: 6px; }
             .stats { padding: 3px 4px; }
-            .stat-item .number { font-size: 15px; min-width: 16px; }
-            .mode-switch-item .mode-name { font-size: 11px; padding: 0 4px; min-width: 30px; }
+            .stat-item .number { font-size: 16px; min-width: 16px; }
+            .mode-switch-item .mode-name { font-size: 13px; padding: 0 4px; min-width: 32px; }
             .grid { gap: 4px; }
-            .card { font-size: 12px; min-height: 44px; border-radius: 8px; border-width: 1.5px; }
+            .card { font-size: 13px; min-height: 46px; border-radius: 8px; border-width: 1.5px; }
             .card .card-lang-tag { font-size: 6px !important; }
-            .grid-short-sentence .card { font-size: 14px !important; min-height: 42px !important; height: 46px !important; padding: 6px 10px !important; }
-            .grid-review-list .review-card { padding: 6px 10px !important; min-height: 44px !important; height: 48px !important; }
-            .grid-review-list .review-card .en-part { font-size: 12px !important; }
-            .grid-review-list .review-card .zh-part { font-size: 11px !important; }
-            .status-bar { font-size: 10px; padding: 3px 6px; min-height: 24px; }
-            .score-popup { font-size: 24px; }
-            .next-level-btn button { padding: 8px 18px; font-size: 14px; min-height: 38px; }
-            .panel { padding: 6px; max-height: 40vh; }
-            .panel-title { font-size: 12px; }
-            .panel textarea { height: 40px; font-size: 11px; }
+            .grid-short-sentence .card { font-size: 15px !important; min-height: 44px !important; height: 48px !important; padding: 6px 10px !important; }
+            .grid-review-list .review-card { padding: 6px 10px !important; min-height: 46px !important; height: 50px !important; }
+            .grid-review-list .review-card .en-part { font-size: 13px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 12px !important; }
+            .status-bar { font-size: 11px; padding: 3px 6px; min-height: 26px; }
+            .score-popup { font-size: 26px; }
+            .next-level-btn button { padding: 8px 18px; font-size: 16px; min-height: 40px; }
+            .panel { padding: 6px 8px; }
+            .panel-title { font-size: 14px; }
+            .panel textarea { height: 45px; font-size: 12px; }
+            .panel .input-group input { font-size: 12px; padding: 4px 8px; min-height: 32px; }
+            .panel-actions .btn { font-size: 11px; padding: 4px 8px; min-height: 32px; }
         }
 
         @media (max-height: 700px) {
-            .container { padding: 8px; height: 100vh; max-height: 100vh; }
+            .container { padding: 8px 8px 4px 8px; height: 100vh; max-height: 100vh; }
             .header { margin-bottom: 4px; }
-            .title { font-size: 17px; }
+            .title { font-size: 18px; }
             .stats { padding: 4px 6px; margin-bottom: 4px; }
-            .stat-item .number { font-size: 15px; }
-            .status-bar { font-size: 11px; padding: 4px 8px; min-height: 24px; margin-bottom: 4px; }
+            .stat-item .number { font-size: 16px; }
+            .status-bar { font-size: 12px; padding: 4px 8px; min-height: 26px; margin-bottom: 4px; }
             .grid { gap: 5px; }
-            .card { min-height: 44px; font-size: 13px; }
-            .grid-review-list .review-card { min-height: 46px !important; height: 50px !important; }
-            .grid-short-sentence .card { min-height: 44px !important; height: 48px !important; }
-            .btn { min-height: 30px; font-size: 12px; padding: 4px 10px; }
-            .panel { max-height: 40vh; }
+            .card { min-height: 46px; font-size: 14px; }
+            .grid-review-list .review-card { min-height: 48px !important; height: 52px !important; }
+            .grid-short-sentence .card { min-height: 46px !important; height: 50px !important; }
+            .btn { min-height: 32px; font-size: 13px; padding: 4px 10px; }
+            .panel { padding: 8px 10px; }
+            .panel textarea { height: 50px; }
         }
 
         @media (min-height: 850px) {
-            .container { max-height: 960px; }
-            .card { min-height: 74px; font-size: 18px; }
+            .card { min-height: 76px; font-size: 19px; }
             .grid { gap: 12px; }
-            .grid-short-sentence .card { min-height: 70px !important; height: 74px !important; font-size: 20px !important; }
-            .grid-review-list .review-card { min-height: 72px !important; height: 76px !important; }
-            .grid-review-list .review-card .en-part { font-size: 18px !important; }
-            .grid-review-list .review-card .zh-part { font-size: 17px !important; }
+            .grid-short-sentence .card { min-height: 72px !important; height: 76px !important; font-size: 21px !important; }
+            .grid-review-list .review-card { min-height: 74px !important; height: 78px !important; }
+            .grid-review-list .review-card .en-part { font-size: 19px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 18px !important; }
         }
     </style>
 </head>
@@ -786,7 +797,7 @@
         <!-- 游戏网格 -->
         <div class="grid" id="gameGrid"></div>
 
-        <!-- 管理面板 - 修复滚动 -->
+        <!-- 管理面板 - 占据卡片区域 -->
         <div class="panel" id="managePanel">
             <h3 class="panel-title">📚 词库管理</h3>
             
@@ -795,7 +806,7 @@
                 <div class="upload-actions">
                     <input type="file" id="uploadInput" accept=".json,.csv,.txt">
                     <button class="btn btn-primary" id="uploadBtn">📂 选择文件</button>
-                    <span style="font-size:11px;color:#6b7280;">JSON / CSV / TXT</span>
+                    <span style="font-size:12px;color:#6b7280;">JSON / CSV / TXT</span>
                 </div>
                 <div class="upload-status" id="uploadStatus">💡 上传文件批量导入词条</div>
             </div>
@@ -810,7 +821,6 @@
 
             <hr class="divider">
 
-            <!-- 按钮组 - 使用 flex-wrap 确保可见 -->
             <div class="panel-actions">
                 <button class="btn btn-danger" id="clearBtn">🗑️ 清空分组</button>
                 <button class="btn btn-info" id="resetAllBtn">🔄 重置数据</button>
@@ -1663,10 +1673,10 @@
                 availableWords = words;
             }
 
-            // ===== 复习模式 =====
+            // ===== 复习模式 - 8个词条 =====
             if (gameMode === 'review') {
                 const totalWords = availableWords.length;
-                const cardsPerPage = 4;
+                const cardsPerPage = 8; // 改为8个
                 if (totalWords === 0) {
                     grid.innerHTML =
                         `<div class="review-complete"><span class="emoji">📚</span><p>暂无词条，请先导入词库！</p></div>`;
@@ -1763,7 +1773,6 @@
                 return;
             }
 
-            // 固定8对（8张英文 + 8张中文 = 16张卡片）
             let maxPairs = 8;
             const selected = availableWords.slice(0, Math.min(maxPairs, availableWords.length));
             if (selected.length === 0) {
@@ -2204,7 +2213,10 @@
 
             document.getElementById('manageBtn').addEventListener('click', () => {
                 const panel = document.getElementById('managePanel');
+                const grid = document.getElementById('gameGrid');
                 panel.classList.toggle('active');
+                grid.classList.toggle('hidden');
+                
                 // 打开面板时滚动到顶部
                 if (panel.classList.contains('active')) {
                     setTimeout(() => { panel.scrollTop = 0; }, 100);
