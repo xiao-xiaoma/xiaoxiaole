@@ -18,44 +18,43 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px;
+            padding: 8px;
             touch-action: manipulation;
+            overflow: hidden;
+            height: 100vh;
         }
         .container {
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 16px;
-            max-width: 600px;
+            border-radius: 16px;
+            padding: 12px;
+            max-width: 480px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideUp 0.5s ease;
-            min-height: 92vh;
+            height: 98vh;
+            max-height: 820px;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        /* ===== 头部 ===== */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 6px;
+            margin-bottom: 6px;
             flex-shrink: 0;
+            gap: 4px;
         }
         .title {
-            font-size: 20px;
+            font-size: 17px;
             font-weight: 800;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
@@ -63,38 +62,36 @@
             background-clip: text;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
         .title .horse-icon {
             -webkit-text-fill-color: initial;
             background: none;
-            font-size: 24px;
+            font-size: 20px;
         }
         .controls {
             display: flex;
             gap: 4px;
-            flex-wrap: wrap;
-            align-items: center;
+            flex-shrink: 0;
         }
         .custom-select {
-            padding: 5px 24px 5px 10px;
+            padding: 4px 20px 4px 8px;
             border: 2px solid #fcd34d;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             color: #78350f;
             background: #fef3c7;
             appearance: none;
             -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2378350f' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2378350f' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 8px center;
-            background-size: 10px 7px;
-            transition: all 0.3s ease;
-            min-width: 100px;
-            max-width: 160px;
+            background-position: right 6px center;
+            background-size: 8px 5px;
+            min-width: 70px;
+            max-width: 130px;
+            font-size: 10px;
         }
         .custom-select:focus {
             outline: none;
@@ -102,54 +99,38 @@
             border-color: #f59e0b;
         }
         .btn {
-            padding: 5px 10px;
+            padding: 4px 8px;
             border: none;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             color: #fff;
             display: inline-flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
             touch-action: manipulation;
             white-space: nowrap;
+            min-height: 32px;
         }
-        .btn:active {
-            transform: scale(0.95);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-        .btn-success {
-            background: linear-gradient(135deg, #10b981, #059669);
-        }
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-        }
-        .btn-warning {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-        }
-        .btn-info {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-        }
-        .btn-purple {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-        }
-        .btn-sm {
-            padding: 3px 8px;
-            font-size: 10px;
-            border-radius: 6px;
-        }
+        .btn:active { transform: scale(0.92); }
+        .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .btn-info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .btn-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+        /* ===== 统计栏 ===== */
         .stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr 1fr 1.2fr;
             gap: 4px;
             background: #f3f4f6;
-            padding: 6px 8px;
+            padding: 4px 6px;
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             flex-shrink: 0;
         }
         .stat-item {
@@ -157,173 +138,124 @@
             flex-direction: column;
             align-items: center;
             gap: 0px;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             color: #4b5563;
         }
         .stat-item .number {
             background: #fff;
-            padding: 0 6px;
-            border-radius: 14px;
-            font-size: 16px;
+            padding: 0 4px;
+            border-radius: 12px;
+            font-size: 15px;
             color: #1f2937;
-            min-width: 20px;
+            min-width: 16px;
             text-align: center;
             font-weight: 700;
         }
-        .stat-item .label {
-            font-size: 9px;
-            color: #6b7280;
-        }
-        .stat-item.highlight .number {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #fff;
-        }
-        .stat-item.warning .number {
-            background: #f59e0b;
-            color: #fff;
-        }
+        .stat-item .label { font-size: 7px; color: #6b7280; }
+        .stat-item.highlight .number { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
+        .stat-item.warning .number { background: #f59e0b; color: #fff; }
         .mode-switch-item {
             cursor: pointer;
             transition: all 0.3s ease;
+            padding: 0 4px;
+            border-radius: 8px;
         }
-        .mode-switch-item:active {
-            transform: scale(0.95);
-        }
-        .mode-switch-item .mode-label {
-            font-size: 8px;
-            color: #6b7280;
-            text-align: center;
-        }
+        .mode-switch-item:active { transform: scale(0.95); background: rgba(0,0,0,0.05); }
+        .mode-switch-item .mode-label { font-size: 7px; color: #6b7280; text-align: center; }
         .mode-switch-item .mode-name {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: #1f2937;
             background: #fff;
-            padding: 0 8px;
-            border-radius: 12px;
-            min-width: 40px;
+            padding: 0 6px;
+            border-radius: 10px;
+            min-width: 36px;
             text-align: center;
         }
-        .mode-switch-item .mode-name.normal {
-            color: #10b981;
-        }
-        .mode-switch-item .mode-name.review {
-            color: #f59e0b;
-        }
-        .mode-switch-item .mode-name.eb {
-            color: #7c3aed;
-        }
+        .mode-switch-item .mode-name.normal { color: #10b981; }
+        .mode-switch-item .mode-name.review { color: #f59e0b; }
+        .mode-switch-item .mode-name.eb { color: #7c3aed; }
+
+        /* ===== 状态栏 ===== */
         .status-bar {
-            padding: 6px 10px;
+            padding: 4px 8px;
             border-radius: 8px;
             background: #f0f4ff;
             color: #4b5563;
-            font-size: 12px;
-            margin-bottom: 10px;
-            min-height: 32px;
+            font-size: 10px;
+            margin-bottom: 6px;
+            min-height: 26px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             transition: all 0.3s ease;
             flex-wrap: wrap;
             flex-shrink: 0;
         }
         .status-bar .badge {
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 8px;
+            font-size: 8px;
             font-weight: 600;
             white-space: nowrap;
         }
-        .badge.urgent {
-            background: #fecaca;
-            color: #991b1b;
-        }
-        .badge.learning {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-        .badge.mastered {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        .status-bar.success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        .status-bar.error {
-            background: #fecaca;
-            color: #991b1b;
-        }
-        .status-bar.info {
-            background: #dbeafe;
-            color: #1e40af;
-        }
+        .badge.urgent { background: #fecaca; color: #991b1b; }
+        .badge.learning { background: #dbeafe; color: #1e40af; }
+        .badge.mastered { background: #d1fae5; color: #065f46; }
+        .status-bar.success { background: #d1fae5; color: #065f46; }
+        .status-bar.error { background: #fecaca; color: #991b1b; }
+        .status-bar.info { background: #dbeafe; color: #1e40af; }
+
+        /* ===== 游戏网格 - 手机优化 ===== */
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin: 8px 0;
+            gap: 6px;
+            margin: 4px 0;
             flex: 1;
             min-height: 0;
+            align-content: start;
         }
         .grid-short-sentence {
             grid-template-columns: 1fr !important;
-            gap: 8px !important;
-            max-width: 100% !important;
-            width: 100% !important;
+            gap: 6px !important;
         }
         .grid-short-sentence .card {
-            font-size: 17px !important;
-            padding: 14px 20px !important;
-            border-radius: 14px !important;
-            border-width: 2.5px !important;
+            font-size: 15px !important;
+            padding: 10px 16px !important;
+            border-radius: 12px !important;
             aspect-ratio: auto !important;
-            width: 100% !important;
-            min-height: 56px !important;
-            height: 64px !important;
+            min-height: 48px !important;
+            height: 52px !important;
             flex-direction: row !important;
             justify-content: center !important;
-            gap: 8px !important;
+            gap: 6px !important;
         }
-        .grid-short-sentence .card .level-badge {
-            font-size: 9px !important;
-            top: 4px !important;
-            right: 4px !important;
-            padding: 1px 6px !important;
-        }
-        .grid-short-sentence .card .speaker-icon {
-            font-size: 14px !important;
-            bottom: 4px !important;
-            right: 4px !important;
-        }
-        .grid-short-sentence .card .card-lang-tag {
-            font-size: 8px !important;
-            bottom: 2px !important;
-        }
+        .grid-short-sentence .card .level-badge { font-size: 8px !important; top: 3px !important; right: 3px !important; padding: 0 4px !important; }
+        .grid-short-sentence .card .speaker-icon { font-size: 12px !important; bottom: 3px !important; right: 3px !important; }
+        .grid-short-sentence .card .card-lang-tag { font-size: 6px !important; bottom: 1px !important; }
+
         .grid-review-list {
             grid-template-columns: 1fr 1fr !important;
-            gap: 10px !important;
-            max-width: 100% !important;
-            width: 100% !important;
+            gap: 6px !important;
         }
         .grid-review-list .review-card {
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
             justify-content: space-between !important;
-            padding: 10px 14px !important;
+            padding: 8px 10px !important;
             background: linear-gradient(135deg, #f9fafb, #f3f4f6);
-            border: 2.5px solid #e5e7eb;
-            border-radius: 14px !important;
-            min-height: 56px !important;
-            height: 62px !important;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px !important;
+            min-height: 48px !important;
+            height: 52px !important;
             aspect-ratio: auto !important;
             width: 100% !important;
             cursor: default !important;
             transition: all 0.3s ease;
-            gap: 8px !important;
+            gap: 4px !important;
             position: relative;
         }
         .grid-review-list .review-card .card-left {
@@ -332,7 +264,7 @@
             align-items: flex-start !important;
             flex: 2;
             min-width: 0;
-            gap: 2px !important;
+            gap: 1px !important;
         }
         .grid-review-list .review-card .card-right {
             display: flex !important;
@@ -340,18 +272,18 @@
             align-items: flex-end !important;
             flex: 1;
             min-width: 0;
-            gap: 2px !important;
+            gap: 1px !important;
         }
         .grid-review-list .review-card .en-part {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 13px;
             color: #1f2937;
             text-align: left;
             line-height: 1.2;
         }
         .grid-review-list .review-card .zh-part {
             font-weight: 500;
-            font-size: 15px;
+            font-size: 12px;
             color: #4b5563;
             text-align: right;
             line-height: 1.2;
@@ -359,32 +291,40 @@
         .grid-review-list .review-card .speaker-btn {
             background: none;
             border: none;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
-            padding: 4px 6px;
-            border-radius: 8px;
+            padding: 2px 4px;
+            border-radius: 6px;
             transition: all 0.2s ease;
             touch-action: manipulation;
             color: #667eea;
             flex-shrink: 0;
-            margin-left: 4px;
         }
         .grid-review-list .review-card .speaker-btn:active {
-            transform: scale(0.85);
-            background: rgba(102, 126, 234, 0.1);
+            transform: scale(0.8);
+            background: rgba(102, 126, 234, 0.15);
         }
         .grid-review-list .review-card .card-index {
             position: absolute;
-            top: 4px;
-            right: 6px;
-            font-size: 9px;
+            top: 2px;
+            right: 4px;
+            font-size: 7px;
             color: #d1d5db;
             font-weight: 700;
         }
+        .grid-review-list .review-card .mini-example {
+            font-size: 8px;
+            color: #9ca3af;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+
         .review-complete {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 40px 16px;
+            padding: 20px 12px;
             color: #6b7280;
             display: flex;
             flex-direction: column;
@@ -392,151 +332,112 @@
             align-items: center;
             height: 100%;
         }
-        .review-complete .emoji {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 8px;
-        }
-        .review-complete p {
-            font-size: 15px;
-        }
-        .review-complete .sub {
-            font-size: 13px;
-            color: #9ca3af;
-            margin-top: 4px;
-        }
+        .review-complete .emoji { font-size: 36px; display: block; margin-bottom: 4px; }
+        .review-complete p { font-size: 13px; }
+        .review-complete .sub { font-size: 11px; color: #9ca3af; margin-top: 3px; }
+
+        /* ===== 卡片 - 手机优化 ===== */
         .card {
             aspect-ratio: 1;
             background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-            border: 2.5px solid #e5e7eb;
-            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 4px;
+            padding: 3px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
             word-break: break-word;
             position: relative;
             color: #1f2937;
-            min-height: 50px;
+            min-height: 44px;
             line-height: 1.2;
             -webkit-touch-callout: none;
+            touch-action: manipulation;
         }
         .card .card-lang-tag {
             position: absolute;
-            bottom: 2px;
+            bottom: 1px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 7px;
+            font-size: 5px;
             color: #9ca3af;
             background: rgba(255, 255, 255, 0.6);
-            padding: 0 5px;
-            border-radius: 4px;
+            padding: 0 4px;
+            border-radius: 3px;
             font-weight: 400;
             pointer-events: none;
         }
         .card.flipped .card-lang-tag {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.4);
             background: rgba(255, 255, 255, 0.1);
         }
         .card .level-badge {
             position: absolute;
-            top: 2px;
-            right: 2px;
-            font-size: 7px;
+            top: 1px;
+            right: 1px;
+            font-size: 5px;
             background: rgba(0, 0, 0, 0.07);
-            padding: 1px 4px;
-            border-radius: 6px;
+            padding: 0 3px;
+            border-radius: 4px;
             color: #6b7280;
         }
         .card .speaker-icon {
             position: absolute;
-            bottom: 2px;
-            right: 2px;
-            font-size: 11px;
+            bottom: 1px;
+            right: 1px;
+            font-size: 9px;
             opacity: 0.5;
             pointer-events: none;
         }
-        .card:active {
-            transform: scale(0.95);
-        }
+        .card:active { transform: scale(0.93); }
         .card.flipped {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: #fff;
             border-color: #667eea;
-            transform: scale(1.02);
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
         }
-        .card.flipped .level-badge {
-            color: rgba(255, 255, 255, 0.6);
-        }
+        .card.flipped .level-badge { color: rgba(255, 255, 255, 0.6); }
         .card.matched {
-            animation: matchPop 0.5s ease forwards;
+            animation: matchPop 0.4s ease forwards;
             pointer-events: none;
         }
         .card.hidden {
             visibility: hidden;
             pointer-events: none;
-            animation: fadeOut 0.25s ease forwards;
+            animation: fadeOut 0.2s ease forwards;
         }
         .card.fail {
-            animation: shake 0.4s ease;
+            animation: shake 0.35s ease;
             border-color: #ef4444;
         }
         @keyframes matchPop {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            30% {
-                transform: scale(1.25) rotate(8deg);
-                opacity: 1;
-                background: linear-gradient(135deg, #10b981, #059669);
-                border-color: #10b981;
-                box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
-            }
-            60% {
-                transform: scale(0.85) rotate(-3deg);
-                opacity: 0.8;
-            }
-            100% {
-                transform: scale(0);
-                opacity: 0;
-            }
+            0% { transform: scale(1); opacity: 1; }
+            25% { transform: scale(1.2) rotate(6deg); opacity: 1; background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; box-shadow: 0 0 25px rgba(16,185,129,0.4); }
+            50% { transform: scale(0.9) rotate(-2deg); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
         }
         @keyframes fadeOut {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.6);
-            }
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
         }
         @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            25% {
-                transform: translateX(-6px) rotate(-2deg);
-            }
-            75% {
-                transform: translateX(6px) rotate(2deg);
-            }
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-5px) rotate(-2deg); }
+            60% { transform: translateX(5px) rotate(2deg); }
         }
         .card::after {
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 12px;
+            border-radius: 10px;
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
@@ -545,116 +446,75 @@
             background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), transparent 70%);
             opacity: 1;
         }
+
+        /* ===== 面板 ===== */
         .panel {
-            margin-top: 10px;
+            margin-top: 6px;
             background: #f9fafb;
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px;
             display: none;
             animation: slideUp 0.3s ease;
             flex-shrink: 0;
+            max-height: 50vh;
+            overflow-y: auto;
         }
-        .panel.active {
-            display: block;
-        }
-        .panel-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 8px;
-        }
+        .panel.active { display: block; }
+        .panel-title { font-size: 13px; font-weight: 700; color: #1f2937; margin-bottom: 6px; }
         .panel textarea {
             width: 100%;
-            height: 70px;
-            padding: 8px;
+            height: 50px;
+            padding: 6px;
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 13px;
+            border-radius: 6px;
+            font-size: 11px;
             resize: vertical;
-            transition: border-color 0.3s ease;
             font-family: inherit;
         }
-        .panel textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+        .panel textarea:focus { outline: none; border-color: #667eea; }
         .panel .input-group {
             display: flex;
-            gap: 6px;
-            margin: 8px 0;
+            gap: 4px;
+            margin: 6px 0;
             flex-wrap: wrap;
         }
         .panel .input-group input {
             flex: 1;
-            padding: 6px 10px;
+            padding: 4px 8px;
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 13px;
-            transition: border-color 0.3s ease;
-            min-width: 80px;
+            border-radius: 6px;
+            font-size: 11px;
+            min-width: 60px;
         }
-        .panel .input-group input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .panel .hint {
-            font-size: 12px;
-            color: #6b7280;
-            margin-bottom: 6px;
-            line-height: 1.4;
-        }
-        .panel .divider {
-            border: none;
-            border-top: 2px solid #e5e7eb;
-            margin: 10px 0;
-        }
+        .panel .input-group input:focus { outline: none; border-color: #667eea; }
+        .panel .hint { font-size: 10px; color: #6b7280; margin-bottom: 4px; line-height: 1.3; }
+        .panel .divider { border: none; border-top: 2px solid #e5e7eb; margin: 6px 0; }
         .upload-section {
             background: #f0fdf4;
             border: 2px dashed #10b981;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 8px 0;
-        }
-        .upload-section .upload-title {
-            font-weight: 700;
-            color: #065f46;
-            margin-bottom: 4px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .upload-section .upload-actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .upload-section .upload-actions input[type="file"] {
-            display: none;
-        }
-        .upload-section .upload-status {
-            padding: 4px 8px;
             border-radius: 6px;
-            font-size: 12px;
-            min-height: 28px;
+            padding: 8px;
+            margin: 6px 0;
+        }
+        .upload-section .upload-title { font-weight: 700; color: #065f46; margin-bottom: 3px; font-size: 11px; display: flex; align-items: center; gap: 3px; }
+        .upload-section .upload-actions { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+        .upload-section .upload-actions input[type="file"] { display: none; }
+        .upload-section .upload-status {
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            min-height: 22px;
             background: #f3f4f6;
             color: #4b5563;
-            margin-top: 4px;
-            transition: all 0.3s ease;
+            margin-top: 3px;
         }
-        .upload-section .upload-status.success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        .upload-section .upload-status.error {
-            background: #fecaca;
-            color: #991b1b;
-        }
+        .upload-section .upload-status.success { background: #d1fae5; color: #065f46; }
+        .upload-section .upload-status.error { background: #fecaca; color: #991b1b; }
+
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 30px 16px;
+            padding: 20px 12px;
             color: #6b7280;
             display: flex;
             flex-direction: column;
@@ -662,17 +522,12 @@
             align-items: center;
             height: 100%;
         }
-        .empty-state .emoji {
-            font-size: 38px;
-            display: block;
-            margin-bottom: 6px;
-        }
-        .empty-state p {
-            font-size: 14px;
-        }
+        .empty-state .emoji { font-size: 30px; display: block; margin-bottom: 4px; }
+        .empty-state p { font-size: 12px; }
+
         .next-level-btn {
             grid-column: 1 / -1;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -681,10 +536,10 @@
             height: 100%;
         }
         .next-level-btn button {
-            padding: 10px 24px;
-            font-size: 16px;
+            padding: 8px 20px;
+            font-size: 14px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             background: linear-gradient(135deg, #10b981, #059669);
             color: #fff;
             cursor: pointer;
@@ -693,440 +548,179 @@
             box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
             touch-action: manipulation;
         }
-        .next-level-btn button:active {
-            transform: scale(0.95);
-        }
-        .next-level-btn .info-text {
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 6px;
-        }
-        .celebration {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 1000;
-        }
+        .next-level-btn button:active { transform: scale(0.93); }
+        .next-level-btn .info-text { font-size: 11px; color: #6b7280; margin-top: 4px; }
+
+        /* ===== 庆祝动画 ===== */
+        .celebration { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
         .confetti {
             position: absolute;
-            font-size: 14px;
+            font-size: 12px;
             animation: confettiFall linear forwards;
         }
         @keyframes confettiFall {
-            0% {
-                transform: translateY(-10vh) rotate(0deg) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(110vh) rotate(720deg) scale(0.5);
-                opacity: 0;
-            }
+            0% { transform: translateY(-10vh) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg) scale(0.4); opacity: 0; }
         }
         .score-popup {
             position: fixed;
-            font-size: 36px;
+            font-size: 28px;
             font-weight: 900;
             color: #10b981;
             pointer-events: none;
             z-index: 999;
-            animation: scoreFloat 0.9s ease forwards;
-            text-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+            animation: scoreFloat 0.8s ease forwards;
+            text-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
         }
         @keyframes scoreFloat {
-            0% {
-                transform: translateY(0) scale(0.5);
-                opacity: 0;
-            }
-            30% {
-                transform: translateY(-25px) scale(1.2);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) scale(1);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            30% { transform: translateY(-20px) scale(1.1); opacity: 1; }
+            100% { transform: translateY(-80px) scale(1); opacity: 0; }
         }
-        ::-webkit-scrollbar {
-            width: 3px;
+
+        /* ===== 滚动条 ===== */
+        ::-webkit-scrollbar { width: 2px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 4px; }
+
+        /* ===== 导航按钮 ===== */
+        .nav-buttons {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            padding: 8px 0 2px 0;
+            flex-wrap: wrap;
+            align-items: center;
         }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 8px;
+        .nav-buttons .nav-info {
+            font-size: 11px;
+            color: #6b7280;
+            text-align: center;
         }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 8px;
+        .nav-buttons .btn {
+            font-size: 11px;
+            padding: 4px 10px;
+            min-height: 28px;
         }
-        @media (max-width: 500px) {
+
+        /* ===== 响应式 - 小屏手机 ===== */
+        @media (max-width: 420px) {
             .container {
-                padding: 10px;
-                border-radius: 14px;
-                min-height: 90vh;
-            }
-            .title {
-                font-size: 17px;
-            }
-            .title .horse-icon {
-                font-size: 20px;
-            }
-            .custom-select {
-                font-size: 11px;
-                padding: 4px 20px 4px 8px;
-                min-width: 80px;
-                border-radius: 6px;
-            }
-            .btn {
-                font-size: 11px;
-                padding: 4px 8px;
-                border-radius: 6px;
-            }
-            .stats {
-                padding: 4px 6px;
-                border-radius: 8px;
-                gap: 2px;
-            }
-            .stat-item .number {
-                font-size: 14px;
-                min-width: 18px;
-                padding: 0 4px;
-            }
-            .stat-item .label {
-                font-size: 8px;
-            }
-            .mode-switch-item .mode-name {
-                font-size: 11px;
-                padding: 0 6px;
-            }
-            .grid {
-                gap: 5px;
-            }
-            .card {
-                font-size: 12px;
-                min-height: 44px;
-                border-radius: 8px;
-                border-width: 2px;
-                padding: 3px;
-            }
-            .card .level-badge {
-                font-size: 6px;
-                top: 1px;
-                right: 1px;
-                padding: 0px 3px;
-            }
-            .card .speaker-icon {
-                font-size: 9px;
-                bottom: 1px;
-                right: 1px;
-            }
-            .card .card-lang-tag {
-                font-size: 6px !important;
-                bottom: 1px !important;
-            }
-            .grid-short-sentence {
-                gap: 6px !important;
-                padding: 0 !important;
-                max-width: 100% !important;
-                width: 100% !important;
-            }
-            .grid-short-sentence .card {
-                font-size: 15px !important;
-                min-height: 48px !important;
-                height: 54px !important;
-                padding: 8px 14px !important;
-                border-radius: 10px !important;
-            }
-            .grid-review-list {
-                gap: 6px !important;
-                grid-template-columns: 1fr !important;
-            }
-            .grid-review-list .review-card {
-                padding: 8px 12px !important;
-                min-height: 48px !important;
-                height: 54px !important;
-                border-radius: 12px !important;
-            }
-            .grid-review-list .review-card .en-part {
-                font-size: 14px !important;
-            }
-            .grid-review-list .review-card .zh-part {
-                font-size: 13px !important;
-            }
-            .grid-review-list .review-card .speaker-btn {
-                font-size: 14px !important;
-            }
-            .grid-review-list .review-card .card-index {
-                font-size: 7px !important;
-                top: 2px !important;
-                right: 4px !important;
-            }
-            .status-bar {
-                font-size: 11px;
-                padding: 4px 8px;
-                min-height: 28px;
-                border-radius: 6px;
-            }
-            .status-bar .badge {
-                font-size: 9px;
-                padding: 1px 6px;
-            }
-            .panel {
                 padding: 8px;
-                border-radius: 10px;
+                border-radius: 12px;
+                max-height: none;
+                height: 100vh;
+                max-height: 100vh;
             }
-            .panel-title {
-                font-size: 14px;
-            }
-            .panel textarea {
-                height: 50px;
-                font-size: 12px;
-                padding: 6px;
-                border-radius: 6px;
-            }
-            .panel .input-group input {
-                font-size: 12px;
-                padding: 4px 8px;
-                border-radius: 6px;
-                min-width: 60px;
-            }
-            .panel .hint {
-                font-size: 11px;
-            }
-            .upload-section {
-                padding: 8px;
-                border-radius: 6px;
-            }
-            .upload-section .upload-title {
-                font-size: 12px;
-            }
-            .upload-section .upload-status {
-                font-size: 11px;
-                min-height: 24px;
-                padding: 3px 6px;
-                border-radius: 4px;
-            }
-            .next-level-btn button {
-                padding: 8px 18px;
-                font-size: 14px;
-                border-radius: 10px;
-            }
-            .next-level-btn .info-text {
-                font-size: 12px;
-            }
-            .score-popup {
-                font-size: 28px;
-            }
-            .empty-state .emoji {
-                font-size: 30px;
-            }
-            .empty-state p {
-                font-size: 13px;
-            }
-            .review-complete .emoji {
-                font-size: 38px;
-            }
-            .review-complete p {
-                font-size: 14px;
-            }
+            .title { font-size: 15px; }
+            .title .horse-icon { font-size: 17px; }
+            .custom-select { font-size: 9px; padding: 3px 16px 3px 6px; min-width: 60px; max-width: 100px; }
+            .btn { font-size: 10px; padding: 3px 6px; min-height: 28px; }
+            .stats { padding: 3px 4px; gap: 2px; }
+            .stat-item .number { font-size: 13px; min-width: 14px; padding: 0 3px; }
+            .stat-item .label { font-size: 6px; }
+            .mode-switch-item .mode-name { font-size: 10px; padding: 0 4px; min-width: 30px; }
+            .grid { gap: 4px; }
+            .card { font-size: 10px; min-height: 38px; border-radius: 8px; border-width: 1.5px; padding: 2px; }
+            .card .level-badge { font-size: 4px; }
+            .card .speaker-icon { font-size: 7px; }
+            .card .card-lang-tag { font-size: 4px !important; }
+            .grid-short-sentence .card { font-size: 13px !important; min-height: 40px !important; height: 44px !important; padding: 6px 10px !important; border-radius: 8px !important; }
+            .grid-review-list { gap: 4px !important; grid-template-columns: 1fr !important; }
+            .grid-review-list .review-card { padding: 6px 8px !important; min-height: 42px !important; height: 46px !important; border-radius: 10px !important; }
+            .grid-review-list .review-card .en-part { font-size: 12px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 11px !important; }
+            .grid-review-list .review-card .speaker-btn { font-size: 12px !important; }
+            .grid-review-list .review-card .card-index { font-size: 6px !important; }
+            .status-bar { font-size: 9px; padding: 3px 6px; min-height: 22px; }
+            .status-bar .badge { font-size: 7px; padding: 1px 4px; }
+            .score-popup { font-size: 22px; }
+            .panel { padding: 6px; max-height: 40vh; }
+            .panel-title { font-size: 12px; }
+            .panel textarea { height: 40px; font-size: 10px; padding: 4px; }
+            .nav-buttons .btn { font-size: 10px; padding: 3px 8px; min-height: 24px; }
+            .nav-buttons .nav-info { font-size: 10px; }
         }
-        @media (max-width: 380px) {
-            .container {
-                padding: 6px;
-                border-radius: 10px;
-                min-height: 85vh;
-            }
-            .title {
-                font-size: 15px;
-            }
-            .title .horse-icon {
-                font-size: 18px;
-            }
-            .custom-select {
-                font-size: 10px;
-                padding: 3px 16px 3px 6px;
-                min-width: 60px;
-            }
-            .btn {
-                font-size: 10px;
-                padding: 3px 6px;
-                border-radius: 4px;
-            }
-            .stats {
-                padding: 3px 4px;
-                gap: 1px;
-            }
-            .stat-item .number {
-                font-size: 12px;
-                min-width: 14px;
-                padding: 0 3px;
-            }
-            .stat-item .label {
-                font-size: 7px;
-            }
-            .mode-switch-item .mode-name {
-                font-size: 10px;
-                padding: 0 4px;
-            }
-            .grid {
-                gap: 4px;
-            }
-            .card {
-                font-size: 10px;
-                min-height: 38px;
-                border-radius: 6px;
-                border-width: 1.5px;
-                padding: 2px;
-            }
-            .card .level-badge {
-                font-size: 5px;
-            }
-            .card .speaker-icon {
-                font-size: 8px;
-            }
-            .card .card-lang-tag {
-                font-size: 5px !important;
-            }
-            .grid-short-sentence {
-                gap: 5px !important;
-            }
-            .grid-short-sentence .card {
-                font-size: 13px !important;
-                min-height: 42px !important;
-                height: 48px !important;
-                padding: 6px 12px !important;
-                border-radius: 8px !important;
-            }
-            .grid-review-list {
-                gap: 5px !important;
-                grid-template-columns: 1fr !important;
-            }
-            .grid-review-list .review-card {
-                padding: 6px 10px !important;
-                min-height: 42px !important;
-                height: 48px !important;
-                border-radius: 10px !important;
-            }
-            .grid-review-list .review-card .en-part {
-                font-size: 12px !important;
-            }
-            .grid-review-list .review-card .zh-part {
-                font-size: 11px !important;
-            }
-            .grid-review-list .review-card .speaker-btn {
-                font-size: 12px !important;
-            }
-            .grid-review-list .review-card .card-index {
-                font-size: 6px !important;
-                top: 2px !important;
-                right: 4px !important;
-            }
-            .status-bar {
-                font-size: 10px;
-                padding: 3px 6px;
-                min-height: 24px;
-            }
-            .status-bar .badge {
-                font-size: 8px;
-                padding: 1px 4px;
-            }
-            .score-popup {
-                font-size: 22px;
-            }
-            .next-level-btn button {
-                padding: 6px 14px;
-                font-size: 12px;
-            }
-            .empty-state .emoji {
-                font-size: 26px;
-            }
-            .empty-state p {
-                font-size: 12px;
-            }
-            .review-complete .emoji {
-                font-size: 32px;
-            }
-            .review-complete p {
-                font-size: 13px;
-            }
+
+        @media (max-width: 360px) {
+            .container { padding: 5px; border-radius: 10px; }
+            .title { font-size: 13px; }
+            .custom-select { font-size: 8px; padding: 2px 14px 2px 5px; min-width: 50px; }
+            .btn { font-size: 9px; padding: 2px 5px; min-height: 24px; border-radius: 5px; }
+            .stats { padding: 2px 3px; }
+            .stat-item .number { font-size: 11px; min-width: 12px; }
+            .mode-switch-item .mode-name { font-size: 9px; padding: 0 3px; min-width: 26px; }
+            .grid { gap: 3px; }
+            .card { font-size: 9px; min-height: 32px; border-radius: 6px; border-width: 1px; }
+            .grid-short-sentence .card { font-size: 11px !important; min-height: 34px !important; height: 38px !important; padding: 4px 8px !important; }
+            .grid-review-list .review-card { padding: 4px 6px !important; min-height: 36px !important; height: 40px !important; }
+            .grid-review-list .review-card .en-part { font-size: 10px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 9px !important; }
+            .status-bar { font-size: 8px; padding: 2px 4px; min-height: 18px; }
+            .score-popup { font-size: 18px; }
         }
-        @media (min-width: 601px) {
-            .card {
-                font-size: 17px;
-                min-height: 80px;
-                border-radius: 14px;
-                padding: 6px;
-            }
-            .card .level-badge {
-                font-size: 9px;
-                top: 4px;
-                right: 4px;
-                padding: 2px 6px;
-            }
-            .card .speaker-icon {
-                font-size: 14px;
-                bottom: 4px;
-                right: 4px;
-            }
-            .card .card-lang-tag {
-                font-size: 8px !important;
-                bottom: 3px !important;
-            }
-            .grid-short-sentence .card {
-                font-size: 19px !important;
-                min-height: 66px !important;
-                height: 72px !important;
-                padding: 14px 24px !important;
-                border-radius: 14px !important;
-            }
-            .grid-review-list .review-card {
-                padding: 12px 18px !important;
-                min-height: 64px !important;
-                height: 70px !important;
-                border-radius: 14px !important;
-            }
-            .grid-review-list .review-card .en-part {
-                font-size: 18px !important;
-            }
-            .grid-review-list .review-card .zh-part {
-                font-size: 17px !important;
-            }
-            .grid-review-list .review-card .speaker-btn {
-                font-size: 20px !important;
-            }
-            .stats {
-                padding: 8px 12px;
-            }
-            .stat-item .number {
-                font-size: 18px;
-            }
-            .stat-item .label {
-                font-size: 11px;
-            }
-            .grid {
-                gap: 10px;
-            }
-            .grid-review-list {
-                gap: 10px !important;
-            }
+
+        @media (max-height: 700px) {
+            .container { padding: 8px; height: 100vh; max-height: 100vh; }
+            .header { margin-bottom: 4px; }
+            .title { font-size: 15px; }
+            .stats { padding: 3px 4px; margin-bottom: 4px; }
+            .status-bar { font-size: 9px; padding: 3px 6px; min-height: 20px; margin-bottom: 4px; }
+            .grid { gap: 4px; }
+            .card { min-height: 36px; font-size: 10px; }
+            .grid-review-list .review-card { min-height: 40px !important; height: 44px !important; }
+            .grid-short-sentence .card { min-height: 40px !important; height: 44px !important; }
+        }
+
+        @media (min-height: 800px) {
+            .container { max-height: 900px; }
+            .card { min-height: 60px; font-size: 14px; }
+            .grid-short-sentence .card { min-height: 60px !important; height: 64px !important; font-size: 17px !important; }
+            .grid-review-list .review-card { min-height: 60px !important; height: 64px !important; }
+            .grid-review-list .review-card .en-part { font-size: 15px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 14px !important; }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- 头部 -->
         <div class="header">
-            <h1 class="title"><span class="horse-icon">🐴</span>小小马单词消消乐</h1>
+            <h1 class="title"><span class="horse-icon">🐴</span>小小马消消乐</h1>
             <div class="controls">
                 <select id="groupSelect" class="custom-select"></select>
                 <button class="btn btn-success" id="restartBtn">🔄</button>
                 <button class="btn btn-warning" id="manageBtn">📚</button>
             </div>
         </div>
+
+        <!-- 统计栏 -->
         <div class="stats" id="statsContainer">
-            <div class="stat-item highlight"><span class="label">📚 总词汇</span><span class="number" id="totalCount">0</span></div>
-            <div class="stat-item warning"><span class="label">⏰ 待复习</span><span class="number" id="remainCount">0</span></div>
-            <div class="stat-item mode-switch-item" id="modeSwitch"><span class="mode-label">🎯 模式</span><span class="mode-name" id="modeDisplay">普通</span></div>
+            <div class="stat-item highlight">
+                <span class="label">📚 总词汇</span>
+                <span class="number" id="totalCount">0</span>
+            </div>
+            <div class="stat-item warning">
+                <span class="label">⏰ 待复习</span>
+                <span class="number" id="remainCount">0</span>
+            </div>
+            <div class="stat-item mode-switch-item" id="modeSwitch">
+                <span class="mode-label">🎯 模式</span>
+                <span class="mode-name" id="modeDisplay">普通</span>
+            </div>
         </div>
-        <div class="status-bar" id="statusBar">💡 点击配对 · 长按发音<span class="badge learning" id="statusBadge" style="display:none;">学习中</span></div>
+
+        <!-- 状态栏 -->
+        <div class="status-bar" id="statusBar">
+            💡 点击配对 · 长按发音
+            <span class="badge learning" id="statusBadge" style="display:none;">学习中</span>
+        </div>
+
+        <!-- 游戏网格 -->
         <div class="grid" id="gameGrid"></div>
+
+        <!-- 管理面板 -->
         <div class="panel" id="managePanel">
             <h3 class="panel-title">📚 词库管理</h3>
             <div class="upload-section">
@@ -1134,11 +728,11 @@
                 <div class="upload-actions">
                     <input type="file" id="uploadInput" accept=".json,.csv,.txt">
                     <button class="btn btn-primary" id="uploadBtn">📂 选择文件</button>
-                    <span style="font-size:11px;color:#6b7280;">JSON / CSV / TXT</span>
+                    <span style="font-size:9px;color:#6b7280;">JSON / CSV / TXT</span>
                 </div>
                 <div class="upload-status" id="uploadStatus">💡 上传文件批量导入词条</div>
             </div>
-            <div class="hint">💡 每行一个词条，英文和中文用 <strong>逗号</strong> 或 <strong>Tab</strong> 分隔<br>例如：<code>get up,起床</code> 或 <code>How are you?,你好吗</code></div>
+            <div class="hint">💡 每行一个词条，英文和中文用 <strong>逗号</strong> 或 <strong>Tab</strong> 分隔</div>
             <textarea id="wordInput" placeholder="apple,苹果&#10;get up,起床&#10;How are you?,你好吗"></textarea>
             <div class="input-group">
                 <input id="groupNameInput" type="text" placeholder="分组名称">
@@ -1152,6 +746,7 @@
             </div>
         </div>
     </div>
+
     <script>
         // ================================================================
         //  1. 艾宾浩斯记忆系统
@@ -1159,7 +754,7 @@
         const EBBINGHAUS_INTERVALS = [5 * 60 * 1000, 30 * 60 * 1000, 12 * 60 * 60 * 1000, 24 * 60 * 60 * 1000, 2 * 24 * 60 *
             60 * 1000, 4 * 24 * 60 * 60 * 1000, 7 * 24 * 60 * 60 * 1000, 15 * 24 * 60 * 60 * 1000
         ];
-        const LEVEL_LABELS = ['初次学习', '5分钟复习', '30分钟复习', '12小时复习', '1天复习', '2天复习', '4天复习', '7天复习', '15天复习', '已掌握 ✅'];
+        const LEVEL_LABELS = ['初次学习', '5分钟', '30分钟', '12小时', '1天', '2天', '4天', '7天', '15天', '已掌握 ✅'];
 
         // ================================================================
         //  2. 音效系统
@@ -1212,7 +807,7 @@
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(880, now);
                 osc.frequency.exponentialRampToValueAtTime(660, now + 0.06);
-                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.setValueAtTime(0.12, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
                 osc.start(now);
                 osc.stop(now + 0.07); }
@@ -1223,7 +818,7 @@
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(500, now);
                 osc.frequency.exponentialRampToValueAtTime(400, now + 0.04);
-                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.setValueAtTime(0.1, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
                 osc.start(now);
                 osc.stop(now + 0.05); }
@@ -1233,7 +828,7 @@
                     gain.connect(ctx.destination);
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, now + i * 0.07);
-                    gain.gain.setValueAtTime(0.12, now + i * 0.07);
+                    gain.gain.setValueAtTime(0.1, now + i * 0.07);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.1);
                     osc.start(now + i * 0.07);
                     osc.stop(now + i * 0.07 + 0.1); }); }
@@ -1243,7 +838,7 @@
                     gain.connect(ctx.destination);
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, now + i * 0.06);
-                    gain.gain.setValueAtTime(0.15, now + i * 0.06);
+                    gain.gain.setValueAtTime(0.12, now + i * 0.06);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.09);
                     osc.start(now + i * 0.06);
                     osc.stop(now + i * 0.06 + 0.09); }); }
@@ -1254,7 +849,7 @@
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(350, now);
                 osc.frequency.exponentialRampToValueAtTime(100, now + 0.2);
-                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.setValueAtTime(0.06, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
                 osc.start(now);
                 osc.stop(now + 0.2); }
@@ -1263,11 +858,11 @@
                     osc.connect(gain);
                     gain.connect(ctx.destination);
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + i * 0.09);
-                    gain.gain.setValueAtTime(0.15, now + i * 0.09);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.12);
-                    osc.start(now + i * 0.09);
-                    osc.stop(now + i * 0.09 + 0.12); }); }
+                    osc.frequency.setValueAtTime(freq, now + i * 0.08);
+                    gain.gain.setValueAtTime(0.12, now + i * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.1);
+                    osc.start(now + i * 0.08);
+                    osc.stop(now + i * 0.08 + 0.1); }); }
             _playPerfect(ctx, now) { [523, 659, 784, 1047, 1319, 1568].forEach((freq, i) => { const osc = ctx
                         .createOscillator();
                     const gain = ctx.createGain();
@@ -1275,10 +870,10 @@
                     gain.connect(ctx.destination);
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, now + i * 0.06);
-                    gain.gain.setValueAtTime(0.15, now + i * 0.06);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.12);
+                    gain.gain.setValueAtTime(0.13, now + i * 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.1);
                     osc.start(now + i * 0.06);
-                    osc.stop(now + i * 0.06 + 0.12); }); }
+                    osc.stop(now + i * 0.06 + 0.1); }); }
             _playLevelUp(ctx, now) { [523, 659, 784, 1047, 1319, 1568, 1760].forEach((freq, i) => { const osc = ctx
                         .createOscillator();
                     const gain = ctx.createGain();
@@ -1286,7 +881,7 @@
                     gain.connect(ctx.destination);
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, now + i * 0.05);
-                    gain.gain.setValueAtTime(0.18, now + i * 0.05);
+                    gain.gain.setValueAtTime(0.14, now + i * 0.05);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.1);
                     osc.start(now + i * 0.05);
                     osc.stop(now + i * 0.05 + 0.1); }); }
@@ -1302,7 +897,7 @@
             try {
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'en-US';
-                utterance.rate = 0.9;
+                utterance.rate = 0.85;
                 utterance.pitch = 1.0;
                 utterance.volume = 0.8;
                 window.speechSynthesis.speak(utterance);
@@ -1314,13 +909,13 @@
         }
 
         // ================================================================
-        //  4. 数据层 - 完整词库（已扩充OPD词汇）
+        //  4. 数据层 - 词库
         // ================================================================
         const DB_KEY = 'word_match_game_v17';
         let EXAMPLE_SENTENCES = {};
 
         function generateDefaultExample(en, zh) {
-            return { en: "Here is an example for \"" + en + "\".", zh: "这是\"" + zh + "\"的一个例句。" };
+            return { en: "Example: \"" + en + "\".", zh: "例句：\"" + zh + "\"。" };
         }
 
         // ===== 基础词汇 =====
@@ -1359,223 +954,158 @@
             { en: "train", zh: "火车" }, { en: "plane", zh: "飞机" }, { en: "ship", zh: "轮船" }, { en: "bike",
                 zh: "自行车" },
             { en: "subway", zh: "地铁" }, { en: "taxi", zh: "出租车" }, { en: "head", zh: "头" }, { en: "hand",
-            zh: "手" },
+                zh: "手" },
             { en: "foot", zh: "脚" }, { en: "eye", zh: "眼睛" }, { en: "ear", zh: "耳朵" }, { en: "nose", zh: "鼻子" },
-            { en: "mouth", zh: "嘴" }, { en: "hair", zh: "头发" }, { en: "sunny", zh: "晴朗的" }, { en: "rainy",
-                zh: "下雨的" },
-            { en: "cloudy", zh: "多云的" }, { en: "windy", zh: "有风的" }, { en: "snowy", zh: "下雪的" }, { en: "hot",
-                zh: "热的" },
-            { en: "cold", zh: "冷的" }, { en: "warm", zh: "温暖的" }, { en: "cool", zh: "凉爽的" }, { en: "rainbow",
+            { en: "mouth", zh: "嘴" }, { en: "hair", zh: "头发" }, { en: "sunny", zh: "晴朗" }, { en: "rainy",
+                zh: "下雨" },
+            { en: "cloudy", zh: "多云" }, { en: "windy", zh: "刮风" }, { en: "snowy", zh: "下雪" }, { en: "hot",
+                zh: "热" },
+            { en: "cold", zh: "冷" }, { en: "warm", zh: "温暖" }, { en: "cool", zh: "凉爽" }, { en: "rainbow",
                 zh: "彩虹" },
             { en: "classroom", zh: "教室" }, { en: "library", zh: "图书馆" }, { en: "desk", zh: "书桌" }, { en: "chair",
                 zh: "椅子" },
             { en: "pen", zh: "钢笔" }, { en: "pencil", zh: "铅笔" }, { en: "swim", zh: "游泳" }, { en: "run",
-            zh: "跑步" },
+                zh: "跑步" },
             { en: "jump", zh: "跳" }, { en: "walk", zh: "走" }, { en: "dance", zh: "跳舞" }, { en: "happy",
-                zh: "快乐的" },
-            { en: "sad", zh: "悲伤的" }, { en: "angry", zh: "生气的" }, { en: "tired", zh: "疲惫的" }, { en: "hungry",
-                zh: "饥饿的" },
-            { en: "thirsty", zh: "口渴的" }, { en: "scared", zh: "害怕的" }, { en: "brave", zh: "勇敢的" }, { en: "kind",
-                zh: "善良的" },
-            { en: "smart", zh: "聪明的" }
+                zh: "快乐" },
+            { en: "sad", zh: "悲伤" }, { en: "angry", zh: "生气" }, { en: "tired", zh: "疲惫" }, { en: "hungry",
+                zh: "饥饿" },
+            { en: "thirsty", zh: "口渴" }, { en: "scared", zh: "害怕" }, { en: "brave", zh: "勇敢" }, { en: "kind",
+                zh: "善良" },
+            { en: "smart", zh: "聪明" }
         ];
 
-        // ===== OPD 单词（大幅扩充至500+） =====
+        // ===== OPD 单词 =====
         const OPD_WORDS = [
-            // 基础社交
             { en: "hello", zh: "你好" }, { en: "hi", zh: "嗨" }, { en: "goodbye", zh: "再见" }, { en: "thanks",
                 zh: "谢谢" },
             { en: "sorry", zh: "对不起" }, { en: "please", zh: "请" }, { en: "name", zh: "姓名" }, { en: "first",
                 zh: "名" },
-            { en: "middle", zh: "中间" }, { en: "initial", zh: "首字母" }, { en: "last", zh: "姓氏" }, { en: "spell",
-                zh: "拼写" },
-            { en: "print", zh: "手写" }, { en: "type", zh: "输入" }, { en: "address", zh: "地址" }, { en: "street",
+            { en: "last", zh: "姓氏" }, { en: "spell", zh: "拼写" }, { en: "address", zh: "地址" }, { en: "street",
                 zh: "街道" },
-            { en: "apartment", zh: "公寓" }, { en: "city", zh: "城市" }, { en: "state", zh: "州" }, { en: "zip",
-                zh: "邮编" },
-            { en: "phone", zh: "电话" }, { en: "work", zh: "工作" }, { en: "home", zh: "住宅" }, { en: "cell",
-                zh: "移动" },
-            { en: "gender", zh: "性别" }, { en: "male", zh: "男性" }, { en: "female", zh: "女性" }, { en: "birth",
-                zh: "出生" },
-            { en: "place", zh: "地点" }, { en: "signature", zh: "签名" },
-            // 学校与教育
+            { en: "city", zh: "城市" }, { en: "phone", zh: "电话" }, { en: "work", zh: "工作" }, { en: "home",
+                zh: "住宅" },
+            { en: "cell", zh: "手机" }, { en: "birth", zh: "出生" }, { en: "place", zh: "地点" }, { en: "signature",
+                zh: "签名" },
             { en: "principal", zh: "校长" }, { en: "assistant", zh: "助理" }, { en: "counselor", zh: "辅导员" },
             { en: "instructor", zh: "讲师" },
             { en: "restroom", zh: "卫生间" }, { en: "hallway", zh: "走廊" }, { en: "locker", zh: "储物柜" },
             { en: "office", zh: "办公室" },
-            { en: "clerk", zh: "办事员" }, { en: "cafeteria", zh: "食堂" }, { en: "lab", zh: "实验室" },
-            { en: "auditorium", zh: "礼堂" },
-            { en: "gym", zh: "体育馆" }, { en: "coach", zh: "教练" }, { en: "track", zh: "跑道" }, { en: "whiteboard",
-                zh: "白板" },
-            { en: "blackboard", zh: "黑板" }, { en: "screen", zh: "屏幕" }, { en: "clock", zh: "时钟" },
-            { en: "bookcase", zh: "书架" },
-            { en: "map", zh: "地图" }, { en: "alphabet", zh: "字母" }, { en: "board", zh: "白板" }, { en: "eraser",
-                zh: "板擦" },
-            { en: "marker", zh: "记号笔" }, { en: "notebook", zh: "笔记本" }, { en: "textbook", zh: "教科书" },
-            { en: "workbook", zh: "练习册" },
-            { en: "dictionary", zh: "词典" }, { en: "vocabulary", zh: "词汇" }, { en: "recording", zh: "录音" },
+            { en: "cafeteria", zh: "食堂" }, { en: "lab", zh: "实验室" }, { en: "auditorium", zh: "礼堂" },
+            { en: "gym", zh: "体育馆" },
+            { en: "coach", zh: "教练" }, { en: "track", zh: "跑道" }, { en: "whiteboard", zh: "白板" },
+            { en: "blackboard", zh: "黑板" },
+            { en: "screen", zh: "屏幕" }, { en: "clock", zh: "时钟" }, { en: "bookcase", zh: "书架" }, { en: "map",
+                zh: "地图" },
+            { en: "alphabet", zh: "字母" }, { en: "eraser", zh: "板擦" }, { en: "marker", zh: "记号笔" },
+            { en: "notebook", zh: "笔记本" },
+            { en: "textbook", zh: "教科书" }, { en: "dictionary", zh: "词典" }, { en: "vocabulary", zh: "词汇" },
             { en: "question", zh: "问题" },
             { en: "answer", zh: "答案" }, { en: "group", zh: "小组" }, { en: "goal", zh: "目标" }, { en: "test",
-                zh: "试卷" },
-            { en: "mistake", zh: "错误" }, { en: "paper", zh: "纸张" }, { en: "snack", zh: "零食" }, { en: "homework",
-                zh: "家庭作业" },
-            { en: "exam", zh: "考试" }, { en: "grade", zh: "成绩" }, { en: "score", zh: "分数" }, { en: "pass",
-                zh: "通过" },
-            { en: "fail", zh: "不及格" }, { en: "study", zh: "学习" }, { en: "read", zh: "阅读" }, { en: "write",
-                zh: "书写" },
-            { en: "listen", zh: "聆听" }, { en: "speak", zh: "说话" }, { en: "learn", zh: "学习" }, { en: "teach",
-                zh: "教授" },
-            // 天气与自然
-            { en: "weather", zh: "天气" }, { en: "season", zh: "季节" }, { en: "spring", zh: "春天" },
-            { en: "summer", zh: "夏天" },
-            { en: "autumn", zh: "秋天" }, { en: "winter", zh: "冬天" }, { en: "storm", zh: "风暴" },
-            { en: "thunder", zh: "雷声" },
-            { en: "lightning", zh: "闪电" }, { en: "fog", zh: "雾" }, { en: "ice", zh: "冰" }, { en: "snowflake",
-                zh: "雪花" },
-            // 数字与时间
-            { en: "zero", zh: "零" }, { en: "one", zh: "一" }, { en: "two", zh: "二" }, { en: "three", zh: "三" },
-            { en: "four", zh: "四" }, { en: "five", zh: "五" }, { en: "six", zh: "六" }, { en: "seven", zh: "七" },
-            { en: "eight", zh: "八" }, { en: "nine", zh: "九" }, { en: "ten", zh: "十" }, { en: "time", zh: "时间" },
-            { en: "hour", zh: "小时" }, { en: "minute", zh: "分钟" }, { en: "second", zh: "秒" }, { en: "morning",
+                zh: "考试" },
+            { en: "mistake", zh: "错误" }, { en: "homework", zh: "作业" }, { en: "grade", zh: "成绩" }, { en: "score",
+                zh: "分数" },
+            { en: "pass", zh: "通过" }, { en: "fail", zh: "不及格" }, { en: "study", zh: "学习" }, { en: "read",
+                zh: "阅读" },
+            { en: "write", zh: "书写" }, { en: "listen", zh: "聆听" }, { en: "speak", zh: "说话" }, { en: "learn",
+                zh: "学习" },
+            { en: "teach", zh: "教授" }, { en: "weather", zh: "天气" }, { en: "season", zh: "季节" }, { en: "spring",
+                zh: "春天" },
+            { en: "summer", zh: "夏天" }, { en: "autumn", zh: "秋天" }, { en: "winter", zh: "冬天" }, { en: "storm",
+                zh: "风暴" },
+            { en: "time", zh: "时间" }, { en: "hour", zh: "小时" }, { en: "minute", zh: "分钟" }, { en: "morning",
                 zh: "早上" },
             { en: "afternoon", zh: "下午" }, { en: "evening", zh: "傍晚" }, { en: "night", zh: "夜晚" },
             { en: "calendar", zh: "日历" },
             { en: "day", zh: "天" }, { en: "week", zh: "星期" }, { en: "month", zh: "月份" }, { en: "year",
-            zh: "年份" },
-            { en: "today", zh: "今天" }, { en: "tomorrow", zh: "明天" }, { en: "yesterday", zh: "昨天" },
-            { en: "weekend", zh: "周末" },
-            // 形容词
-            { en: "big", zh: "大的" }, { en: "small", zh: "小的" }, { en: "long", zh: "长的" }, { en: "short",
-                zh: "短的" },
-            { en: "tall", zh: "高的" }, { en: "heavy", zh: "重的" }, { en: "light", zh: "轻的" }, { en: "fast",
-                zh: "快的" },
-            { en: "slow", zh: "慢的" }, { en: "new", zh: "新的" }, { en: "old", zh: "旧的" }, { en: "young",
-                zh: "年轻的" },
-            { en: "beautiful", zh: "美丽的" }, { en: "ugly", zh: "丑陋的" }, { en: "rich", zh: "富有的" },
-            { en: "poor", zh: "贫穷的" },
-            { en: "easy", zh: "容易的" }, { en: "difficult", zh: "困难的" }, { en: "cheap", zh: "便宜的" },
-            { en: "expensive", zh: "昂贵的" },
-            // 颜色
+                zh: "年份" },
+            { en: "big", zh: "大" }, { en: "small", zh: "小" }, { en: "long", zh: "长" }, { en: "short", zh: "短" },
+            { en: "tall", zh: "高" }, { en: "heavy", zh: "重" }, { en: "light", zh: "轻" }, { en: "fast", zh: "快" },
+            { en: "slow", zh: "慢" }, { en: "new", zh: "新" }, { en: "old", zh: "旧" }, { en: "young", zh: "年轻" },
+            { en: "beautiful", zh: "美丽" }, { en: "ugly", zh: "丑陋" }, { en: "rich", zh: "富有" }, { en: "poor",
+                zh: "贫穷" },
+            { en: "easy", zh: "容易" }, { en: "difficult", zh: "困难" }, { en: "cheap", zh: "便宜" },
+            { en: "expensive", zh: "昂贵" },
             { en: "purple", zh: "紫色" }, { en: "brown", zh: "棕色" }, { en: "gray", zh: "灰色" }, { en: "gold",
                 zh: "金色" },
-            { en: "silver", zh: "银色" }, { en: "color", zh: "颜色" },
-            // 位置与方向
-            { en: "in", zh: "在…内" }, { en: "on", zh: "在…上" }, { en: "under", zh: "在…下" }, { en: "next",
-                zh: "旁边" },
-            { en: "between", zh: "中间" }, { en: "behind", zh: "后面" }, { en: "front", zh: "前面" },
-            { en: "left", zh: "左" },
-            { en: "right", zh: "右" }, { en: "up", zh: "上" }, { en: "down", zh: "下" }, { en: "inside", zh: "内部" },
-            { en: "outside", zh: "外部" }, { en: "here", zh: "这里" }, { en: "there", zh: "那里" },
-            { en: "everywhere", zh: "到处" },
-            // 金钱与购物
-            { en: "money", zh: "金钱" }, { en: "dollar", zh: "美元" }, { en: "quarter", zh: "25美分" },
-            { en: "half", zh: "一半" },
-            { en: "nickel", zh: "5美分" }, { en: "dime", zh: "10美分" }, { en: "penny", zh: "1美分" },
-            { en: "shop", zh: "购物" },
-            { en: "store", zh: "商店" }, { en: "price", zh: "价格" }, { en: "cash", zh: "现金" },
-            { en: "credit", zh: "信用卡" },
-            { en: "receipt", zh: "收据" }, { en: "discount", zh: "折扣" }, { en: "sale", zh: "促销" },
-            { en: "buy", zh: "购买" },
-            { en: "sell", zh: "售卖" }, { en: "cost", zh: "花费" }, { en: "save", zh: "节省" }, { en: "spend",
-                zh: "花费" },
-            // 家庭与亲属
-            { en: "daughter", zh: "女儿" }, { en: "son", zh: "儿子" }, { en: "wife", zh: "妻子" },
-            { en: "husband", zh: "丈夫" },
-            { en: "parent", zh: "父母" }, { en: "child", zh: "孩子" }, { en: "family", zh: "家庭" },
-            { en: "relative", zh: "亲戚" },
-            { en: "friend", zh: "朋友" }, { en: "neighbor", zh: "邻居" }, { en: "classmate", zh: "同学" },
-            // 人体与健康
-            { en: "face", zh: "脸" }, { en: "arm", zh: "手臂" }, { en: "leg", zh: "腿" }, { en: "finger",
-                zh: "手指" },
-            { en: "toe", zh: "脚趾" }, { en: "neck", zh: "脖子" }, { en: "shoulder", zh: "肩膀" },
-            { en: "knee", zh: "膝盖" },
-            { en: "back", zh: "背部" }, { en: "stomach", zh: "胃" }, { en: "heart", zh: "心脏" },
-            { en: "bone", zh: "骨头" },
-            { en: "health", zh: "健康" }, { en: "exercise", zh: "运动" }, { en: "sleep", zh: "睡觉" },
-            { en: "eat", zh: "吃" },
-            { en: "drink", zh: "喝" }, { en: "symptom", zh: "症状" }, { en: "injury", zh: "外伤" },
-            { en: "pain", zh: "疼痛" },
-            { en: "fever", zh: "发烧" }, { en: "medicine", zh: "药品" }, { en: "pill", zh: "药片" },
-            { en: "bandage", zh: "绷带" },
-            // 食物与餐饮
-            { en: "fruit", zh: "水果" }, { en: "vegetable", zh: "蔬菜" }, { en: "tomato", zh: "番茄" },
-            { en: "potato", zh: "土豆" },
-            { en: "meat", zh: "肉类" }, { en: "chicken", zh: "鸡肉" }, { en: "beef", zh: "牛肉" },
-            { en: "pork", zh: "猪肉" },
-            { en: "egg", zh: "鸡蛋" }, { en: "cheese", zh: "奶酪" }, { en: "butter", zh: "黄油" },
-            { en: "jam", zh: "果酱" },
-            { en: "soup", zh: "汤" }, { en: "steak", zh: "牛排" }, { en: "salad", zh: "沙拉" },
-            { en: "dessert", zh: "甜点" },
-            { en: "coffee", zh: "咖啡" }, { en: "tea", zh: "茶" }, { en: "juice", zh: "果汁" },
-            { en: "water", zh: "水" },
-            // 衣物与时尚
-            { en: "shirt", zh: "衬衫" }, { en: "pants", zh: "长裤" }, { en: "jacket", zh: "外套" },
-            { en: "suit", zh: "西装" },
-            { en: "coat", zh: "大衣" }, { en: "dress", zh: "连衣裙" }, { en: "skirt", zh: "裙子" },
-            { en: "tie", zh: "领带" },
-            { en: "belt", zh: "腰带" }, { en: "swimsuit", zh: "泳衣" }, { en: "pajamas", zh: "睡衣" },
-            { en: "uniform", zh: "工装" },
-            { en: "shoe", zh: "鞋子" }, { en: "hat", zh: "帽子" }, { en: "glove", zh: "手套" },
-            { en: "scarf", zh: "围巾" },
-            { en: "sock", zh: "袜子" }, { en: "jeans", zh: "牛仔裤" }, { en: "fashion", zh: "时尚" },
-            { en: "style", zh: "风格" },
-            // 交通与出行
-            { en: "truck", zh: "卡车" }, { en: "motorcycle", zh: "摩托车" }, { en: "station", zh: "车站" },
-            { en: "stop", zh: "停止" },
-            { en: "engine", zh: "发动机" }, { en: "gas", zh: "汽油" }, { en: "wheel", zh: "车轮" },
-            { en: "window", zh: "车窗" },
-            { en: "airport", zh: "机场" }, { en: "ticket", zh: "机票" }, { en: "gate", zh: "登机口" },
-            { en: "travel", zh: "旅行" },
-            { en: "trip", zh: "行程" },
-            // 职业与工作
-            { en: "lawyer", zh: "律师" }, { en: "police", zh: "警察" }, { en: "soldier", zh: "士兵" },
-            { en: "manager", zh: "经理" },
-            { en: "engineer", zh: "工程师" }, { en: "scientist", zh: "科学家" }, { en: "athlete", zh: "运动员" },
-            { en: "actor", zh: "演员" }, { en: "model", zh: "模特" },
-            // 动物与自然
-            { en: "cow", zh: "奶牛" }, { en: "sheep", zh: "绵羊" }, { en: "horse", zh: "马" }, { en: "bird",
-                zh: "鸟" },
-            { en: "insect", zh: "昆虫" }, { en: "bee", zh: "蜜蜂" }, { en: "butterfly", zh: "蝴蝶" },
-            { en: "spider", zh: "蜘蛛" },
-            { en: "monkey", zh: "猴子" }, { en: "bear", zh: "熊" }, { en: "wolf", zh: "狼" }, { en: "deer",
-                zh: "鹿" },
-            { en: "fox", zh: "狐狸" }, { en: "mouse", zh: "老鼠" }, { en: "planet", zh: "行星" },
-            { en: "moon", zh: "月亮" },
-            { en: "sun", zh: "太阳" }, { en: "star", zh: "星星" }, { en: "plant", zh: "植物" }, { en: "tree",
-                zh: "树" },
-            { en: "flower", zh: "花" }, { en: "grass", zh: "草" }, { en: "leaf", zh: "树叶" }, { en: "rose",
-                zh: "玫瑰" },
-            // 家居与建筑
-            { en: "kitchen", zh: "厨房" }, { en: "refrigerator", zh: "冰箱" }, { en: "stove", zh: "炉灶" },
-            { en: "table", zh: "餐桌" },
-            { en: "sofa", zh: "沙发" }, { en: "television", zh: "电视" }, { en: "shower", zh: "淋浴" },
-            { en: "tub", zh: "浴缸" },
-            { en: "bedroom", zh: "卧室" }, { en: "bed", zh: "床" }, { en: "pillow", zh: "枕头" },
-            { en: "house", zh: "房屋" },
-            { en: "room", zh: "房间" }, { en: "door", zh: "门" }, { en: "floor", zh: "地板" },
-            { en: "wall", zh: "墙壁" },
-            { en: "roof", zh: "屋顶" },
-            // 技术与互联网
-            { en: "computer", zh: "电脑" }, { en: "laptop", zh: "笔记本电脑" }, { en: "keyboard", zh: "键盘" },
+            { en: "silver", zh: "银色" }, { en: "in", zh: "在…内" }, { en: "on", zh: "在…上" }, { en: "under",
+                zh: "在…下" },
+            { en: "next", zh: "旁边" }, { en: "between", zh: "中间" }, { en: "behind", zh: "后面" }, { en: "front",
+                zh: "前面" },
+            { en: "left", zh: "左" }, { en: "right", zh: "右" }, { en: "up", zh: "上" }, { en: "down", zh: "下" },
+            { en: "money", zh: "金钱" }, { en: "dollar", zh: "美元" }, { en: "shop", zh: "购物" }, { en: "store",
+                zh: "商店" },
+            { en: "price", zh: "价格" }, { en: "cash", zh: "现金" }, { en: "receipt", zh: "收据" }, { en: "discount",
+                zh: "折扣" },
+            { en: "sale", zh: "促销" }, { en: "buy", zh: "购买" }, { en: "sell", zh: "售卖" }, { en: "daughter",
+                zh: "女儿" },
+            { en: "son", zh: "儿子" }, { en: "wife", zh: "妻子" }, { en: "husband", zh: "丈夫" }, { en: "parent",
+                zh: "父母" },
+            { en: "child", zh: "孩子" }, { en: "family", zh: "家庭" }, { en: "friend", zh: "朋友" }, { en: "neighbor",
+                zh: "邻居" },
+            { en: "classmate", zh: "同学" }, { en: "face", zh: "脸" }, { en: "arm", zh: "手臂" }, { en: "leg",
+                zh: "腿" },
+            { en: "finger", zh: "手指" }, { en: "neck", zh: "脖子" }, { en: "shoulder", zh: "肩膀" }, { en: "knee",
+                zh: "膝盖" },
+            { en: "back", zh: "背部" }, { en: "health", zh: "健康" }, { en: "exercise", zh: "运动" }, { en: "sleep",
+                zh: "睡觉" },
+            { en: "eat", zh: "吃" }, { en: "drink", zh: "喝" }, { en: "symptom", zh: "症状" }, { en: "pain",
+                zh: "疼痛" },
+            { en: "fever", zh: "发烧" }, { en: "medicine", zh: "药品" }, { en: "fruit", zh: "水果" },
+            { en: "vegetable", zh: "蔬菜" },
+            { en: "tomato", zh: "番茄" }, { en: "potato", zh: "土豆" }, { en: "meat", zh: "肉类" }, { en: "chicken",
+                zh: "鸡肉" },
+            { en: "beef", zh: "牛肉" }, { en: "egg", zh: "鸡蛋" }, { en: "cheese", zh: "奶酪" }, { en: "butter",
+                zh: "黄油" },
+            { en: "bread", zh: "面包" }, { en: "rice", zh: "米饭" }, { en: "noodle", zh: "面条" }, { en: "pizza",
+                zh: "披萨" },
+            { en: "burger", zh: "汉堡" }, { en: "sushi", zh: "寿司" }, { en: "soup", zh: "汤" }, { en: "salad",
+                zh: "沙拉" },
+            { en: "coffee", zh: "咖啡" }, { en: "tea", zh: "茶" }, { en: "juice", zh: "果汁" }, { en: "water",
+                zh: "水" },
+            { en: "shirt", zh: "衬衫" }, { en: "pants", zh: "裤子" }, { en: "jacket", zh: "外套" }, { en: "coat",
+                zh: "大衣" },
+            { en: "dress", zh: "连衣裙" }, { en: "skirt", zh: "裙子" }, { en: "shoe", zh: "鞋子" }, { en: "hat",
+                zh: "帽子" },
+            { en: "jeans", zh: "牛仔裤" }, { en: "truck", zh: "卡车" }, { en: "motorcycle", zh: "摩托车" },
+            { en: "station", zh: "车站" },
+            { en: "engine", zh: "发动机" }, { en: "gas", zh: "汽油" }, { en: "wheel", zh: "车轮" }, { en: "airport",
+                zh: "机场" },
+            { en: "ticket", zh: "机票" }, { en: "travel", zh: "旅行" }, { en: "lawyer", zh: "律师" }, { en: "police",
+                zh: "警察" },
+            { en: "soldier", zh: "士兵" }, { en: "manager", zh: "经理" }, { en: "engineer", zh: "工程师" },
+            { en: "scientist", zh: "科学家" },
+            { en: "athlete", zh: "运动员" }, { en: "actor", zh: "演员" }, { en: "cow", zh: "奶牛" }, { en: "sheep",
+                zh: "绵羊" },
+            { en: "horse", zh: "马" }, { en: "bird", zh: "鸟" }, { en: "insect", zh: "昆虫" }, { en: "bee",
+                zh: "蜜蜂" },
+            { en: "butterfly", zh: "蝴蝶" }, { en: "monkey", zh: "猴子" }, { en: "bear", zh: "熊" }, { en: "wolf",
+                zh: "狼" },
+            { en: "deer", zh: "鹿" }, { en: "fox", zh: "狐狸" }, { en: "moon", zh: "月亮" }, { en: "sun", zh: "太阳" },
+            { en: "star", zh: "星星" }, { en: "plant", zh: "植物" }, { en: "tree", zh: "树" }, { en: "flower",
+                zh: "花" },
+            { en: "grass", zh: "草" }, { en: "leaf", zh: "树叶" }, { en: "kitchen", zh: "厨房" },
+            { en: "refrigerator", zh: "冰箱" },
+            { en: "stove", zh: "炉灶" }, { en: "table", zh: "餐桌" }, { en: "sofa", zh: "沙发" },
+            { en: "television", zh: "电视" },
+            { en: "shower", zh: "淋浴" }, { en: "bedroom", zh: "卧室" }, { en: "bed", zh: "床" }, { en: "pillow",
+                zh: "枕头" },
+            { en: "room", zh: "房间" }, { en: "door", zh: "门" }, { en: "floor", zh: "地板" }, { en: "wall",
+                zh: "墙壁" },
+            { en: "computer", zh: "电脑" }, { en: "laptop", zh: "笔记本" }, { en: "keyboard", zh: "键盘" },
             { en: "mouse", zh: "鼠标" },
-            { en: "internet", zh: "互联网" }, { en: "website", zh: "网站" }, { en: "email", zh: "电子邮件" },
+            { en: "internet", zh: "互联网" }, { en: "website", zh: "网站" }, { en: "email", zh: "邮件" },
             { en: "password", zh: "密码" },
-            { en: "download", zh: "下载" }, { en: "upload", zh: "上传" }, { en: "search", zh: "搜索" },
-            { en: "click", zh: "点击" },
-            // 休闲与娱乐
-            { en: "game", zh: "游戏" }, { en: "ball", zh: "球" }, { en: "camera", zh: "相机" },
-            { en: "movie", zh: "电影" },
-            { en: "music", zh: "音乐" }, { en: "sing", zh: "唱歌" }, { en: "dance", zh: "跳舞" },
-            { en: "draw", zh: "绘画" },
-            { en: "play", zh: "玩耍" }, { en: "hobby", zh: "爱好" }, { en: "sport", zh: "运动" },
-            { en: "team", zh: "团队" },
-            // 动词补充
-            { en: "push", zh: "推" }, { en: "pull", zh: "拉" }, { en: "cut", zh: "裁剪" }, { en: "fix", zh: "修理" },
-            { en: "break", zh: "打破" }, { en: "build", zh: "建造" }, { en: "clean", zh: "打扫" },
-            { en: "wash", zh: "清洗" },
-            { en: "brush", zh: "刷" }, { en: "bake", zh: "烘焙" }, { en: "fry", zh: "油炸" },
-            { en: "boil", zh: "煮沸" },
-            { en: "grill", zh: "烧烤" }
+            { en: "game", zh: "游戏" }, { en: "movie", zh: "电影" }, { en: "music", zh: "音乐" }, { en: "sing",
+                zh: "唱歌" },
+            { en: "dance", zh: "跳舞" }, { en: "draw", zh: "绘画" }, { en: "play", zh: "玩耍" }, { en: "hobby",
+                zh: "爱好" },
+            { en: "sport", zh: "运动" }, { en: "push", zh: "推" }, { en: "pull", zh: "拉" }, { en: "cut", zh: "切" },
+            { en: "fix", zh: "修理" }, { en: "break", zh: "打破" }, { en: "build", zh: "建造" }, { en: "clean",
+                zh: "打扫" },
+            { en: "wash", zh: "清洗" }, { en: "brush", zh: "刷" }, { en: "bake", zh: "烘焙" }, { en: "fry",
+                zh: "油炸" },
+            { en: "boil", zh: "煮沸" }, { en: "grill", zh: "烧烤" }
         ];
 
         // ===== OPD 短语 =====
@@ -1585,111 +1115,60 @@
             { en: "sit down", zh: "坐下" }, { en: "take a seat", zh: "入座" },
             { en: "open your book", zh: "打开书本" }, { en: "close your book", zh: "合上书本" },
             { en: "pick up the pencil", zh: "拿起铅笔" }, { en: "put down the pencil", zh: "放下铅笔" },
-            { en: "look up the word", zh: "查单词" }, { en: "read the definition", zh: "阅读释义" },
-            { en: "translate the word", zh: "翻译单词" }, { en: "work in a group", zh: "小组合作" },
+            { en: "look up the word", zh: "查单词" }, { en: "work in a group", zh: "小组合作" },
             { en: "help a classmate", zh: "帮助同学" }, { en: "ask a question", zh: "提出问题" },
             { en: "answer a question", zh: "回答问题" }, { en: "share a book", zh: "共用书本" },
-            { en: "read a book", zh: "读书" }, { en: "unscramble the words", zh: "重组单词" },
-            { en: "put sentences in order", zh: "句子排序" }, { en: "label the picture", zh: "标注图片" },
-            { en: "check the correct boxes", zh: "勾选正确选项" }, { en: "set goals", zh: "设定目标" },
-            { en: "participate in class", zh: "课堂参与" }, { en: "study at home", zh: "居家自习" },
+            { en: "read a book", zh: "读书" }, { en: "set goals", zh: "设定目标" },
             { en: "take a test", zh: "参加考试" }, { en: "correct the mistake", zh: "订正错误" },
-            { en: "erase the mistake", zh: "擦掉错误" }, { en: "hand in your test", zh: "上交试卷" },
-            { en: "check your work", zh: "检查作答" }, { en: "work on your own", zh: "独立完成" },
-            { en: "carry the books", zh: "搬书本" }, { en: "make a call", zh: "拨打电话" },
+            { en: "hand in your test", zh: "上交试卷" }, { en: "check your work", zh: "检查作答" },
+            { en: "work on your own", zh: "独立完成" }, { en: "make a call", zh: "拨打电话" },
             { en: "answer the phone", zh: "接电话" }, { en: "hang up", zh: "挂断电话" },
             { en: "take a break", zh: "休息片刻" }, { en: "buy a snack", zh: "购买零食" },
             { en: "have lunch", zh: "吃午餐" }, { en: "have dinner", zh: "吃晚餐" },
             { en: "make friends", zh: "交朋友" }, { en: "say hello", zh: "打招呼" },
-            { en: "say goodbye", zh: "道别" }, { en: "apologize to someone", zh: "向某人道歉" },
-            { en: "thank someone", zh: "感谢某人" }, { en: "family reunion", zh: "家庭聚会" },
-            { en: "daily routine", zh: "日常作息" }, { en: "life event", zh: "人生大事" },
-            { en: "childcare and parenting", zh: "育儿工作" }, { en: "find a home", zh: "找房子" },
-            { en: "house and yard", zh: "房屋庭院" }, { en: "dining area", zh: "用餐区域" },
-            { en: "food preparation", zh: "食物制作" }, { en: "food safety", zh: "食品安全" },
+            { en: "say goodbye", zh: "道别" }, { en: "family reunion", zh: "家庭聚会" },
+            { en: "daily routine", zh: "日常作息" }, { en: "find a home", zh: "找房子" },
+            { en: "dining area", zh: "用餐区域" }, { en: "food preparation", zh: "食物制作" },
             { en: "kitchen utensil", zh: "厨房用具" }, { en: "long hair", zh: "长发" },
             { en: "short hair", zh: "短发" }, { en: "curly hair", zh: "卷发" },
             { en: "straight hair", zh: "直发" }, { en: "blonde hair", zh: "金发" },
             { en: "brown hair", zh: "棕发" }, { en: "black hair", zh: "黑发" },
-            { en: "gray hair", zh: "白发" }, { en: "tall man", zh: "高个子男人" },
-            { en: "short woman", zh: "矮个子女人" }, { en: "beautiful girl", zh: "美丽的女孩" },
-            { en: "handsome boy", zh: "帅气的男孩" }, { en: "everyday clothes", zh: "日常服装" },
-            { en: "casual clothes", zh: "休闲装" }, { en: "work clothes", zh: "工作服" },
-            { en: "formal clothes", zh: "正装" }, { en: "seasonal clothing", zh: "四季服饰" },
-            { en: "underwear and sleepwear", zh: "内衣睡衣" }, { en: "shoes and accessories", zh: "鞋履配饰" },
-            { en: "describe clothes", zh: "描述衣物" }, { en: "make clothes", zh: "缝制衣物" },
-            { en: "make alterations", zh: "修改衣服" }, { en: "fast food restaurant", zh: "快餐店" },
-            { en: "coffee shop", zh: "咖啡店" }, { en: "short-order cook", zh: "快餐厨师" },
-            { en: "walk-in freezer", zh: "立式冷冻柜" }, { en: "sous-chef", zh: "副主厨" },
-            { en: "head chef", zh: "主厨" }, { en: "buffet table", zh: "自助取餐台" },
-            { en: "banquet room", zh: "宴会厅" }, { en: "line cook", zh: "炉头厨师" },
-            { en: "wait staff", zh: "全体服务生" }, { en: "food prep station", zh: "备餐操作台" },
-            { en: "front desk", zh: "前台" }, { en: "private dining", zh: "包间" },
+            { en: "tall man", zh: "高个子男人" }, { en: "short woman", zh: "矮个子女人" },
+            { en: "beautiful girl", zh: "美丽的女孩" }, { en: "handsome boy", zh: "帅气的男孩" },
+            { en: "everyday clothes", zh: "日常服装" }, { en: "casual clothes", zh: "休闲装" },
+            { en: "work clothes", zh: "工作服" }, { en: "formal clothes", zh: "正装" },
+            { en: "shoes and accessories", zh: "鞋履配饰" }, { en: "describe clothes", zh: "描述衣物" },
+            { en: "fast food restaurant", zh: "快餐店" }, { en: "coffee shop", zh: "咖啡店" },
+            { en: "walk-in freezer", zh: "立式冷冻柜" }, { en: "head chef", zh: "主厨" },
+            { en: "buffet table", zh: "自助取餐台" }, { en: "banquet room", zh: "宴会厅" },
+            { en: "wait staff", zh: "全体服务生" }, { en: "front desk", zh: "前台" },
             { en: "dental care", zh: "牙科护理" }, { en: "health insurance", zh: "医疗保险" },
             { en: "medical emergency", zh: "医疗急症" }, { en: "first aid kit", zh: "急救包" },
-            { en: "fever relief", zh: "退烧药品" }, { en: "pain medicine", zh: "止痛药物" },
             { en: "pharmacy counter", zh: "药房柜台" }, { en: "hospital ward", zh: "病房" },
-            { en: "medical consultation", zh: "问诊" }, { en: "health screening", zh: "体检" },
-            { en: "oral care products", zh: "口腔护理" }, { en: "public safety", zh: "公共安全" },
-            { en: "cyber safety", zh: "网络安全" }, { en: "natural disaster", zh: "自然灾害" },
-            { en: "emergency procedure", zh: "应急流程" }, { en: "community cleanup", zh: "社区清扫" },
-            { en: "call 911", zh: "拨打911" }, { en: "dial the police", zh: "报警" },
-            { en: "call for help", zh: "呼救" }, { en: "public transportation", zh: "公共交通" },
-            { en: "traffic sign", zh: "交通标识" }, { en: "directions and maps", zh: "方向地图" },
-            { en: "parts of a car", zh: "汽车零件" }, { en: "road trip", zh: "公路自驾游" },
-            { en: "city intersection", zh: "十字路口" }, { en: "public transit station", zh: "公交站台" },
-            { en: "airport terminal", zh: "机场航站楼" }, { en: "vehicle parts", zh: "汽车配件" },
-            { en: "car maintenance service", zh: "车辆保养" }, { en: "gas station", zh: "加油站" },
+            { en: "public safety", zh: "公共安全" }, { en: "call 911", zh: "拨打911" },
+            { en: "dial the police", zh: "报警" }, { en: "call for help", zh: "呼救" },
+            { en: "public transportation", zh: "公共交通" }, { en: "traffic sign", zh: "交通标识" },
+            { en: "directions and maps", zh: "方向地图" }, { en: "parts of a car", zh: "汽车零件" },
+            { en: "road trip", zh: "公路自驾游" }, { en: "gas station", zh: "加油站" },
             { en: "job search", zh: "求职找工作" }, { en: "career planning", zh: "职业规划" },
-            { en: "office skills", zh: "办公技能" }, { en: "soft skills", zh: "职场软技能" },
             { en: "interview skills", zh: "面试技巧" }, { en: "first day on the job", zh: "入职第一天" },
-            { en: "inside a company", zh: "公司内部" }, { en: "manufacturing work", zh: "制造业工作" },
-            { en: "career resume", zh: "求职简历" }, { en: "job application form", zh: "工作申请表" },
-            { en: "workplace colleague", zh: "同事伙伴" }, { en: "office equipment", zh: "办公设备" },
+            { en: "inside a company", zh: "公司内部" }, { en: "office equipment", zh: "办公设备" },
             { en: "company management", zh: "公司管理层" }, { en: "work accident", zh: "工作意外" },
-            { en: "building supply", zh: "建材" }, { en: "construction work", zh: "建筑施工" },
-            { en: "job safety", zh: "职场安全" }, { en: "bad day at work", zh: "工作不顺" },
-            { en: "construction tools", zh: "施工工具" }, { en: "follow safety rules", zh: "遵守安全规范" },
-            { en: "schools and subjects", zh: "学校科目" }, { en: "mathematics class", zh: "数学课" },
-            { en: "science experiment", zh: "科学实验" }, { en: "geography habitat", zh: "地理栖息地" },
-            { en: "marine life", zh: "海洋生物" }, { en: "amphibian and reptile", zh: "两栖爬行动物" },
-            { en: "domestic animal", zh: "家畜" }, { en: "mammal animal", zh: "哺乳动物" },
+            { en: "construction work", zh: "建筑施工" }, { en: "job safety", zh: "职场安全" },
+            { en: "mathematics class", zh: "数学课" }, { en: "science experiment", zh: "科学实验" },
+            { en: "marine life", zh: "海洋生物" }, { en: "domestic animal", zh: "家畜" },
             { en: "graduation ceremony", zh: "毕业典礼" }, { en: "hobbies and games", zh: "爱好游戏" },
-            { en: "electronics and photography", zh: "电子摄影" }, { en: "music performance", zh: "音乐演奏" },
-            { en: "holiday celebration", zh: "节日庆祝" }, { en: "3-ring binder", zh: "三孔活页夹" },
-            { en: "permanent marker", zh: "记号笔" }, { en: "pencil sharpener", zh: "削笔刀" },
-            { en: "bring school supplies", zh: "带学习用品" }, { en: "put away stationery", zh: "收好文具" },
-            { en: "complete test alone", zh: "独自完成考试" }, { en: "social security number", zh: "社保号码" },
-            { en: "street address", zh: "街道地址" }, { en: "apartment number", zh: "公寓房号" },
-            { en: "area code", zh: "区号" }, { en: "phone number", zh: "电话号码" },
-            { en: "home phone", zh: "住宅电话" }, { en: "cell phone", zh: "手机" },
-            { en: "date of birth", zh: "出生日期" }, { en: "place of birth", zh: "出生地" },
-            { en: "registration form", zh: "注册表格" }, { en: "name tag", zh: "姓名牌" },
-            { en: "address label", zh: "地址标签" }, { en: "country map", zh: "国家地图" },
-            { en: "class timetable", zh: "课程表" }, { en: "school event", zh: "校园活动" },
-            { en: "sports meeting", zh: "运动会" }, { en: "spring concert", zh: "春季音乐会" },
-            { en: "basketball court", zh: "篮球场" }, { en: "running track", zh: "跑道" },
-            { en: "library room", zh: "图书室" }, { en: "storage locker", zh: "储物柜" },
-            { en: "hallway passage", zh: "走廊通道" }, { en: "audio recording", zh: "听力录音" },
-            { en: "daily conversation", zh: "日常对话" }, { en: "greeting words", zh: "问候用语" },
-            { en: "farewell words", zh: "告别用语" }, { en: "self-introduction", zh: "自我介绍" },
-            { en: "introduce others", zh: "介绍他人" }, { en: "polite phrases", zh: "礼貌用语" },
-            { en: "emergency call", zh: "紧急来电" }, { en: "voice mail message", zh: "语音留言" },
-            { en: "text message", zh: "短信" }, { en: "missed call", zh: "未接来电" },
-            { en: "weather forecast", zh: "天气预报" }, { en: "daily temperature", zh: "每日气温" },
+            { en: "holiday celebration", zh: "节日庆祝" }, { en: "pencil sharpener", zh: "削笔刀" },
+            { en: "street address", zh: "街道地址" }, { en: "phone number", zh: "电话号码" },
+            { en: "date of birth", zh: "出生日期" }, { en: "registration form", zh: "注册表格" },
+            { en: "name tag", zh: "姓名牌" }, { en: "class timetable", zh: "课程表" },
+            { en: "sports meeting", zh: "运动会" }, { en: "basketball court", zh: "篮球场" },
+            { en: "running track", zh: "跑道" }, { en: "daily conversation", zh: "日常对话" },
+            { en: "greeting words", zh: "问候用语" }, { en: "polite phrases", zh: "礼貌用语" },
+            { en: "text message", zh: "短信" }, { en: "weather forecast", zh: "天气预报" },
             { en: "fresh produce", zh: "生鲜蔬果" }, { en: "raw ingredients", zh: "生鲜原料" },
-            { en: "restaurant staff", zh: "餐厅全体员工" }, { en: "cold storage", zh: "立式冰柜" },
-            { en: "kitchen storage", zh: "后厨储藏" }, { en: "chef team", zh: "厨师团队" },
-            { en: "cleaning attendant", zh: "保洁员" }, { en: "fast food kitchen", zh: "快餐后厨" },
-            { en: "fabric material", zh: "面料材质" }, { en: "cloth texture", zh: "布料质感" },
-            { en: "clothing modification", zh: "改衣" }, { en: "hand sewing", zh: "手工缝制" },
-            { en: "downtown area", zh: "市中心" }, { en: "hotel service staff", zh: "酒店服务人员" },
-            { en: "garden planting", zh: "园艺种植" }, { en: "farm livestock", zh: "农场牲畜" },
-            { en: "factory workshop", zh: "工厂车间" }, { en: "wild animals", zh: "野生动物" },
-            { en: "aquatic life", zh: "水生生物" }, { en: "reptile species", zh: "爬行类" },
-            { en: "bird species", zh: "鸟类" }, { en: "insect type", zh: "昆虫" },
-            { en: "flower blossom", zh: "花卉" }, { en: "tree foliage", zh: "树叶" },
-            { en: "celestial body", zh: "天体" }, { en: "geographic landform", zh: "地理地貌" },
+            { en: "restaurant staff", zh: "餐厅全体员工" }, { en: "wild animals", zh: "野生动物" },
+            { en: "bird species", zh: "鸟类" }, { en: "flower blossom", zh: "花卉" },
             { en: "wake up", zh: "醒来" }, { en: "get up", zh: "起床" },
             { en: "go to bed", zh: "上床睡觉" }, { en: "brush teeth", zh: "刷牙" },
             { en: "wash face", zh: "洗脸" }, { en: "take a shower", zh: "淋浴" },
@@ -1697,10 +1176,9 @@
             { en: "go to work", zh: "去上班" }, { en: "come home", zh: "回家" },
             { en: "have breakfast", zh: "吃早餐" }, { en: "do homework", zh: "做作业" },
             { en: "watch TV", zh: "看电视" }, { en: "listen to music", zh: "听音乐" },
-            { en: "write a letter", zh: "写信" }, { en: "take a walk", zh: "散步" },
-            { en: "ride a bike", zh: "骑自行车" }, { en: "drive a car", zh: "开车" },
-            { en: "take the bus", zh: "乘公交车" }, { en: "take the subway", zh: "乘地铁" },
-            { en: "take a taxi", zh: "乘出租车" }, { en: "go shopping", zh: "去购物" },
+            { en: "take a walk", zh: "散步" }, { en: "ride a bike", zh: "骑自行车" },
+            { en: "drive a car", zh: "开车" }, { en: "take the bus", zh: "乘公交" },
+            { en: "take the subway", zh: "乘地铁" }, { en: "go shopping", zh: "去购物" },
             { en: "cook dinner", zh: "做晚饭" }, { en: "clean the room", zh: "打扫房间" },
             { en: "do the dishes", zh: "洗碗" }, { en: "do the laundry", zh: "洗衣服" },
             { en: "make the bed", zh: "铺床" }
@@ -1713,46 +1191,26 @@
             { en: "Good morning.", zh: "早上好。" }, { en: "Good afternoon.", zh: "下午好。" },
             { en: "Good evening.", zh: "晚上好。" }, { en: "Goodbye.", zh: "再见。" },
             { en: "Good night.", zh: "晚安。" }, { en: "Nice to meet you.", zh: "很高兴认识你。" },
-            { en: "How is it going?", zh: "最近怎么样？" }, { en: "What's new?", zh: "有什么新鲜事吗？" },
-            { en: "Take care.", zh: "保重。" }, { en: "See you later.", zh: "待会见。" },
-            { en: "See you tomorrow.", zh: "明天见。" }, { en: "Hi, I'm Tom.", zh: "你好，我是Tom。" },
-            { en: "Fred, this is Jan.", zh: "Fred，这是Jan。" }, { en: "Nice to meet you, Jan.", zh: "很高兴认识你Jan。" },
-            { en: "Good evening, everyone.", zh: "大家晚上好。" }, { en: "What is your name?", zh: "你叫什么名字？" },
-            { en: "Please spell your name.", zh: "请拼写你的名字。" }, { en: "My first name is Carlos.", zh: "我的名叫Carlos。" },
-            { en: "Where are you from?", zh: "你来自哪里？" }, { en: "I'm from China.", zh: "我来自中国。" },
-            { en: "I'm from Mexico.", zh: "我来自墨西哥。" }, { en: "I'm from Korea.", zh: "我来自韩国。" },
-            { en: "I'm from Japan.", zh: "我来自日本。" }, { en: "I'm from the USA.", zh: "我来自美国。" },
-            { en: "I'm from the UK.", zh: "我来自英国。" }, { en: "I'm from Canada.", zh: "我来自加拿大。" },
-            { en: "Can I share your book?", zh: "我能借你的书吗？" }, { en: "Sure.", zh: "当然。" },
-            { en: "Will you help me?", zh: "你能帮我吗？" }, { en: "I'm sorry.", zh: "对不起。" },
-            { en: "That's OK.", zh: "没关系。" }, { en: "That's a great sweater!", zh: "这件毛衣真好看！" },
+            { en: "What is your name?", zh: "你叫什么名字？" }, { en: "Where are you from?", zh: "你来自哪里？" },
+            { en: "I'm from China.", zh: "我来自中国。" }, { en: "Can I share your book?", zh: "我能借你的书吗？" },
+            { en: "Sure.", zh: "当然。" }, { en: "Will you help me?", zh: "你能帮我吗？" },
+            { en: "I'm sorry.", zh: "对不起。" }, { en: "That's OK.", zh: "没关系。" },
             { en: "Thank you.", zh: "谢谢。" }, { en: "You're welcome.", zh: "不用谢。" },
             { en: "Excuse me.", zh: "打扰了。" }, { en: "I don't understand.", zh: "我不明白。" },
             { en: "Can you repeat that?", zh: "你能重复一遍吗？" }, { en: "What time is it?", zh: "现在几点了？" },
             { en: "It's 3 o'clock.", zh: "现在3点了。" }, { en: "What's the weather like?", zh: "天气怎么样？" },
-            { en: "It's sunny today.", zh: "今天天气晴朗。" }, { en: "It's raining outside.", zh: "外面在下雨。" },
-            { en: "How much is it?", zh: "多少钱？" }, { en: "I'm hungry.", zh: "我饿了。" },
-            { en: "I'm thirsty.", zh: "我渴了。" }, { en: "I'm tired.", zh: "我累了。" },
-            { en: "I can't hear you.", zh: "我听不见你说话。" }, { en: "Can you hear me?", zh: "你能听见我吗？" },
-            { en: "What do you see in the pictures?", zh: "图片里你看到了什么？" },
+            { en: "It's sunny today.", zh: "今天天气晴朗。" }, { en: "How much is it?", zh: "多少钱？" },
+            { en: "I'm hungry.", zh: "我饿了。" }, { en: "I'm thirsty.", zh: "我渴了。" },
+            { en: "I'm tired.", zh: "我累了。" }, { en: "I can't hear you.", zh: "我听不见你说话。" },
             { en: "Read the story.", zh: "阅读短文。" }, { en: "What do you think?", zh: "你怎么看？" },
-            { en: "Make new conversations.", zh: "编写新对话。" }, { en: "Start a conversation.", zh: "开启对话。" },
-            { en: "Make small talk.", zh: "闲聊。" }, { en: "Compliment each other.", zh: "互相赞美。" },
-            { en: "Silence them.", zh: "静音。" }, { en: "Turn them off.", zh: "关机。" },
-            { en: "Put them away.", zh: "收起来。" }, { en: "Correct errors.", zh: "修改错题。" },
-            { en: "Check answers.", zh: "核对答案。" }, { en: "Take turns.", zh: "轮流发言。" },
-            { en: "Look up the word in dictionary.", zh: "在词典查词。" }, { en: "Read word meaning.", zh: "阅读词义。" },
-            { en: "Translate into Chinese.", zh: "翻译成中文。" }, { en: "Write vocabulary down.", zh: "抄写单词。" },
-            { en: "Practice dialogue.", zh: "对话练习。" }, { en: "Ask classmates for help.", zh: "向同学求助。" },
-            { en: "Share textbooks.", zh: "共用课本。" }, { en: "Dictate sentences.", zh: "句子听写。" },
-            { en: "Unscramble letters.", zh: "字母重组。" }, { en: "Match words and pictures.", zh: "图文配对。" },
-            { en: "Complete multiple choice.", zh: "完成选择题。" }, { en: "Fill answer sheet.", zh: "填答题卡。" },
-            { en: "Submit exam online.", zh: "线上交卷。" }, { en: "Review mistakes.", zh: "复盘错题。" },
-            { en: "Erase wrong answers.", zh: "擦掉错误答案。" }, { en: "No copying.", zh: "禁止抄袭。" },
-            { en: "Turn off mobile phones.", zh: "关闭手机。" }, { en: "Silence cell phones.", zh: "手机静音。" },
-            { en: "Store phones away.", zh: "收好手机。" }, { en: "Tell me about your job.", zh: "跟我说说你的工作。" },
-            { en: "It's great. I fix computers.", zh: "很不错，我修电脑。" },
-            { en: "Describe your daily routine.", zh: "描述你的日常作息。" },
+            { en: "Make new conversations.", zh: "编写新对话。" }, { en: "Make small talk.", zh: "闲聊。" },
+            { en: "Correct errors.", zh: "修改错题。" }, { en: "Check answers.", zh: "核对答案。" },
+            { en: "Take turns.", zh: "轮流发言。" }, { en: "Look up the word in dictionary.", zh: "在词典查词。" },
+            { en: "Translate into Chinese.", zh: "翻译成中文。" }, { en: "Practice dialogue.", zh: "对话练习。" },
+            { en: "Ask classmates for help.", zh: "向同学求助。" }, { en: "Share textbooks.", zh: "共用课本。" },
+            { en: "No copying.", zh: "禁止抄袭。" }, { en: "Turn off mobile phones.", zh: "关闭手机。" },
+            { en: "Tell me about your job.", zh: "跟我说说你的工作。" }, { en: "It's great. I fix computers.",
+                zh: "很不错，我修电脑。" },
             { en: "I wake up early every morning.", zh: "我每天早起。" },
             { en: "I brush my teeth and wash my face.", zh: "我刷牙洗脸。" },
             { en: "We hold a family reunion party.", zh: "我们举办家庭聚会。" },
@@ -1761,13 +1219,10 @@
             { en: "Cook simple meals in the kitchen.", zh: "在厨房简单做饭。" },
             { en: "Wash dishes after every meal.", zh: "每餐饭后洗碗。" },
             { en: "This cotton shirt feels very soft.", zh: "这件棉衬衫手感柔软。" },
-            { en: "I sew broken clothes by hand.", zh: "我手工缝补破衣服。" },
             { en: "Go to the hospital if you have a fever.", zh: "发烧就去医院。" },
             { en: "Learn basic first aid for accidents.", zh: "学习基础应急急救。" },
             { en: "Call 911 when there is a fire.", zh: "发生火灾拨打911。" },
-            { en: "Check traffic signs before driving.", zh: "开车前看懂交通标识。" },
             { en: "Fill out the registration form completely.", zh: "完整填写注册表格。" },
-            { en: "Sign your name on the signature line.", zh: "在签名栏写全名。" },
             { en: "Maintain your car regularly to avoid breakdowns.", zh: "定期保养车辆防止故障。" },
             { en: "Practice interview dialogue at home.", zh: "在家练习面试对话。" },
             { en: "Plant flowers and trees in the garden.", zh: "在花园种花种树。" },
@@ -1782,7 +1237,6 @@
             { en: "Run and swim for daily exercise.", zh: "跑步游泳作为日常锻炼。" },
             { en: "Ride a bike in the community park.", zh: "在小区公园骑行。" },
             { en: "Throw rubbish into the trash can.", zh: "垃圾扔进垃圾桶。" },
-            { en: "Catch falling items carefully to avoid breaking.", zh: "小心接住掉落物品防止摔坏。" },
             { en: "I like to play basketball.", zh: "我喜欢打篮球。" },
             { en: "She is a good teacher.", zh: "她是一位好老师。" },
             { en: "He works in a hospital.", zh: "他在医院工作。" },
@@ -1796,7 +1250,6 @@
             { en: "I need to buy some food.", zh: "我需要买些食物。" },
             { en: "This is a beautiful flower.", zh: "这是一朵美丽的花。" },
             { en: "The cat is sleeping on the bed.", zh: "猫在床上睡觉。" },
-            { en: "The dog is running in the park.", zh: "狗在公园里跑。" },
             { en: "I like to read books.", zh: "我喜欢读书。" },
             { en: "She likes to sing songs.", zh: "她喜欢唱歌。" },
             { en: "We are going to the cinema.", zh: "我们要去看电影。" },
@@ -1805,11 +1258,6 @@
             { en: "She speaks Chinese very well.", zh: "她中文说得很好。" },
             { en: "I want to travel to Europe.", zh: "我想去欧洲旅行。" },
             { en: "This is my favorite restaurant.", zh: "这是我最喜欢的餐厅。" },
-            { en: "I like pizza and pasta.", zh: "我喜欢披萨和意大利面。" },
-            { en: "We live in a small town.", zh: "我们住在小镇上。" },
-            { en: "He is a very famous singer.", zh: "他是一位非常有名的歌手。" },
-            { en: "I'm learning to drive.", zh: "我在学开车。" },
-            { en: "She is wearing a blue dress.", zh: "她穿着蓝色连衣裙。" },
             { en: "I love my family very much.", zh: "我非常爱我的家人。" },
             { en: "I'm going to visit my grandparents.", zh: "我要去看望我的祖父母。" },
             { en: "This room is very clean.", zh: "这个房间很干净。" },
@@ -1964,9 +1412,9 @@
         //  7. UI 渲染
         // ================================================================
         const MODE_CONFIG = {
-            'normal': { name: '普通', className: 'normal', emoji: '📖', statusMsg: '消消乐配对学习' },
-            'review': { name: '复习列表', className: 'review', emoji: '📝', statusMsg: '卡片式复习 + 例句' },
-            'ebbinghaus': { name: '艾宾浩斯', className: 'eb', emoji: '🧠', statusMsg: '按记忆曲线智能复习' }
+            'normal': { name: '普通', className: 'normal', emoji: '📖' },
+            'review': { name: '复习', className: 'review', emoji: '📝' },
+            'ebbinghaus': { name: '艾宾浩斯', className: 'eb', emoji: '🧠' }
         };
 
         function toggleMode() {
@@ -1986,7 +1434,7 @@
             }
             game.reset();
             loadLevel();
-            setStatus(config.emoji + ' ' + config.statusMsg, 'info', config.name);
+            setStatus(config.emoji + ' ' + config.name + '模式', 'info');
             speakText(config.name + '模式');
         }
 
@@ -2000,7 +1448,7 @@
                 const opt = document.createElement('option');
                 opt.value = g;
                 const count = db.filter(w => w.group === g).length;
-                opt.textContent = g + ' (' + count + '个)';
+                opt.textContent = g + ' (' + count + ')';
                 select.appendChild(opt);
             });
             if (current && groups.includes(current)) select.value = current;
@@ -2038,11 +1486,6 @@
             return Math.round(ratio * 33);
         }
 
-        function getWordStage(word) {
-            const level = Math.min(word.level, EBBINGHAUS_INTERVALS.length);
-            return LEVEL_LABELS[level] || '已掌握 ✅';
-        }
-
         function setStatus(message, type = '', badge = '') {
             const bar = document.getElementById('statusBar');
             const textNode = bar.childNodes[0];
@@ -2068,7 +1511,7 @@
             popup.style.left = (x - 20) + 'px';
             popup.style.top = (y - 20) + 'px';
             document.body.appendChild(popup);
-            setTimeout(() => popup.remove(), 900);
+            setTimeout(() => popup.remove(), 800);
         }
 
         function initGame() {
@@ -2116,7 +1559,7 @@
         }
 
         // ================================================================
-        //  8. 核心: loadLevel
+        //  8. 核心: loadLevel (手机优化版)
         // ================================================================
         function loadLevel() {
             const grid = document.getElementById('gameGrid');
@@ -2127,7 +1570,7 @@
             if (gameMode === 'review') grid.classList.add('grid-review-list');
             if (!group) {
                 grid.innerHTML =
-                `<div class="empty-state"><span class="emoji">📚</span><p>请选择一个分组</p></div>`;
+                    `<div class="empty-state"><span class="emoji">📚</span><p>请选择一个分组</p></div>`;
                 return;
             }
 
@@ -2152,7 +1595,7 @@
                 availableWords = words;
             }
 
-            // 复习模式
+            // ===== 复习模式 =====
             if (gameMode === 'review') {
                 const totalWords = availableWords.length;
                 const cardsPerPage = 4;
@@ -2173,7 +1616,7 @@
 
                 if (pageWords.length === 0) {
                     grid.innerHTML =
-                        `<div class="review-complete"><span class="emoji">🎉</span><p>所有词条已复习完毕！</p><span class="sub">共 ${totalWords} 个词条</span><div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><button class="btn btn-purple" onclick="resetReview()">🔄 重新复习</button></div></div>`;
+                        `<div class="review-complete"><span class="emoji">🎉</span><p>所有词条已复习完毕！</p><span class="sub">共 ${totalWords} 个词条</span><div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;"><button class="btn btn-purple" onclick="resetReview()">🔄 重新复习</button></div></div>`;
                     setStatus('🎉 复习完成！共 ' + totalWords + ' 个词条', 'success', '已掌握 ✅');
                     return;
                 }
@@ -2186,11 +1629,11 @@
                     const leftDiv = document.createElement('div');
                     leftDiv.className = 'card-left';
                     leftDiv.innerHTML =
-                        `<span class="en-part">${globalIdx}. ${w.en}</span><span style="font-size:9px;color:#9ca3af;">💬 ${example.en.substring(0, 30)}${example.en.length > 30 ? '...' : ''}</span>`;
+                        `<span class="en-part">${globalIdx}. ${w.en}</span>`;
                     const rightDiv = document.createElement('div');
                     rightDiv.className = 'card-right';
                     rightDiv.innerHTML =
-                        `<span class="zh-part">${w.zh}</span><span style="font-size:9px;color:#9ca3af;">📌 ${example.zh.substring(0, 20)}${example.zh.length > 20 ? '...' : ''}</span>`;
+                        `<span class="zh-part">${w.zh}</span><span class="mini-example">${example.zh.substring(0, 12)}${example.zh.length > 12 ? '...' : ''}</span>`;
                     const speakerBtn = document.createElement('button');
                     speakerBtn.className = 'speaker-btn';
                     speakerBtn.textContent = '🔊';
@@ -2208,7 +1651,7 @@
                             isPressLong = true;
                             speakText(w.en);
                             setStatus('🔊 ' + w.en, 'info', '🔊 朗读');
-                            if (navigator.vibrate) navigator.vibrate(15);
+                            if (navigator.vibrate) navigator.vibrate(12);
                         }, 350);
                     });
                     card.addEventListener('pointerup', () => { clearTimeout(pressTimer); });
@@ -2224,13 +1667,12 @@
                 });
 
                 const navDiv = document.createElement('div');
-                navDiv.style.cssText =
-                    'grid-column:1/-1;display:flex;gap:8px;justify-content:center;padding:10px 0;flex-wrap:wrap;align-items:center;';
+                navDiv.className = 'nav-buttons';
                 navDiv.innerHTML = `
-                    <button class="btn btn-primary" id="reviewPrevBtn" ${game.reviewPage === 0 ? 'disabled' : ''}>⬅ 上一页</button>
-                    <span style="display:flex;align-items:center;color:#6b7280;font-size:13px;">第 ${game.reviewPage + 1} / ${totalPages} 页 · 共 ${totalWords} 个词条<span style="margin-left:8px;font-size:11px;color:#9ca3af;">(已浏览 ${game.reviewViewed.length} 个)</span></span>
-                    <button class="btn btn-success" id="reviewNextBtn" ${game.reviewPage >= totalPages - 1 ? 'disabled' : ''}>下一页 ➡</button>
-                    ${game.reviewPage >= totalPages - 1 ? '<button class="btn btn-purple" onclick="resetReview()">🔄 重新复习</button>' : ''}
+                    <button class="btn btn-primary" id="reviewPrevBtn" ${game.reviewPage === 0 ? 'disabled' : ''}>⬅</button>
+                    <span class="nav-info">${game.reviewPage + 1} / ${totalPages}</span>
+                    <button class="btn btn-success" id="reviewNextBtn" ${game.reviewPage >= totalPages - 1 ? 'disabled' : ''}>➡</button>
+                    ${game.reviewPage >= totalPages - 1 ? '<button class="btn btn-purple" onclick="resetReview()">🔄</button>' : ''}
                 `;
                 grid.appendChild(navDiv);
                 const nextBtn = document.getElementById('reviewNextBtn');
@@ -2241,25 +1683,25 @@
                 if (prevBtn) prevBtn.addEventListener('click', () => { if (game.reviewPage > 0) { game.reviewPage--;
                         loadLevel(); } });
                 updateStats();
-                setStatus(
-                    `🎯 复习列表 · 第 ${game.reviewPage + 1}/${totalPages} 页 · ${pageWords.length} 个词条`,
-                    'info', '复习列表');
+                setStatus('📝 复习 · ' + pageWords.length + ' 个词条', 'info');
                 return;
             }
 
-            // 普通模式 & 艾宾浩斯模式
+            // ===== 普通模式 & 艾宾浩斯模式 =====
             if (availableWords.length === 0) {
                 grid.innerHTML =
-                `<div class="empty-state"><span class="emoji">🎉</span><p>所有词条已完成！</p></div>`;
+                    `<div class="empty-state"><span class="emoji">🎉</span><p>所有词条已完成！</p></div>`;
                 setStatus('🎉 全部完成！', 'success', '已掌握 ✅');
                 return;
             }
 
-            let maxPairs = gameMode === 'ebbinghaus' ? (group === 'OPD短句' ? 4 : 6) : (group === 'OPD短句' ? 4 : 8);
+            let maxPairs = gameMode === 'ebbinghaus' ? (group === 'OPD短句' ? 3 : 4) : (group === 'OPD短句' ? 3 : 6);
+            // 手机屏幕小，减少每关数量
+            if (window.innerWidth < 420) maxPairs = Math.max(2, maxPairs - 1);
             const selected = availableWords.slice(0, Math.min(maxPairs, availableWords.length));
             if (selected.length === 0) {
                 grid.innerHTML =
-                `<div class="empty-state"><span class="emoji">🎉</span><p>所有词条已完成！</p></div>`;
+                    `<div class="empty-state"><span class="emoji">🎉</span><p>所有词条已完成！</p></div>`;
                 setStatus('🎉 全部完成！', 'success', '已掌握 ✅');
                 return;
             }
@@ -2315,13 +1757,13 @@
                     const label = LEVEL_LABELS[level] || '已掌握';
                     const badge = document.createElement('span');
                     badge.className = 'level-badge';
-                    badge.textContent = '📍' + label.replace('复习', '').replace('学习', '');
+                    badge.textContent = label.replace('复习', '').replace('学习', '').substring(0, 2);
                     div.appendChild(badge);
                 }
 
                 const langTag = document.createElement('span');
                 langTag.className = 'card-lang-tag';
-                langTag.textContent = card.type === 'en' ? '🇬🇧 EN' : '🇨🇳 中文';
+                langTag.textContent = card.type === 'en' ? 'EN' : '中文';
                 div.appendChild(langTag);
 
                 if (card.type === 'en') {
@@ -2351,7 +1793,7 @@
                         }
                         speakText(finalText);
                         setStatus('🔊 ' + finalText, 'info', '🔊 朗读');
-                        if (navigator.vibrate) navigator.vibrate(15);
+                        if (navigator.vibrate) navigator.vibrate(12);
                     }, 350);
                 });
 
@@ -2363,7 +1805,7 @@
 
             updateStats();
             const modeText = MODE_CONFIG[gameMode].name;
-            setStatus(`🎯 ${modeText}模式 · 第${game.currentLevel}关 · ${selected.length}个词条`, 'info', modeText);
+            setStatus('🎯 ' + modeText + ' · 第' + game.currentLevel + '关 · ' + selected.length + '对', 'info');
         }
 
         // ================================================================
@@ -2378,7 +1820,7 @@
                 if (idx !== -1) game.flipped.splice(idx, 1);
                 cardEl.classList.remove('flipped');
                 sound.play('unflip');
-                setStatus(game.flipped.length === 0 ? '💡 已取消选择' : '💡 已选 ' + game.flipped.length + '/2', '', '🔍 配对');
+                setStatus(game.flipped.length === 0 ? '💡 已取消' : '💡 已选 ' + game.flipped.length + '/2', '');
                 return;
             }
 
@@ -2398,11 +1840,11 @@
 
                     if (game.matchCount >= 3) {
                         sound.play('match_combo');
-                        setStatus('🔥 连续 ' + game.matchCount + ' 次！', 'success', '🔥 连击');
+                        setStatus('🔥 连击 ' + game.matchCount + ' 次！', 'success', '🔥');
                     } else {
                         sound.play('match');
-                        setStatus('✅ 匹配！(' + (game.matchedPairs + 1) + '/' + game.totalPairs + ')',
-                        'success', '✨ 成功');
+                        setStatus('✅ 匹配！(' + (game.matchedPairs + 1) + '/' + game.totalPairs + ')', 'success',
+                            '✨');
                     }
 
                     c1.classList.add('matched');
@@ -2412,9 +1854,9 @@
                         r2 = c2.getBoundingClientRect();
                     const mx = (r1.left + r1.right + r2.left + r2.right) / 4;
                     const my = (r1.top + r1.bottom + r2.top + r2.bottom) / 4;
-                    let txt = '✨ +1';
-                    if (game.matchCount >= 3) txt = '🔥 x' + game.matchCount;
-                    else if (game.matchCount === 2) txt = '⭐ +2';
+                    let txt = '✨+1';
+                    if (game.matchCount >= 3) txt = '🔥x' + game.matchCount;
+                    else if (game.matchCount === 2) txt = '⭐+2';
                     showScorePopup(mx, my, txt);
 
                     game.matched.add(c1.dataset.pairId);
@@ -2432,16 +1874,15 @@
                         if (game.matchedPairs === game.totalPairs) {
                             game.isLevelComplete = true;
                             if (game.matchCount === game.totalPairs) { sound.play('perfect');
-                                setStatus('🌟 完美通关！', 'success', '🏆 完美'); } else { sound.play(
-                                'win'); }
+                                setStatus('🌟 完美通关！', 'success', '🏆'); } else { sound.play('win'); }
                             setTimeout(() => showLevelComplete(), 400);
                         } else {
                             const remain = game.totalPairs - game.matchedPairs;
-                            if (game.matchCount >= 3) setStatus('🔥 连击 ' + game.matchCount +
-                                ' 次！还剩 ' + remain + ' 对', 'success', '🔥 连击');
-                            else setStatus('💡 继续配对，还剩 ' + remain + ' 对', '', '📖 复习');
+                            if (game.matchCount >= 3) setStatus('🔥 连击 ' + game.matchCount + ' 次！还剩 ' +
+                                remain + ' 对', 'success', '🔥');
+                            else setStatus('💡 继续配对，还剩 ' + remain + ' 对', '');
                         }
-                    }, 500);
+                    }, 450);
                 } else {
                     sound.play('fail');
                     c1.classList.add('fail');
@@ -2449,7 +1890,7 @@
                     game.matchCount = 0;
                     if (gameMode === 'ebbinghaus') { updateWordMemory(c1.dataset.pairId, false);
                         updateWordMemory(c2.dataset.pairId, false); }
-                    setStatus('❌ 不匹配，再试一次', 'error', '😅 再试');
+                    setStatus('❌ 不匹配，再试一次', 'error', '😅');
 
                     setTimeout(() => {
                         c1.classList.remove('flipped', 'fail');
@@ -2457,11 +1898,11 @@
                         game.flipped = [];
                         game.locked = false;
                         const remain = game.totalPairs - game.matchedPairs;
-                        setStatus('💡 继续配对，还剩 ' + remain + ' 对', '', '📖 复习');
-                    }, 600);
+                        setStatus('💡 继续配对，还剩 ' + remain + ' 对', '');
+                    }, 500);
                 }
             } else {
-                setStatus('💡 已选 ' + game.flipped.length + '/2', '', '🔍 配对');
+                setStatus('💡 已选 ' + game.flipped.length + '/2', '');
             }
         }
 
@@ -2482,10 +1923,10 @@
             }
             let remaining = availableWords.filter(w => !game.usedWords.includes(w.en)).length;
             grid.innerHTML =
-                `<div class="next-level-btn"><button onclick="continueToNextLevel()">🚀 下一关</button><div class="info-text">剩余 ${remaining} 个词条待复习</div></div>`;
+                `<div class="next-level-btn"><button onclick="continueToNextLevel()">🚀 下一关</button><div class="info-text">剩余 ${remaining} 个词条</div></div>`;
             sound.play('levelup');
             showCelebration();
-            setStatus('🎉 第 ' + game.currentLevel + ' 关完成！', 'success', '🌟 进步');
+            setStatus('🎉 第 ' + game.currentLevel + ' 关完成！', 'success', '🌟');
         }
 
         function continueToNextLevel() {
@@ -2498,20 +1939,20 @@
             const container = document.createElement('div');
             container.className = 'celebration';
             document.body.appendChild(container);
-            const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6'];
-            const emojis = ['🎉', '⭐', '🌟', '🎊', '💪', '🔥'];
-            for (let i = 0; i < 50; i++) {
+            const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+            const emojis = ['🎉', '⭐', '🌟', '🎊', '💪'];
+            for (let i = 0; i < 30; i++) {
                 const el = document.createElement('div');
                 el.className = 'confetti';
                 el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
                 el.style.left = Math.random() * 100 + '%';
                 el.style.color = colors[Math.floor(Math.random() * colors.length)];
-                el.style.fontSize = (Math.random() * 14 + 12) + 'px';
-                el.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                el.style.animationDelay = (Math.random() * 1.2) + 's';
+                el.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                el.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+                el.style.animationDelay = (Math.random() * 0.8) + 's';
                 container.appendChild(el);
             }
-            setTimeout(() => container.remove(), 4000);
+            setTimeout(() => container.remove(), 3000);
         }
 
         // ================================================================
@@ -2528,9 +1969,9 @@
                     if (ext === 'json') {
                         const data = JSON.parse(content);
                         if (Array.isArray(data)) { words = data.map(item => ({ en: item.en || item
-                                    .english || item.word || '', zh: item.zh || item.chinese || item
-                                    .mean || '', example_en: item.example_en || '',
-                                example_zh: item.example_zh || '' })).filter(w => w.en && w.zh); }
+                                    .english || '', zh: item.zh || item.chinese || '',
+                                example_en: item.example_en || '', example_zh: item.example_zh || ''
+                            })).filter(w => w.en && w.zh); }
                     } else if (ext === 'csv' || ext === 'txt') {
                         const lines = content.split('\n').filter(l => l.trim());
                         words = lines.map(line => { const parts = line.split(/[,，\t]+/); if (parts
@@ -2600,7 +2041,7 @@
             if (count === 0) { alert('没有新词条可导入'); return; }
             saveDB(db);
             saveExamples();
-            alert('✅ 导入 ' + count + ' 个词条到 "' + group + '"（已自动生成例句）');
+            alert('✅ 导入 ' + count + ' 个词条到 "' + group + '"');
             document.getElementById('wordInput').value = '';
             document.getElementById('groupNameInput').value = '';
             renderGroups();
