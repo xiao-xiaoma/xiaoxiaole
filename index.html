@@ -38,6 +38,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
         }
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -54,7 +55,7 @@
             gap: 6px;
         }
         .title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
@@ -67,7 +68,7 @@
         .title .horse-icon {
             -webkit-text-fill-color: initial;
             background: none;
-            font-size: 24px;
+            font-size: 26px;
         }
         .controls {
             display: flex;
@@ -75,10 +76,10 @@
             flex-shrink: 0;
         }
         .custom-select {
-            padding: 6px 24px 6px 10px;
+            padding: 7px 24px 7px 12px;
             border: 2px solid #fcd34d;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             color: #78350f;
@@ -91,7 +92,6 @@
             background-size: 8px 5px;
             min-width: 80px;
             max-width: 140px;
-            font-size: 12px;
         }
         .custom-select:focus {
             outline: none;
@@ -99,10 +99,10 @@
             border-color: #f59e0b;
         }
         .btn {
-            padding: 6px 12px;
+            padding: 7px 14px;
             border: none;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -112,7 +112,7 @@
             gap: 3px;
             touch-action: manipulation;
             white-space: nowrap;
-            min-height: 36px;
+            min-height: 38px;
         }
         .btn:active { transform: scale(0.92); }
         .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); }
@@ -129,7 +129,7 @@
             grid-template-columns: 1fr 1fr 1.2fr;
             gap: 6px;
             background: #f3f4f6;
-            padding: 6px 8px;
+            padding: 8px 10px;
             border-radius: 10px;
             margin-bottom: 8px;
             flex-shrink: 0;
@@ -139,21 +139,21 @@
             flex-direction: column;
             align-items: center;
             gap: 1px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             color: #4b5563;
         }
         .stat-item .number {
             background: #fff;
-            padding: 0 8px;
+            padding: 0 10px;
             border-radius: 14px;
-            font-size: 18px;
+            font-size: 20px;
             color: #1f2937;
-            min-width: 20px;
+            min-width: 24px;
             text-align: center;
             font-weight: 700;
         }
-        .stat-item .label { font-size: 9px; color: #6b7280; }
+        .stat-item .label { font-size: 10px; color: #6b7280; }
         .stat-item.highlight .number { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
         .stat-item.warning .number { background: #f59e0b; color: #fff; }
         .mode-switch-item {
@@ -163,15 +163,15 @@
             border-radius: 8px;
         }
         .mode-switch-item:active { transform: scale(0.95); background: rgba(0,0,0,0.05); }
-        .mode-switch-item .mode-label { font-size: 9px; color: #6b7280; text-align: center; }
+        .mode-switch-item .mode-label { font-size: 10px; color: #6b7280; text-align: center; }
         .mode-switch-item .mode-name {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
             color: #1f2937;
             background: #fff;
-            padding: 0 8px;
+            padding: 0 10px;
             border-radius: 10px;
-            min-width: 42px;
+            min-width: 46px;
             text-align: center;
         }
         .mode-switch-item .mode-name.normal { color: #10b981; }
@@ -180,13 +180,13 @@
 
         /* ===== 状态栏 - 加大 ===== */
         .status-bar {
-            padding: 6px 10px;
+            padding: 7px 12px;
             border-radius: 8px;
             background: #f0f4ff;
             color: #4b5563;
-            font-size: 12px;
+            font-size: 13px;
             margin-bottom: 8px;
-            min-height: 30px;
+            min-height: 34px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -195,9 +195,9 @@
             flex-shrink: 0;
         }
         .status-bar .badge {
-            padding: 2px 8px;
+            padding: 2px 10px;
             border-radius: 8px;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
             white-space: nowrap;
         }
@@ -208,7 +208,7 @@
         .status-bar.error { background: #fecaca; color: #991b1b; }
         .status-bar.info { background: #dbeafe; color: #1e40af; }
 
-        /* ===== 游戏网格 - 4x4 共16张卡片 ===== */
+        /* ===== 游戏网格 ===== */
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -223,19 +223,19 @@
             gap: 8px !important;
         }
         .grid-short-sentence .card {
-            font-size: 18px !important;
+            font-size: 19px !important;
             padding: 12px 20px !important;
             border-radius: 12px !important;
             aspect-ratio: auto !important;
-            min-height: 56px !important;
-            height: 60px !important;
+            min-height: 58px !important;
+            height: 62px !important;
             flex-direction: row !important;
             justify-content: center !important;
             gap: 8px !important;
         }
-        .grid-short-sentence .card .level-badge { font-size: 9px !important; top: 3px !important; right: 3px !important; padding: 0 5px !important; }
-        .grid-short-sentence .card .speaker-icon { font-size: 14px !important; bottom: 3px !important; right: 3px !important; }
-        .grid-short-sentence .card .card-lang-tag { font-size: 7px !important; bottom: 2px !important; }
+        .grid-short-sentence .card .level-badge { font-size: 10px !important; top: 3px !important; right: 3px !important; padding: 0 5px !important; }
+        .grid-short-sentence .card .speaker-icon { font-size: 15px !important; bottom: 3px !important; right: 3px !important; }
+        .grid-short-sentence .card .card-lang-tag { font-size: 8px !important; bottom: 2px !important; }
 
         .grid-review-list {
             grid-template-columns: 1fr 1fr !important;
@@ -246,12 +246,12 @@
             flex-direction: row !important;
             align-items: center !important;
             justify-content: space-between !important;
-            padding: 10px 14px !important;
+            padding: 12px 16px !important;
             background: linear-gradient(135deg, #f9fafb, #f3f4f6);
             border: 2px solid #e5e7eb;
             border-radius: 12px !important;
-            min-height: 56px !important;
-            height: 60px !important;
+            min-height: 60px !important;
+            height: 64px !important;
             aspect-ratio: auto !important;
             width: 100% !important;
             cursor: default !important;
@@ -277,14 +277,14 @@
         }
         .grid-review-list .review-card .en-part {
             font-weight: 700;
-            font-size: 15px;
+            font-size: 16px;
             color: #1f2937;
             text-align: left;
             line-height: 1.2;
         }
         .grid-review-list .review-card .zh-part {
             font-weight: 500;
-            font-size: 14px;
+            font-size: 15px;
             color: #4b5563;
             text-align: right;
             line-height: 1.2;
@@ -292,7 +292,7 @@
         .grid-review-list .review-card .speaker-btn {
             background: none;
             border: none;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             padding: 4px 6px;
             border-radius: 6px;
@@ -309,12 +309,12 @@
             position: absolute;
             top: 3px;
             right: 5px;
-            font-size: 8px;
+            font-size: 9px;
             color: #d1d5db;
             font-weight: 700;
         }
         .grid-review-list .review-card .mini-example {
-            font-size: 9px;
+            font-size: 10px;
             color: #9ca3af;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -333,11 +333,11 @@
             align-items: center;
             height: 100%;
         }
-        .review-complete .emoji { font-size: 42px; display: block; margin-bottom: 6px; }
-        .review-complete p { font-size: 15px; }
-        .review-complete .sub { font-size: 13px; color: #9ca3af; margin-top: 4px; }
+        .review-complete .emoji { font-size: 44px; display: block; margin-bottom: 6px; }
+        .review-complete p { font-size: 16px; }
+        .review-complete .sub { font-size: 14px; color: #9ca3af; margin-top: 4px; }
 
-        /* ===== 卡片 - 加大尺寸 ===== */
+        /* ===== 卡片 ===== */
         .card {
             aspect-ratio: 1;
             background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
@@ -350,14 +350,14 @@
             text-align: center;
             padding: 6px;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
             word-break: break-word;
             position: relative;
             color: #1f2937;
-            min-height: 56px;
+            min-height: 60px;
             line-height: 1.3;
             -webkit-touch-callout: none;
             touch-action: manipulation;
@@ -367,7 +367,7 @@
             bottom: 2px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 7px;
+            font-size: 8px;
             color: #9ca3af;
             background: rgba(255, 255, 255, 0.6);
             padding: 0 6px;
@@ -383,7 +383,7 @@
             position: absolute;
             top: 2px;
             right: 2px;
-            font-size: 6px;
+            font-size: 7px;
             background: rgba(0, 0, 0, 0.07);
             padding: 0 4px;
             border-radius: 4px;
@@ -393,7 +393,7 @@
             position: absolute;
             bottom: 2px;
             right: 2px;
-            font-size: 11px;
+            font-size: 12px;
             opacity: 0.5;
             pointer-events: none;
         }
@@ -448,7 +448,7 @@
             opacity: 1;
         }
 
-        /* ===== 面板 ===== */
+        /* ===== 面板 - 修复滚动问题 ===== */
         .panel {
             margin-top: 8px;
             background: #f9fafb;
@@ -457,18 +457,30 @@
             display: none;
             animation: slideUp 0.3s ease;
             flex-shrink: 0;
-            max-height: 45vh;
+            max-height: 50vh;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
         }
         .panel.active { display: block; }
-        .panel-title { font-size: 14px; font-weight: 700; color: #1f2937; margin-bottom: 8px; }
+        .panel-title { 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #1f2937; 
+            margin-bottom: 8px;
+            position: sticky;
+            top: 0;
+            background: #f9fafb;
+            padding: 4px 0;
+            z-index: 10;
+        }
         .panel textarea {
             width: 100%;
             height: 60px;
             padding: 8px;
             border: 2px solid #e5e7eb;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 13px;
             resize: vertical;
             font-family: inherit;
         }
@@ -481,15 +493,21 @@
         }
         .panel .input-group input {
             flex: 1;
-            padding: 6px 10px;
+            padding: 8px 12px;
             border: 2px solid #e5e7eb;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 13px;
             min-width: 70px;
+            min-height: 38px;
         }
         .panel .input-group input:focus { outline: none; border-color: #667eea; }
-        .panel .hint { font-size: 11px; color: #6b7280; margin-bottom: 6px; line-height: 1.4; }
-        .panel .divider { border: none; border-top: 2px solid #e5e7eb; margin: 8px 0; }
+        .panel .hint { 
+            font-size: 12px; 
+            color: #6b7280; 
+            margin-bottom: 6px; 
+            line-height: 1.5;
+        }
+        .panel .divider { border: none; border-top: 2px solid #e5e7eb; margin: 10px 0; }
         .upload-section {
             background: #f0fdf4;
             border: 2px dashed #10b981;
@@ -497,20 +515,46 @@
             padding: 10px;
             margin: 6px 0;
         }
-        .upload-section .upload-title { font-weight: 700; color: #065f46; margin-bottom: 4px; font-size: 12px; display: flex; align-items: center; gap: 4px; }
-        .upload-section .upload-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+        .upload-section .upload-title { 
+            font-weight: 700; 
+            color: #065f46; 
+            margin-bottom: 4px; 
+            font-size: 13px; 
+            display: flex; 
+            align-items: center; 
+            gap: 4px; 
+        }
+        .upload-section .upload-actions { 
+            display: flex; 
+            gap: 6px; 
+            flex-wrap: wrap; 
+            align-items: center; 
+        }
         .upload-section .upload-actions input[type="file"] { display: none; }
         .upload-section .upload-status {
-            padding: 4px 8px;
+            padding: 6px 10px;
             border-radius: 4px;
-            font-size: 11px;
-            min-height: 24px;
+            font-size: 12px;
+            min-height: 28px;
             background: #f3f4f6;
             color: #4b5563;
             margin-top: 4px;
         }
         .upload-section .upload-status.success { background: #d1fae5; color: #065f46; }
         .upload-section .upload-status.error { background: #fecaca; color: #991b1b; }
+
+        /* 面板底部按钮区域 - 确保可见 */
+        .panel-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            padding-top: 4px;
+        }
+        .panel-actions .btn {
+            flex: 1;
+            min-width: 80px;
+            justify-content: center;
+        }
 
         .empty-state {
             grid-column: 1 / -1;
@@ -523,8 +567,8 @@
             align-items: center;
             height: 100%;
         }
-        .empty-state .emoji { font-size: 36px; display: block; margin-bottom: 6px; }
-        .empty-state p { font-size: 14px; }
+        .empty-state .emoji { font-size: 38px; display: block; margin-bottom: 6px; }
+        .empty-state p { font-size: 15px; }
 
         .next-level-btn {
             grid-column: 1 / -1;
@@ -537,8 +581,8 @@
             height: 100%;
         }
         .next-level-btn button {
-            padding: 12px 28px;
-            font-size: 17px;
+            padding: 14px 32px;
+            font-size: 18px;
             border: none;
             border-radius: 12px;
             background: linear-gradient(135deg, #10b981, #059669);
@@ -548,9 +592,14 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
             touch-action: manipulation;
+            min-height: 48px;
         }
         .next-level-btn button:active { transform: scale(0.93); }
-        .next-level-btn .info-text { font-size: 13px; color: #6b7280; margin-top: 6px; }
+        .next-level-btn .info-text { 
+            font-size: 14px; 
+            color: #6b7280; 
+            margin-top: 6px; 
+        }
 
         /* ===== 庆祝动画 ===== */
         .celebration { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
@@ -565,7 +614,7 @@
         }
         .score-popup {
             position: fixed;
-            font-size: 32px;
+            font-size: 34px;
             font-weight: 900;
             color: #10b981;
             pointer-events: none;
@@ -588,109 +637,115 @@
         .nav-buttons {
             grid-column: 1 / -1;
             display: flex;
-            gap: 8px;
+            gap: 10px;
             justify-content: center;
             padding: 10px 0 4px 0;
             flex-wrap: wrap;
             align-items: center;
         }
         .nav-buttons .nav-info {
-            font-size: 13px;
+            font-size: 14px;
             color: #6b7280;
             text-align: center;
             font-weight: 600;
         }
         .nav-buttons .btn {
-            font-size: 13px;
-            padding: 6px 12px;
-            min-height: 34px;
+            font-size: 14px;
+            padding: 6px 14px;
+            min-height: 36px;
         }
 
-        /* ===== 响应式 - 大屏手机 ===== */
+        /* ===== 响应式 ===== */
         @media (min-width: 500px) {
-            .container { padding: 18px; max-height: 900px; }
-            .card { font-size: 17px; min-height: 64px; }
+            .container { padding: 18px; max-height: 920px; }
+            .card { font-size: 18px; min-height: 68px; }
             .grid { gap: 10px; }
-            .title { font-size: 22px; }
-            .stat-item .number { font-size: 20px; }
+            .title { font-size: 24px; }
+            .stat-item .number { font-size: 22px; }
         }
 
-        /* ===== 响应式 - 小屏手机 ===== */
         @media (max-width: 420px) {
             .container { padding: 10px; border-radius: 12px; height: 100vh; max-height: 100vh; }
-            .title { font-size: 17px; }
-            .title .horse-icon { font-size: 20px; }
-            .custom-select { font-size: 11px; padding: 5px 20px 5px 8px; min-width: 70px; max-width: 110px; }
-            .btn { font-size: 11px; padding: 5px 9px; min-height: 32px; }
-            .stats { padding: 4px 6px; gap: 4px; }
-            .stat-item .number { font-size: 16px; min-width: 18px; padding: 0 6px; }
-            .stat-item .label { font-size: 8px; }
-            .mode-switch-item .mode-name { font-size: 12px; padding: 0 6px; min-width: 36px; }
+            .title { font-size: 19px; }
+            .title .horse-icon { font-size: 22px; }
+            .custom-select { font-size: 12px; padding: 5px 20px 5px 8px; min-width: 70px; max-width: 110px; }
+            .btn { font-size: 12px; padding: 5px 10px; min-height: 34px; }
+            .stats { padding: 5px 8px; gap: 4px; }
+            .stat-item .number { font-size: 17px; min-width: 20px; padding: 0 6px; }
+            .stat-item .label { font-size: 9px; }
+            .mode-switch-item .mode-name { font-size: 13px; padding: 0 6px; min-width: 38px; }
             .grid { gap: 6px; }
-            .card { font-size: 13px; min-height: 48px; border-radius: 10px; border-width: 2px; padding: 4px; }
-            .card .level-badge { font-size: 5px; }
-            .card .speaker-icon { font-size: 9px; }
-            .card .card-lang-tag { font-size: 6px !important; }
-            .grid-short-sentence .card { font-size: 15px !important; min-height: 48px !important; height: 52px !important; padding: 8px 14px !important; }
+            .card { font-size: 14px; min-height: 52px; border-radius: 10px; border-width: 2px; padding: 4px; }
+            .card .level-badge { font-size: 6px; }
+            .card .speaker-icon { font-size: 10px; }
+            .card .card-lang-tag { font-size: 7px !important; }
+            .grid-short-sentence .card { font-size: 16px !important; min-height: 50px !important; height: 54px !important; padding: 8px 14px !important; }
             .grid-review-list { gap: 6px !important; grid-template-columns: 1fr !important; }
-            .grid-review-list .review-card { padding: 8px 12px !important; min-height: 50px !important; height: 54px !important; }
-            .grid-review-list .review-card .en-part { font-size: 13px !important; }
-            .grid-review-list .review-card .zh-part { font-size: 12px !important; }
-            .grid-review-list .review-card .speaker-btn { font-size: 14px !important; }
-            .status-bar { font-size: 11px; padding: 4px 8px; min-height: 26px; }
-            .status-bar .badge { font-size: 9px; padding: 1px 6px; }
-            .score-popup { font-size: 26px; }
-            .panel { padding: 8px; max-height: 35vh; }
-            .panel-title { font-size: 13px; }
-            .panel textarea { height: 45px; font-size: 11px; padding: 6px; }
-            .nav-buttons .btn { font-size: 11px; padding: 4px 10px; min-height: 30px; }
-            .nav-buttons .nav-info { font-size: 12px; }
-            .next-level-btn button { padding: 10px 22px; font-size: 15px; }
-            .next-level-btn .info-text { font-size: 12px; }
+            .grid-review-list .review-card { padding: 10px 14px !important; min-height: 54px !important; height: 58px !important; }
+            .grid-review-list .review-card .en-part { font-size: 14px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 13px !important; }
+            .grid-review-list .review-card .speaker-btn { font-size: 15px !important; }
+            .status-bar { font-size: 12px; padding: 5px 8px; min-height: 28px; }
+            .status-bar .badge { font-size: 10px; padding: 1px 6px; }
+            .score-popup { font-size: 28px; }
+            .panel { padding: 10px; max-height: 45vh; }
+            .panel-title { font-size: 14px; }
+            .panel textarea { height: 50px; font-size: 12px; padding: 6px; }
+            .panel .input-group input { font-size: 12px; padding: 6px 10px; min-height: 34px; }
+            .panel .hint { font-size: 11px; }
+            .nav-buttons .btn { font-size: 12px; padding: 5px 12px; min-height: 32px; }
+            .nav-buttons .nav-info { font-size: 13px; }
+            .next-level-btn button { padding: 12px 24px; font-size: 16px; min-height: 44px; }
+            .next-level-btn .info-text { font-size: 13px; }
+            .panel-actions .btn { min-width: 60px; font-size: 11px; padding: 5px 8px; }
         }
 
         @media (max-width: 360px) {
             .container { padding: 6px; border-radius: 10px; }
-            .title { font-size: 15px; }
+            .title { font-size: 16px; }
             .custom-select { font-size: 10px; padding: 4px 16px 4px 6px; min-width: 60px; }
-            .btn { font-size: 10px; padding: 4px 7px; min-height: 28px; border-radius: 6px; }
+            .btn { font-size: 10px; padding: 4px 8px; min-height: 30px; border-radius: 6px; }
             .stats { padding: 3px 4px; }
-            .stat-item .number { font-size: 14px; min-width: 16px; }
+            .stat-item .number { font-size: 15px; min-width: 16px; }
             .mode-switch-item .mode-name { font-size: 11px; padding: 0 4px; min-width: 30px; }
             .grid { gap: 4px; }
-            .card { font-size: 11px; min-height: 42px; border-radius: 8px; border-width: 1.5px; }
-            .card .card-lang-tag { font-size: 5px !important; }
-            .grid-short-sentence .card { font-size: 13px !important; min-height: 40px !important; height: 44px !important; padding: 6px 10px !important; }
-            .grid-review-list .review-card { padding: 6px 8px !important; min-height: 42px !important; height: 46px !important; }
-            .grid-review-list .review-card .en-part { font-size: 11px !important; }
-            .grid-review-list .review-card .zh-part { font-size: 10px !important; }
-            .status-bar { font-size: 10px; padding: 3px 6px; min-height: 22px; }
-            .score-popup { font-size: 22px; }
-            .next-level-btn button { padding: 8px 18px; font-size: 13px; }
+            .card { font-size: 12px; min-height: 44px; border-radius: 8px; border-width: 1.5px; }
+            .card .card-lang-tag { font-size: 6px !important; }
+            .grid-short-sentence .card { font-size: 14px !important; min-height: 42px !important; height: 46px !important; padding: 6px 10px !important; }
+            .grid-review-list .review-card { padding: 6px 10px !important; min-height: 44px !important; height: 48px !important; }
+            .grid-review-list .review-card .en-part { font-size: 12px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 11px !important; }
+            .status-bar { font-size: 10px; padding: 3px 6px; min-height: 24px; }
+            .score-popup { font-size: 24px; }
+            .next-level-btn button { padding: 8px 18px; font-size: 14px; min-height: 38px; }
+            .panel { padding: 6px; max-height: 40vh; }
+            .panel-title { font-size: 12px; }
+            .panel textarea { height: 40px; font-size: 11px; }
         }
 
         @media (max-height: 700px) {
             .container { padding: 8px; height: 100vh; max-height: 100vh; }
             .header { margin-bottom: 4px; }
-            .title { font-size: 16px; }
+            .title { font-size: 17px; }
             .stats { padding: 4px 6px; margin-bottom: 4px; }
-            .stat-item .number { font-size: 14px; }
-            .status-bar { font-size: 10px; padding: 3px 6px; min-height: 22px; margin-bottom: 4px; }
+            .stat-item .number { font-size: 15px; }
+            .status-bar { font-size: 11px; padding: 4px 8px; min-height: 24px; margin-bottom: 4px; }
             .grid { gap: 5px; }
-            .card { min-height: 42px; font-size: 12px; }
-            .grid-review-list .review-card { min-height: 44px !important; height: 48px !important; }
-            .grid-short-sentence .card { min-height: 42px !important; height: 46px !important; }
-            .btn { min-height: 28px; font-size: 11px; padding: 4px 8px; }
+            .card { min-height: 44px; font-size: 13px; }
+            .grid-review-list .review-card { min-height: 46px !important; height: 50px !important; }
+            .grid-short-sentence .card { min-height: 44px !important; height: 48px !important; }
+            .btn { min-height: 30px; font-size: 12px; padding: 4px 10px; }
+            .panel { max-height: 40vh; }
         }
 
         @media (min-height: 850px) {
-            .container { max-height: 950px; }
-            .card { min-height: 70px; font-size: 17px; }
+            .container { max-height: 960px; }
+            .card { min-height: 74px; font-size: 18px; }
             .grid { gap: 12px; }
-            .grid-short-sentence .card { min-height: 68px !important; height: 72px !important; font-size: 19px !important; }
-            .grid-review-list .review-card { min-height: 68px !important; height: 72px !important; }
-            .grid-review-list .review-card .en-part { font-size: 17px !important; }
-            .grid-review-list .review-card .zh-part { font-size: 16px !important; }
+            .grid-short-sentence .card { min-height: 70px !important; height: 74px !important; font-size: 20px !important; }
+            .grid-review-list .review-card { min-height: 72px !important; height: 76px !important; }
+            .grid-review-list .review-card .en-part { font-size: 18px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 17px !important; }
         }
     </style>
 </head>
@@ -728,29 +783,35 @@
             <span class="badge learning" id="statusBadge" style="display:none;">学习中</span>
         </div>
 
-        <!-- 游戏网格 - 4x4 共16张卡片 -->
+        <!-- 游戏网格 -->
         <div class="grid" id="gameGrid"></div>
 
-        <!-- 管理面板 -->
+        <!-- 管理面板 - 修复滚动 -->
         <div class="panel" id="managePanel">
             <h3 class="panel-title">📚 词库管理</h3>
+            
             <div class="upload-section">
                 <div class="upload-title">📤 批量上传</div>
                 <div class="upload-actions">
                     <input type="file" id="uploadInput" accept=".json,.csv,.txt">
                     <button class="btn btn-primary" id="uploadBtn">📂 选择文件</button>
-                    <span style="font-size:10px;color:#6b7280;">JSON / CSV / TXT</span>
+                    <span style="font-size:11px;color:#6b7280;">JSON / CSV / TXT</span>
                 </div>
                 <div class="upload-status" id="uploadStatus">💡 上传文件批量导入词条</div>
             </div>
+
             <div class="hint">💡 每行一个词条，英文和中文用 <strong>逗号</strong> 或 <strong>Tab</strong> 分隔</div>
             <textarea id="wordInput" placeholder="apple,苹果&#10;get up,起床&#10;How are you?,你好吗"></textarea>
+            
             <div class="input-group">
                 <input id="groupNameInput" type="text" placeholder="分组名称">
                 <button class="btn btn-primary" id="importBtn">📥 导入</button>
             </div>
+
             <hr class="divider">
-            <div style="display:flex;gap:4px;flex-wrap:wrap;">
+
+            <!-- 按钮组 - 使用 flex-wrap 确保可见 -->
+            <div class="panel-actions">
                 <button class="btn btn-danger" id="clearBtn">🗑️ 清空分组</button>
                 <button class="btn btn-info" id="resetAllBtn">🔄 重置数据</button>
                 <button class="btn btn-purple" id="updateWordsBtn">📦 更新词库</button>
@@ -986,7 +1047,7 @@
             { en: "smart", zh: "聪明" }
         ];
 
-        // ===== OPD 单词（精简版，保持核心词汇） =====
+        // ===== OPD 单词 =====
         const OPD_WORDS = [
             { en: "hello", zh: "你好" }, { en: "hi", zh: "嗨" }, { en: "goodbye", zh: "再见" }, { en: "thanks",
                 zh: "谢谢" },
@@ -1712,20 +1773,12 @@
                 return;
             }
 
-            // 如果可用词条少于8个，就用全部
-            const actualPairs = selected.length;
-            if (actualPairs < 8) {
-                // 如果少于8对，调整网格列数，保持4列
-                // 但卡片数量不变，按实际数量显示
-            }
-
             selected.forEach(w => game.usedWords.push(w.en));
             game.totalPairs = selected.length;
             game.matchedPairs = 0;
             game.matchCount = 0;
             game.isLevelComplete = false;
 
-            // 构建卡片：每对生成英文和中文两张
             const cards = [];
             selected.forEach(w => {
                 cards.push({ id: w.en, text: w.en, type: 'en', pairId: w.en });
@@ -1733,7 +1786,6 @@
             });
             game.cards = cards.sort(() => 0.5 - Math.random());
 
-            // 重新排列：尽量让英文和中文交错分布
             const enCards = game.cards.filter(c => c.type === 'en');
             const zhCards = game.cards.filter(c => c.type === 'zh');
             for (let i = enCards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));
@@ -1741,7 +1793,6 @@
             for (let i = zhCards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));
                 [zhCards[i], zhCards[j]] = [zhCards[j], zhCards[i]]; }
 
-            // 重新排列卡片位置
             const reorderedCards = [];
             const enCount = enCards.length;
             const zhCount = zhCards.length;
@@ -1762,7 +1813,6 @@
             }
             game.cards = reorderedCards;
 
-            // 渲染卡片
             game.cards.forEach((card, index) => {
                 const div = document.createElement('div');
                 div.className = 'card';
@@ -2155,6 +2205,10 @@
             document.getElementById('manageBtn').addEventListener('click', () => {
                 const panel = document.getElementById('managePanel');
                 panel.classList.toggle('active');
+                // 打开面板时滚动到顶部
+                if (panel.classList.contains('active')) {
+                    setTimeout(() => { panel.scrollTop = 0; }, 100);
+                }
             });
 
             document.getElementById('uploadBtn').addEventListener('click', () => {
