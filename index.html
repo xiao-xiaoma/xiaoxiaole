@@ -18,7 +18,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 8px;
+            padding: 6px;
             touch-action: manipulation;
             overflow: hidden;
             height: 100vh;
@@ -28,13 +28,13 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
-            padding: 12px;
-            max-width: 480px;
+            padding: 14px;
+            max-width: 500px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideUp 0.5s ease;
             height: 98vh;
-            max-height: 820px;
+            max-height: 860px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -44,17 +44,17 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 头部 ===== */
+        /* ===== 头部 - 加大 ===== */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             flex-shrink: 0;
-            gap: 4px;
+            gap: 6px;
         }
         .title {
-            font-size: 17px;
+            font-size: 20px;
             font-weight: 800;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
@@ -62,23 +62,23 @@
             background-clip: text;
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 4px;
         }
         .title .horse-icon {
             -webkit-text-fill-color: initial;
             background: none;
-            font-size: 20px;
+            font-size: 24px;
         }
         .controls {
             display: flex;
-            gap: 4px;
+            gap: 5px;
             flex-shrink: 0;
         }
         .custom-select {
-            padding: 4px 20px 4px 8px;
+            padding: 6px 24px 6px 10px;
             border: 2px solid #fcd34d;
             border-radius: 8px;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             color: #78350f;
@@ -87,11 +87,11 @@
             -webkit-appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2378350f' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 6px center;
+            background-position: right 8px center;
             background-size: 8px 5px;
-            min-width: 70px;
-            max-width: 130px;
-            font-size: 10px;
+            min-width: 80px;
+            max-width: 140px;
+            font-size: 12px;
         }
         .custom-select:focus {
             outline: none;
@@ -99,20 +99,20 @@
             border-color: #f59e0b;
         }
         .btn {
-            padding: 4px 8px;
+            padding: 6px 12px;
             border: none;
             border-radius: 8px;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             color: #fff;
             display: inline-flex;
             align-items: center;
-            gap: 2px;
+            gap: 3px;
             touch-action: manipulation;
             white-space: nowrap;
-            min-height: 32px;
+            min-height: 36px;
         }
         .btn:active { transform: scale(0.92); }
         .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); }
@@ -121,82 +121,83 @@
         .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .btn-info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .btn-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .btn-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
 
-        /* ===== 统计栏 ===== */
+        /* ===== 统计栏 - 加大 ===== */
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1.2fr;
-            gap: 4px;
+            gap: 6px;
             background: #f3f4f6;
-            padding: 4px 6px;
+            padding: 6px 8px;
             border-radius: 10px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             flex-shrink: 0;
         }
         .stat-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0px;
-            font-size: 9px;
+            gap: 1px;
+            font-size: 11px;
             font-weight: 600;
             color: #4b5563;
         }
         .stat-item .number {
             background: #fff;
-            padding: 0 4px;
-            border-radius: 12px;
-            font-size: 15px;
+            padding: 0 8px;
+            border-radius: 14px;
+            font-size: 18px;
             color: #1f2937;
-            min-width: 16px;
+            min-width: 20px;
             text-align: center;
             font-weight: 700;
         }
-        .stat-item .label { font-size: 7px; color: #6b7280; }
+        .stat-item .label { font-size: 9px; color: #6b7280; }
         .stat-item.highlight .number { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
         .stat-item.warning .number { background: #f59e0b; color: #fff; }
         .mode-switch-item {
             cursor: pointer;
             transition: all 0.3s ease;
-            padding: 0 4px;
+            padding: 0 6px;
             border-radius: 8px;
         }
         .mode-switch-item:active { transform: scale(0.95); background: rgba(0,0,0,0.05); }
-        .mode-switch-item .mode-label { font-size: 7px; color: #6b7280; text-align: center; }
+        .mode-switch-item .mode-label { font-size: 9px; color: #6b7280; text-align: center; }
         .mode-switch-item .mode-name {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 700;
             color: #1f2937;
             background: #fff;
-            padding: 0 6px;
+            padding: 0 8px;
             border-radius: 10px;
-            min-width: 36px;
+            min-width: 42px;
             text-align: center;
         }
         .mode-switch-item .mode-name.normal { color: #10b981; }
         .mode-switch-item .mode-name.review { color: #f59e0b; }
         .mode-switch-item .mode-name.eb { color: #7c3aed; }
 
-        /* ===== 状态栏 ===== */
+        /* ===== 状态栏 - 加大 ===== */
         .status-bar {
-            padding: 4px 8px;
+            padding: 6px 10px;
             border-radius: 8px;
             background: #f0f4ff;
             color: #4b5563;
-            font-size: 10px;
-            margin-bottom: 6px;
-            min-height: 26px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            min-height: 30px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             transition: all 0.3s ease;
             flex-wrap: wrap;
             flex-shrink: 0;
         }
         .status-bar .badge {
-            padding: 1px 6px;
+            padding: 2px 8px;
             border-radius: 8px;
-            font-size: 8px;
+            font-size: 10px;
             font-weight: 600;
             white-space: nowrap;
         }
@@ -207,11 +208,11 @@
         .status-bar.error { background: #fecaca; color: #991b1b; }
         .status-bar.info { background: #dbeafe; color: #1e40af; }
 
-        /* ===== 游戏网格 - 手机优化 ===== */
+        /* ===== 游戏网格 - 4x4 共16张卡片 ===== */
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
+            gap: 8px;
             margin: 4px 0;
             flex: 1;
             min-height: 0;
@@ -219,43 +220,43 @@
         }
         .grid-short-sentence {
             grid-template-columns: 1fr !important;
-            gap: 6px !important;
+            gap: 8px !important;
         }
         .grid-short-sentence .card {
-            font-size: 15px !important;
-            padding: 10px 16px !important;
+            font-size: 18px !important;
+            padding: 12px 20px !important;
             border-radius: 12px !important;
             aspect-ratio: auto !important;
-            min-height: 48px !important;
-            height: 52px !important;
+            min-height: 56px !important;
+            height: 60px !important;
             flex-direction: row !important;
             justify-content: center !important;
-            gap: 6px !important;
+            gap: 8px !important;
         }
-        .grid-short-sentence .card .level-badge { font-size: 8px !important; top: 3px !important; right: 3px !important; padding: 0 4px !important; }
-        .grid-short-sentence .card .speaker-icon { font-size: 12px !important; bottom: 3px !important; right: 3px !important; }
-        .grid-short-sentence .card .card-lang-tag { font-size: 6px !important; bottom: 1px !important; }
+        .grid-short-sentence .card .level-badge { font-size: 9px !important; top: 3px !important; right: 3px !important; padding: 0 5px !important; }
+        .grid-short-sentence .card .speaker-icon { font-size: 14px !important; bottom: 3px !important; right: 3px !important; }
+        .grid-short-sentence .card .card-lang-tag { font-size: 7px !important; bottom: 2px !important; }
 
         .grid-review-list {
             grid-template-columns: 1fr 1fr !important;
-            gap: 6px !important;
+            gap: 8px !important;
         }
         .grid-review-list .review-card {
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
             justify-content: space-between !important;
-            padding: 8px 10px !important;
+            padding: 10px 14px !important;
             background: linear-gradient(135deg, #f9fafb, #f3f4f6);
             border: 2px solid #e5e7eb;
             border-radius: 12px !important;
-            min-height: 48px !important;
-            height: 52px !important;
+            min-height: 56px !important;
+            height: 60px !important;
             aspect-ratio: auto !important;
             width: 100% !important;
             cursor: default !important;
             transition: all 0.3s ease;
-            gap: 4px !important;
+            gap: 6px !important;
             position: relative;
         }
         .grid-review-list .review-card .card-left {
@@ -264,7 +265,7 @@
             align-items: flex-start !important;
             flex: 2;
             min-width: 0;
-            gap: 1px !important;
+            gap: 2px !important;
         }
         .grid-review-list .review-card .card-right {
             display: flex !important;
@@ -272,18 +273,18 @@
             align-items: flex-end !important;
             flex: 1;
             min-width: 0;
-            gap: 1px !important;
+            gap: 2px !important;
         }
         .grid-review-list .review-card .en-part {
             font-weight: 700;
-            font-size: 13px;
+            font-size: 15px;
             color: #1f2937;
             text-align: left;
             line-height: 1.2;
         }
         .grid-review-list .review-card .zh-part {
             font-weight: 500;
-            font-size: 12px;
+            font-size: 14px;
             color: #4b5563;
             text-align: right;
             line-height: 1.2;
@@ -291,9 +292,9 @@
         .grid-review-list .review-card .speaker-btn {
             background: none;
             border: none;
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
-            padding: 2px 4px;
+            padding: 4px 6px;
             border-radius: 6px;
             transition: all 0.2s ease;
             touch-action: manipulation;
@@ -306,14 +307,14 @@
         }
         .grid-review-list .review-card .card-index {
             position: absolute;
-            top: 2px;
-            right: 4px;
-            font-size: 7px;
+            top: 3px;
+            right: 5px;
+            font-size: 8px;
             color: #d1d5db;
             font-weight: 700;
         }
         .grid-review-list .review-card .mini-example {
-            font-size: 8px;
+            font-size: 9px;
             color: #9ca3af;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -324,7 +325,7 @@
         .review-complete {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 20px 12px;
+            padding: 30px 16px;
             color: #6b7280;
             display: flex;
             flex-direction: column;
@@ -332,45 +333,45 @@
             align-items: center;
             height: 100%;
         }
-        .review-complete .emoji { font-size: 36px; display: block; margin-bottom: 4px; }
-        .review-complete p { font-size: 13px; }
-        .review-complete .sub { font-size: 11px; color: #9ca3af; margin-top: 3px; }
+        .review-complete .emoji { font-size: 42px; display: block; margin-bottom: 6px; }
+        .review-complete p { font-size: 15px; }
+        .review-complete .sub { font-size: 13px; color: #9ca3af; margin-top: 4px; }
 
-        /* ===== 卡片 - 手机优化 ===== */
+        /* ===== 卡片 - 加大尺寸 ===== */
         .card {
             aspect-ratio: 1;
             background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
+            border: 2.5px solid #e5e7eb;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 3px;
+            padding: 6px;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 15px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
             word-break: break-word;
             position: relative;
             color: #1f2937;
-            min-height: 44px;
-            line-height: 1.2;
+            min-height: 56px;
+            line-height: 1.3;
             -webkit-touch-callout: none;
             touch-action: manipulation;
         }
         .card .card-lang-tag {
             position: absolute;
-            bottom: 1px;
+            bottom: 2px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 5px;
+            font-size: 7px;
             color: #9ca3af;
             background: rgba(255, 255, 255, 0.6);
-            padding: 0 4px;
-            border-radius: 3px;
+            padding: 0 6px;
+            border-radius: 4px;
             font-weight: 400;
             pointer-events: none;
         }
@@ -380,19 +381,19 @@
         }
         .card .level-badge {
             position: absolute;
-            top: 1px;
-            right: 1px;
-            font-size: 5px;
+            top: 2px;
+            right: 2px;
+            font-size: 6px;
             background: rgba(0, 0, 0, 0.07);
-            padding: 0 3px;
+            padding: 0 4px;
             border-radius: 4px;
             color: #6b7280;
         }
         .card .speaker-icon {
             position: absolute;
-            bottom: 1px;
-            right: 1px;
-            font-size: 9px;
+            bottom: 2px;
+            right: 2px;
+            font-size: 11px;
             opacity: 0.5;
             pointer-events: none;
         }
@@ -402,7 +403,7 @@
             color: #fff;
             border-color: #667eea;
             transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
         }
         .card.flipped .level-badge { color: rgba(255, 255, 255, 0.6); }
         .card.matched {
@@ -420,7 +421,7 @@
         }
         @keyframes matchPop {
             0% { transform: scale(1); opacity: 1; }
-            25% { transform: scale(1.2) rotate(6deg); opacity: 1; background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; box-shadow: 0 0 25px rgba(16,185,129,0.4); }
+            25% { transform: scale(1.2) rotate(6deg); opacity: 1; background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; box-shadow: 0 0 30px rgba(16,185,129,0.4); }
             50% { transform: scale(0.9) rotate(-2deg); opacity: 0.8; }
             100% { transform: scale(0); opacity: 0; }
         }
@@ -430,14 +431,14 @@
         }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-5px) rotate(-2deg); }
-            60% { transform: translateX(5px) rotate(2deg); }
+            20% { transform: translateX(-6px) rotate(-2deg); }
+            60% { transform: translateX(6px) rotate(2deg); }
         }
         .card::after {
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 10px;
+            border-radius: 12px;
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
@@ -449,64 +450,64 @@
 
         /* ===== 面板 ===== */
         .panel {
-            margin-top: 6px;
+            margin-top: 8px;
             background: #f9fafb;
             border-radius: 12px;
-            padding: 10px;
+            padding: 12px;
             display: none;
             animation: slideUp 0.3s ease;
             flex-shrink: 0;
-            max-height: 50vh;
+            max-height: 45vh;
             overflow-y: auto;
         }
         .panel.active { display: block; }
-        .panel-title { font-size: 13px; font-weight: 700; color: #1f2937; margin-bottom: 6px; }
+        .panel-title { font-size: 14px; font-weight: 700; color: #1f2937; margin-bottom: 8px; }
         .panel textarea {
             width: 100%;
-            height: 50px;
-            padding: 6px;
+            height: 60px;
+            padding: 8px;
             border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: 11px;
+            border-radius: 8px;
+            font-size: 12px;
             resize: vertical;
             font-family: inherit;
         }
         .panel textarea:focus { outline: none; border-color: #667eea; }
         .panel .input-group {
             display: flex;
-            gap: 4px;
-            margin: 6px 0;
+            gap: 6px;
+            margin: 8px 0;
             flex-wrap: wrap;
         }
         .panel .input-group input {
             flex: 1;
-            padding: 4px 8px;
+            padding: 6px 10px;
             border: 2px solid #e5e7eb;
             border-radius: 6px;
-            font-size: 11px;
-            min-width: 60px;
+            font-size: 12px;
+            min-width: 70px;
         }
         .panel .input-group input:focus { outline: none; border-color: #667eea; }
-        .panel .hint { font-size: 10px; color: #6b7280; margin-bottom: 4px; line-height: 1.3; }
-        .panel .divider { border: none; border-top: 2px solid #e5e7eb; margin: 6px 0; }
+        .panel .hint { font-size: 11px; color: #6b7280; margin-bottom: 6px; line-height: 1.4; }
+        .panel .divider { border: none; border-top: 2px solid #e5e7eb; margin: 8px 0; }
         .upload-section {
             background: #f0fdf4;
             border: 2px dashed #10b981;
-            border-radius: 6px;
-            padding: 8px;
+            border-radius: 8px;
+            padding: 10px;
             margin: 6px 0;
         }
-        .upload-section .upload-title { font-weight: 700; color: #065f46; margin-bottom: 3px; font-size: 11px; display: flex; align-items: center; gap: 3px; }
-        .upload-section .upload-actions { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+        .upload-section .upload-title { font-weight: 700; color: #065f46; margin-bottom: 4px; font-size: 12px; display: flex; align-items: center; gap: 4px; }
+        .upload-section .upload-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
         .upload-section .upload-actions input[type="file"] { display: none; }
         .upload-section .upload-status {
-            padding: 3px 6px;
+            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 10px;
-            min-height: 22px;
+            font-size: 11px;
+            min-height: 24px;
             background: #f3f4f6;
             color: #4b5563;
-            margin-top: 3px;
+            margin-top: 4px;
         }
         .upload-section .upload-status.success { background: #d1fae5; color: #065f46; }
         .upload-section .upload-status.error { background: #fecaca; color: #991b1b; }
@@ -514,7 +515,7 @@
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 20px 12px;
+            padding: 30px 16px;
             color: #6b7280;
             display: flex;
             flex-direction: column;
@@ -522,12 +523,12 @@
             align-items: center;
             height: 100%;
         }
-        .empty-state .emoji { font-size: 30px; display: block; margin-bottom: 4px; }
-        .empty-state p { font-size: 12px; }
+        .empty-state .emoji { font-size: 36px; display: block; margin-bottom: 6px; }
+        .empty-state p { font-size: 14px; }
 
         .next-level-btn {
             grid-column: 1 / -1;
-            padding: 8px;
+            padding: 12px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -536,26 +537,26 @@
             height: 100%;
         }
         .next-level-btn button {
-            padding: 8px 20px;
-            font-size: 14px;
+            padding: 12px 28px;
+            font-size: 17px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             background: linear-gradient(135deg, #10b981, #059669);
             color: #fff;
             cursor: pointer;
             font-weight: 700;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
             touch-action: manipulation;
         }
         .next-level-btn button:active { transform: scale(0.93); }
-        .next-level-btn .info-text { font-size: 11px; color: #6b7280; margin-top: 4px; }
+        .next-level-btn .info-text { font-size: 13px; color: #6b7280; margin-top: 6px; }
 
         /* ===== 庆祝动画 ===== */
         .celebration { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
         .confetti {
             position: absolute;
-            font-size: 12px;
+            font-size: 14px;
             animation: confettiFall linear forwards;
         }
         @keyframes confettiFall {
@@ -564,22 +565,22 @@
         }
         .score-popup {
             position: fixed;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 900;
             color: #10b981;
             pointer-events: none;
             z-index: 999;
             animation: scoreFloat 0.8s ease forwards;
-            text-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+            text-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
         }
         @keyframes scoreFloat {
             0% { transform: translateY(0) scale(0.5); opacity: 0; }
-            30% { transform: translateY(-20px) scale(1.1); opacity: 1; }
-            100% { transform: translateY(-80px) scale(1); opacity: 0; }
+            30% { transform: translateY(-25px) scale(1.1); opacity: 1; }
+            100% { transform: translateY(-90px) scale(1); opacity: 0; }
         }
 
         /* ===== 滚动条 ===== */
-        ::-webkit-scrollbar { width: 2px; }
+        ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 4px; }
 
@@ -587,99 +588,109 @@
         .nav-buttons {
             grid-column: 1 / -1;
             display: flex;
-            gap: 6px;
+            gap: 8px;
             justify-content: center;
-            padding: 8px 0 2px 0;
+            padding: 10px 0 4px 0;
             flex-wrap: wrap;
             align-items: center;
         }
         .nav-buttons .nav-info {
-            font-size: 11px;
+            font-size: 13px;
             color: #6b7280;
             text-align: center;
+            font-weight: 600;
         }
         .nav-buttons .btn {
-            font-size: 11px;
-            padding: 4px 10px;
-            min-height: 28px;
+            font-size: 13px;
+            padding: 6px 12px;
+            min-height: 34px;
+        }
+
+        /* ===== 响应式 - 大屏手机 ===== */
+        @media (min-width: 500px) {
+            .container { padding: 18px; max-height: 900px; }
+            .card { font-size: 17px; min-height: 64px; }
+            .grid { gap: 10px; }
+            .title { font-size: 22px; }
+            .stat-item .number { font-size: 20px; }
         }
 
         /* ===== 响应式 - 小屏手机 ===== */
         @media (max-width: 420px) {
-            .container {
-                padding: 8px;
-                border-radius: 12px;
-                max-height: none;
-                height: 100vh;
-                max-height: 100vh;
-            }
-            .title { font-size: 15px; }
-            .title .horse-icon { font-size: 17px; }
-            .custom-select { font-size: 9px; padding: 3px 16px 3px 6px; min-width: 60px; max-width: 100px; }
-            .btn { font-size: 10px; padding: 3px 6px; min-height: 28px; }
-            .stats { padding: 3px 4px; gap: 2px; }
-            .stat-item .number { font-size: 13px; min-width: 14px; padding: 0 3px; }
-            .stat-item .label { font-size: 6px; }
-            .mode-switch-item .mode-name { font-size: 10px; padding: 0 4px; min-width: 30px; }
-            .grid { gap: 4px; }
-            .card { font-size: 10px; min-height: 38px; border-radius: 8px; border-width: 1.5px; padding: 2px; }
-            .card .level-badge { font-size: 4px; }
-            .card .speaker-icon { font-size: 7px; }
-            .card .card-lang-tag { font-size: 4px !important; }
-            .grid-short-sentence .card { font-size: 13px !important; min-height: 40px !important; height: 44px !important; padding: 6px 10px !important; border-radius: 8px !important; }
-            .grid-review-list { gap: 4px !important; grid-template-columns: 1fr !important; }
-            .grid-review-list .review-card { padding: 6px 8px !important; min-height: 42px !important; height: 46px !important; border-radius: 10px !important; }
-            .grid-review-list .review-card .en-part { font-size: 12px !important; }
-            .grid-review-list .review-card .zh-part { font-size: 11px !important; }
-            .grid-review-list .review-card .speaker-btn { font-size: 12px !important; }
-            .grid-review-list .review-card .card-index { font-size: 6px !important; }
-            .status-bar { font-size: 9px; padding: 3px 6px; min-height: 22px; }
-            .status-bar .badge { font-size: 7px; padding: 1px 4px; }
-            .score-popup { font-size: 22px; }
-            .panel { padding: 6px; max-height: 40vh; }
-            .panel-title { font-size: 12px; }
-            .panel textarea { height: 40px; font-size: 10px; padding: 4px; }
-            .nav-buttons .btn { font-size: 10px; padding: 3px 8px; min-height: 24px; }
-            .nav-buttons .nav-info { font-size: 10px; }
+            .container { padding: 10px; border-radius: 12px; height: 100vh; max-height: 100vh; }
+            .title { font-size: 17px; }
+            .title .horse-icon { font-size: 20px; }
+            .custom-select { font-size: 11px; padding: 5px 20px 5px 8px; min-width: 70px; max-width: 110px; }
+            .btn { font-size: 11px; padding: 5px 9px; min-height: 32px; }
+            .stats { padding: 4px 6px; gap: 4px; }
+            .stat-item .number { font-size: 16px; min-width: 18px; padding: 0 6px; }
+            .stat-item .label { font-size: 8px; }
+            .mode-switch-item .mode-name { font-size: 12px; padding: 0 6px; min-width: 36px; }
+            .grid { gap: 6px; }
+            .card { font-size: 13px; min-height: 48px; border-radius: 10px; border-width: 2px; padding: 4px; }
+            .card .level-badge { font-size: 5px; }
+            .card .speaker-icon { font-size: 9px; }
+            .card .card-lang-tag { font-size: 6px !important; }
+            .grid-short-sentence .card { font-size: 15px !important; min-height: 48px !important; height: 52px !important; padding: 8px 14px !important; }
+            .grid-review-list { gap: 6px !important; grid-template-columns: 1fr !important; }
+            .grid-review-list .review-card { padding: 8px 12px !important; min-height: 50px !important; height: 54px !important; }
+            .grid-review-list .review-card .en-part { font-size: 13px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 12px !important; }
+            .grid-review-list .review-card .speaker-btn { font-size: 14px !important; }
+            .status-bar { font-size: 11px; padding: 4px 8px; min-height: 26px; }
+            .status-bar .badge { font-size: 9px; padding: 1px 6px; }
+            .score-popup { font-size: 26px; }
+            .panel { padding: 8px; max-height: 35vh; }
+            .panel-title { font-size: 13px; }
+            .panel textarea { height: 45px; font-size: 11px; padding: 6px; }
+            .nav-buttons .btn { font-size: 11px; padding: 4px 10px; min-height: 30px; }
+            .nav-buttons .nav-info { font-size: 12px; }
+            .next-level-btn button { padding: 10px 22px; font-size: 15px; }
+            .next-level-btn .info-text { font-size: 12px; }
         }
 
         @media (max-width: 360px) {
-            .container { padding: 5px; border-radius: 10px; }
-            .title { font-size: 13px; }
-            .custom-select { font-size: 8px; padding: 2px 14px 2px 5px; min-width: 50px; }
-            .btn { font-size: 9px; padding: 2px 5px; min-height: 24px; border-radius: 5px; }
-            .stats { padding: 2px 3px; }
-            .stat-item .number { font-size: 11px; min-width: 12px; }
-            .mode-switch-item .mode-name { font-size: 9px; padding: 0 3px; min-width: 26px; }
-            .grid { gap: 3px; }
-            .card { font-size: 9px; min-height: 32px; border-radius: 6px; border-width: 1px; }
-            .grid-short-sentence .card { font-size: 11px !important; min-height: 34px !important; height: 38px !important; padding: 4px 8px !important; }
-            .grid-review-list .review-card { padding: 4px 6px !important; min-height: 36px !important; height: 40px !important; }
-            .grid-review-list .review-card .en-part { font-size: 10px !important; }
-            .grid-review-list .review-card .zh-part { font-size: 9px !important; }
-            .status-bar { font-size: 8px; padding: 2px 4px; min-height: 18px; }
-            .score-popup { font-size: 18px; }
+            .container { padding: 6px; border-radius: 10px; }
+            .title { font-size: 15px; }
+            .custom-select { font-size: 10px; padding: 4px 16px 4px 6px; min-width: 60px; }
+            .btn { font-size: 10px; padding: 4px 7px; min-height: 28px; border-radius: 6px; }
+            .stats { padding: 3px 4px; }
+            .stat-item .number { font-size: 14px; min-width: 16px; }
+            .mode-switch-item .mode-name { font-size: 11px; padding: 0 4px; min-width: 30px; }
+            .grid { gap: 4px; }
+            .card { font-size: 11px; min-height: 42px; border-radius: 8px; border-width: 1.5px; }
+            .card .card-lang-tag { font-size: 5px !important; }
+            .grid-short-sentence .card { font-size: 13px !important; min-height: 40px !important; height: 44px !important; padding: 6px 10px !important; }
+            .grid-review-list .review-card { padding: 6px 8px !important; min-height: 42px !important; height: 46px !important; }
+            .grid-review-list .review-card .en-part { font-size: 11px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 10px !important; }
+            .status-bar { font-size: 10px; padding: 3px 6px; min-height: 22px; }
+            .score-popup { font-size: 22px; }
+            .next-level-btn button { padding: 8px 18px; font-size: 13px; }
         }
 
         @media (max-height: 700px) {
             .container { padding: 8px; height: 100vh; max-height: 100vh; }
             .header { margin-bottom: 4px; }
-            .title { font-size: 15px; }
-            .stats { padding: 3px 4px; margin-bottom: 4px; }
-            .status-bar { font-size: 9px; padding: 3px 6px; min-height: 20px; margin-bottom: 4px; }
-            .grid { gap: 4px; }
-            .card { min-height: 36px; font-size: 10px; }
-            .grid-review-list .review-card { min-height: 40px !important; height: 44px !important; }
-            .grid-short-sentence .card { min-height: 40px !important; height: 44px !important; }
+            .title { font-size: 16px; }
+            .stats { padding: 4px 6px; margin-bottom: 4px; }
+            .stat-item .number { font-size: 14px; }
+            .status-bar { font-size: 10px; padding: 3px 6px; min-height: 22px; margin-bottom: 4px; }
+            .grid { gap: 5px; }
+            .card { min-height: 42px; font-size: 12px; }
+            .grid-review-list .review-card { min-height: 44px !important; height: 48px !important; }
+            .grid-short-sentence .card { min-height: 42px !important; height: 46px !important; }
+            .btn { min-height: 28px; font-size: 11px; padding: 4px 8px; }
         }
 
-        @media (min-height: 800px) {
-            .container { max-height: 900px; }
-            .card { min-height: 60px; font-size: 14px; }
-            .grid-short-sentence .card { min-height: 60px !important; height: 64px !important; font-size: 17px !important; }
-            .grid-review-list .review-card { min-height: 60px !important; height: 64px !important; }
-            .grid-review-list .review-card .en-part { font-size: 15px !important; }
-            .grid-review-list .review-card .zh-part { font-size: 14px !important; }
+        @media (min-height: 850px) {
+            .container { max-height: 950px; }
+            .card { min-height: 70px; font-size: 17px; }
+            .grid { gap: 12px; }
+            .grid-short-sentence .card { min-height: 68px !important; height: 72px !important; font-size: 19px !important; }
+            .grid-review-list .review-card { min-height: 68px !important; height: 72px !important; }
+            .grid-review-list .review-card .en-part { font-size: 17px !important; }
+            .grid-review-list .review-card .zh-part { font-size: 16px !important; }
         }
     </style>
 </head>
@@ -717,7 +728,7 @@
             <span class="badge learning" id="statusBadge" style="display:none;">学习中</span>
         </div>
 
-        <!-- 游戏网格 -->
+        <!-- 游戏网格 - 4x4 共16张卡片 -->
         <div class="grid" id="gameGrid"></div>
 
         <!-- 管理面板 -->
@@ -728,7 +739,7 @@
                 <div class="upload-actions">
                     <input type="file" id="uploadInput" accept=".json,.csv,.txt">
                     <button class="btn btn-primary" id="uploadBtn">📂 选择文件</button>
-                    <span style="font-size:9px;color:#6b7280;">JSON / CSV / TXT</span>
+                    <span style="font-size:10px;color:#6b7280;">JSON / CSV / TXT</span>
                 </div>
                 <div class="upload-status" id="uploadStatus">💡 上传文件批量导入词条</div>
             </div>
@@ -911,7 +922,7 @@
         // ================================================================
         //  4. 数据层 - 词库
         // ================================================================
-        const DB_KEY = 'word_match_game_v17';
+        const DB_KEY = 'word_match_game_v18';
         let EXAMPLE_SENTENCES = {};
 
         function generateDefaultExample(en, zh) {
@@ -975,20 +986,16 @@
             { en: "smart", zh: "聪明" }
         ];
 
-        // ===== OPD 单词 =====
+        // ===== OPD 单词（精简版，保持核心词汇） =====
         const OPD_WORDS = [
             { en: "hello", zh: "你好" }, { en: "hi", zh: "嗨" }, { en: "goodbye", zh: "再见" }, { en: "thanks",
                 zh: "谢谢" },
-            { en: "sorry", zh: "对不起" }, { en: "please", zh: "请" }, { en: "name", zh: "姓名" }, { en: "first",
-                zh: "名" },
-            { en: "last", zh: "姓氏" }, { en: "spell", zh: "拼写" }, { en: "address", zh: "地址" }, { en: "street",
-                zh: "街道" },
-            { en: "city", zh: "城市" }, { en: "phone", zh: "电话" }, { en: "work", zh: "工作" }, { en: "home",
-                zh: "住宅" },
-            { en: "cell", zh: "手机" }, { en: "birth", zh: "出生" }, { en: "place", zh: "地点" }, { en: "signature",
-                zh: "签名" },
-            { en: "principal", zh: "校长" }, { en: "assistant", zh: "助理" }, { en: "counselor", zh: "辅导员" },
-            { en: "instructor", zh: "讲师" },
+            { en: "sorry", zh: "对不起" }, { en: "please", zh: "请" }, { en: "name", zh: "姓名" }, { en: "address",
+                zh: "地址" },
+            { en: "phone", zh: "电话" }, { en: "work", zh: "工作" }, { en: "home", zh: "住宅" }, { en: "birth",
+                zh: "出生" },
+            { en: "place", zh: "地点" }, { en: "principal", zh: "校长" }, { en: "assistant", zh: "助理" },
+            { en: "counselor", zh: "辅导员" },
             { en: "restroom", zh: "卫生间" }, { en: "hallway", zh: "走廊" }, { en: "locker", zh: "储物柜" },
             { en: "office", zh: "办公室" },
             { en: "cafeteria", zh: "食堂" }, { en: "lab", zh: "实验室" }, { en: "auditorium", zh: "礼堂" },
@@ -1133,8 +1140,8 @@
             { en: "short hair", zh: "短发" }, { en: "curly hair", zh: "卷发" },
             { en: "straight hair", zh: "直发" }, { en: "blonde hair", zh: "金发" },
             { en: "brown hair", zh: "棕发" }, { en: "black hair", zh: "黑发" },
-            { en: "tall man", zh: "高个子男人" }, { en: "short woman", zh: "矮个子女人" },
-            { en: "beautiful girl", zh: "美丽的女孩" }, { en: "handsome boy", zh: "帅气的男孩" },
+            { en: "tall man", zh: "高个子" }, { en: "short woman", zh: "矮个子" },
+            { en: "beautiful girl", zh: "美丽女孩" }, { en: "handsome boy", zh: "帅气男孩" },
             { en: "everyday clothes", zh: "日常服装" }, { en: "casual clothes", zh: "休闲装" },
             { en: "work clothes", zh: "工作服" }, { en: "formal clothes", zh: "正装" },
             { en: "shoes and accessories", zh: "鞋履配饰" }, { en: "describe clothes", zh: "描述衣物" },
@@ -1559,7 +1566,7 @@
         }
 
         // ================================================================
-        //  8. 核心: loadLevel (手机优化版)
+        //  8. 核心: loadLevel (8对 = 16张卡片)
         // ================================================================
         function loadLevel() {
             const grid = document.getElementById('gameGrid');
@@ -1687,7 +1694,7 @@
                 return;
             }
 
-            // ===== 普通模式 & 艾宾浩斯模式 =====
+            // ===== 普通模式 & 艾宾浩斯模式 - 8对 = 16张卡片 =====
             if (availableWords.length === 0) {
                 grid.innerHTML =
                     `<div class="empty-state"><span class="emoji">🎉</span><p>所有词条已完成！</p></div>`;
@@ -1695,9 +1702,8 @@
                 return;
             }
 
-            let maxPairs = gameMode === 'ebbinghaus' ? (group === 'OPD短句' ? 3 : 4) : (group === 'OPD短句' ? 3 : 6);
-            // 手机屏幕小，减少每关数量
-            if (window.innerWidth < 420) maxPairs = Math.max(2, maxPairs - 1);
+            // 固定8对（8张英文 + 8张中文 = 16张卡片）
+            let maxPairs = 8;
             const selected = availableWords.slice(0, Math.min(maxPairs, availableWords.length));
             if (selected.length === 0) {
                 grid.innerHTML =
@@ -1706,12 +1712,20 @@
                 return;
             }
 
+            // 如果可用词条少于8个，就用全部
+            const actualPairs = selected.length;
+            if (actualPairs < 8) {
+                // 如果少于8对，调整网格列数，保持4列
+                // 但卡片数量不变，按实际数量显示
+            }
+
             selected.forEach(w => game.usedWords.push(w.en));
             game.totalPairs = selected.length;
             game.matchedPairs = 0;
             game.matchCount = 0;
             game.isLevelComplete = false;
 
+            // 构建卡片：每对生成英文和中文两张
             const cards = [];
             selected.forEach(w => {
                 cards.push({ id: w.en, text: w.en, type: 'en', pairId: w.en });
@@ -1719,6 +1733,7 @@
             });
             game.cards = cards.sort(() => 0.5 - Math.random());
 
+            // 重新排列：尽量让英文和中文交错分布
             const enCards = game.cards.filter(c => c.type === 'en');
             const zhCards = game.cards.filter(c => c.type === 'zh');
             for (let i = enCards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));
@@ -1726,6 +1741,7 @@
             for (let i = zhCards.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));
                 [zhCards[i], zhCards[j]] = [zhCards[j], zhCards[i]]; }
 
+            // 重新排列卡片位置
             const reorderedCards = [];
             const enCount = enCards.length;
             const zhCount = zhCards.length;
@@ -1735,13 +1751,18 @@
             let enIdx = 0,
                 zhIdx = 0;
             for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < 2; col++) { if (enIdx < enCount) reorderedCards.push(enCards[enIdx++]);
-                    else if (zhIdx < zhCount) reorderedCards.push(zhCards[zhIdx++]); }
-                for (let col = 2; col < 4; col++) { if (zhIdx < zhCount) reorderedCards.push(zhCards[zhIdx++]);
-                    else if (enIdx < enCount) reorderedCards.push(enCards[enIdx++]); }
+                for (let col = 0; col < 2; col++) {
+                    if (enIdx < enCount) reorderedCards.push(enCards[enIdx++]);
+                    else if (zhIdx < zhCount) reorderedCards.push(zhCards[zhIdx++]);
+                }
+                for (let col = 2; col < 4; col++) {
+                    if (zhIdx < zhCount) reorderedCards.push(zhCards[zhIdx++]);
+                    else if (enIdx < enCount) reorderedCards.push(enCards[enIdx++]);
+                }
             }
             game.cards = reorderedCards;
 
+            // 渲染卡片
             game.cards.forEach((card, index) => {
                 const div = document.createElement('div');
                 div.className = 'card';
@@ -1805,7 +1826,7 @@
 
             updateStats();
             const modeText = MODE_CONFIG[gameMode].name;
-            setStatus('🎯 ' + modeText + ' · 第' + game.currentLevel + '关 · ' + selected.length + '对', 'info');
+            setStatus('🎯 ' + modeText + ' · 第' + game.currentLevel + '关 · ' + selected.length + '对 (16张)', 'info');
         }
 
         // ================================================================
