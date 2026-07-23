@@ -46,7 +46,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 头部 - 紧凑 ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -123,7 +122,6 @@
         .btn-info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .btn-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 
-        /* ===== 统计栏 - 紧凑 ===== */
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1.2fr;
@@ -178,7 +176,22 @@
         .mode-switch-item .mode-name.review { color: #f59e0b; }
         .mode-switch-item .mode-name.memory { color: #7c3aed; }
 
-        /* ===== 状态栏 - 紧凑 ===== */
+        .action-bar {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+            padding: 4px 0 5px 0;
+            justify-content: center;
+        }
+        .action-bar .btn {
+            flex: 1;
+            justify-content: center;
+            font-size: 13px;
+            padding: 6px 10px;
+            min-height: 34px;
+            border-radius: 8px;
+        }
+
         .status-bar {
             padding: 4px 10px;
             border-radius: 6px;
@@ -208,7 +221,6 @@
         .status-bar.error { background: #fecaca; color: #991b1b; }
         .status-bar.info { background: #dbeafe; color: #1e40af; }
 
-        /* ===== 游戏网格 - 自适应 ===== */
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -221,7 +233,6 @@
             display: none;
         }
         
-        /* 短句模式 - 3列，共12张卡片（6对） */
         .grid-short-sentence {
             grid-template-columns: repeat(3, 1fr) !important;
             gap: 6px !important;
@@ -241,25 +252,26 @@
         .grid-short-sentence .card .speaker-icon { font-size: 11px !important; bottom: 2px !important; right: 2px !important; }
         .grid-short-sentence .card .card-lang-tag { font-size: 6px !important; bottom: 1px !important; }
 
+        /* ===== 复习模式 - 有例句（2列，卡片更大） ===== */
         .grid-review-with-example {
             grid-template-columns: 1fr 1fr !important;
-            gap: 6px !important;
+            gap: 8px !important;
         }
         .grid-review-with-example .review-card {
             display: flex !important;
             flex-direction: column !important;
             align-items: stretch !important;
-            padding: 8px 10px !important;
+            padding: 12px 14px !important;
             background: linear-gradient(135deg, #f9fafb, #f3f4f6);
             border: 2px solid #e5e7eb;
-            border-radius: 10px !important;
-            min-height: 70px !important;
+            border-radius: 12px !important;
+            min-height: 90px !important;
             height: auto !important;
             aspect-ratio: auto !important;
             width: 100% !important;
             cursor: default !important;
             transition: all 0.3s ease;
-            gap: 3px !important;
+            gap: 4px !important;
             position: relative;
         }
         .grid-review-with-example .review-card .card-top {
@@ -275,7 +287,7 @@
             align-items: flex-start !important;
             flex: 1;
             min-width: 0;
-            gap: 1px !important;
+            gap: 2px !important;
         }
         .grid-review-with-example .review-card .card-right {
             display: flex !important;
@@ -283,52 +295,52 @@
             align-items: flex-end !important;
             flex-shrink: 0;
             min-width: 0;
-            gap: 1px !important;
-            padding-left: 6px;
+            gap: 2px !important;
+            padding-left: 8px;
         }
         .grid-review-with-example .review-card .en-part {
             font-weight: 700;
-            font-size: 14px;
+            font-size: 17px;
             color: #1f2937;
             text-align: left;
-            line-height: 1.2;
+            line-height: 1.3;
         }
         .grid-review-with-example .review-card .zh-part {
             font-weight: 500;
-            font-size: 13px;
+            font-size: 16px;
             color: #4b5563;
             text-align: right;
-            line-height: 1.2;
+            line-height: 1.3;
         }
         .grid-review-with-example .review-card .example-section {
             display: flex !important;
             flex-direction: column !important;
             width: 100%;
-            padding: 3px 6px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 4px;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 6px;
             border-left: 3px solid #667eea;
-            margin-top: 2px;
+            margin-top: 3px;
         }
         .grid-review-with-example .review-card .example-en {
-            font-size: 10px;
+            font-size: 12px;
             color: #1e40af;
             font-style: italic;
-            line-height: 1.3;
+            line-height: 1.4;
         }
         .grid-review-with-example .review-card .example-zh {
-            font-size: 9px;
+            font-size: 11px;
             color: #6b7280;
-            line-height: 1.3;
-            margin-top: 1px;
+            line-height: 1.4;
+            margin-top: 2px;
         }
         .grid-review-with-example .review-card .speaker-btn {
             background: none;
             border: none;
-            font-size: 15px;
+            font-size: 18px;
             cursor: pointer;
-            padding: 2px 4px;
-            border-radius: 4px;
+            padding: 4px 6px;
+            border-radius: 6px;
             transition: all 0.2s ease;
             touch-action: manipulation;
             color: #667eea;
@@ -340,64 +352,65 @@
         }
         .grid-review-with-example .review-card .card-index {
             position: absolute;
-            top: 2px;
-            right: 4px;
-            font-size: 7px;
+            top: 4px;
+            right: 6px;
+            font-size: 9px;
             color: #d1d5db;
             font-weight: 700;
         }
 
+        /* ===== 复习模式 - 无例句（4列，卡片更大） ===== */
         .grid-review-no-example {
             grid-template-columns: repeat(4, 1fr) !important;
-            gap: 5px !important;
+            gap: 6px !important;
         }
         .grid-review-no-example .review-card {
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
             justify-content: center !important;
-            padding: 4px 3px !important;
+            padding: 6px 4px !important;
             background: linear-gradient(135deg, #f9fafb, #f3f4f6);
             border: 2px solid #e5e7eb;
-            border-radius: 8px !important;
-            min-height: 48px !important;
-            height: 52px !important;
+            border-radius: 10px !important;
+            min-height: 60px !important;
+            height: 64px !important;
             aspect-ratio: 1 !important;
             width: 100% !important;
             cursor: default !important;
             transition: all 0.3s ease;
-            gap: 1px !important;
+            gap: 2px !important;
             position: relative;
             text-align: center;
         }
         .grid-review-no-example .review-card .en-part {
             font-weight: 700;
-            font-size: 12px;
+            font-size: 14px;
             color: #1f2937;
-            line-height: 1.2;
+            line-height: 1.3;
             text-align: center;
             word-break: break-word;
         }
         .grid-review-no-example .review-card .zh-part {
             font-weight: 500;
-            font-size: 11px;
+            font-size: 13px;
             color: #4b5563;
-            line-height: 1.2;
+            line-height: 1.3;
             text-align: center;
             word-break: break-word;
         }
         .grid-review-no-example .review-card .speaker-btn {
             background: none;
             border: none;
-            font-size: 11px;
+            font-size: 13px;
             cursor: pointer;
-            padding: 1px 3px;
+            padding: 2px 4px;
             border-radius: 4px;
             transition: all 0.2s ease;
             touch-action: manipulation;
             color: #667eea;
             flex-shrink: 0;
-            margin-top: 1px;
+            margin-top: 2px;
         }
         .grid-review-no-example .review-card .speaker-btn:active {
             transform: scale(0.8);
@@ -405,9 +418,9 @@
         }
         .grid-review-no-example .review-card .card-index {
             position: absolute;
-            top: 1px;
-            right: 3px;
-            font-size: 6px;
+            top: 2px;
+            right: 4px;
+            font-size: 7px;
             color: #d1d5db;
             font-weight: 700;
         }
@@ -427,7 +440,6 @@
         .review-complete p { font-size: 15px; }
         .review-complete .sub { font-size: 13px; color: #9ca3af; margin-top: 3px; }
 
-        /* ===== 卡片 ===== */
         .card {
             aspect-ratio: 1;
             background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
@@ -538,23 +550,6 @@
             opacity: 1;
         }
 
-        /* ===== 底部按钮栏 - 确保可见 ===== */
-        .bottom-bar {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-            padding: 4px 0 2px 0;
-            justify-content: center;
-        }
-        .bottom-bar .btn {
-            flex: 1;
-            justify-content: center;
-            font-size: 13px;
-            padding: 6px 10px;
-            min-height: 36px;
-        }
-
-        /* ===== 管理面板 ===== */
         .panel {
             flex: 1;
             background: #f9fafb;
@@ -769,7 +764,7 @@
             margin-left: 4px;
         }
 
-        /* ===== 响应式 - 小屏手机 ===== */
+        /* ===== 响应式 ===== */
         @media (max-width: 420px) {
             .container { padding: 8px 8px 4px 8px; border-radius: 10px; height: 100vh; max-height: 100vh; }
             .title { font-size: 19px; }
@@ -780,6 +775,7 @@
             .stat-item .number { font-size: 16px; min-width: 18px; padding: 0 4px; }
             .stat-item .label { font-size: 8px; }
             .mode-switch-item .mode-name { font-size: 12px; padding: 0 6px; min-width: 34px; }
+            .action-bar .btn { font-size: 11px; padding: 4px 8px; min-height: 30px; }
             .grid { gap: 5px; }
             .card { font-size: 13px; min-height: 44px; border-radius: 8px; border-width: 1.5px; padding: 3px; }
             .card .level-badge { font-size: 5px; }
@@ -787,18 +783,22 @@
             .card .card-lang-tag { font-size: 5px !important; }
             .grid-short-sentence { gap: 4px !important; }
             .grid-short-sentence .card { font-size: 13px !important; min-height: 44px !important; padding: 4px 6px !important; }
-            .grid-review-with-example { gap: 5px !important; grid-template-columns: 1fr !important; }
-            .grid-review-with-example .review-card { padding: 8px 10px !important; min-height: 64px !important; height: auto !important; }
-            .grid-review-with-example .review-card .en-part { font-size: 13px !important; }
-            .grid-review-with-example .review-card .zh-part { font-size: 12px !important; }
-            .grid-review-with-example .review-card .speaker-btn { font-size: 13px !important; }
-            .grid-review-with-example .review-card .example-en { font-size: 10px !important; }
-            .grid-review-with-example .review-card .example-zh { font-size: 9px !important; }
+            
+            /* 复习模式 - 小屏 */
+            .grid-review-with-example { gap: 6px !important; grid-template-columns: 1fr !important; }
+            .grid-review-with-example .review-card { padding: 10px 12px !important; min-height: 76px !important; height: auto !important; }
+            .grid-review-with-example .review-card .en-part { font-size: 15px !important; }
+            .grid-review-with-example .review-card .zh-part { font-size: 14px !important; }
+            .grid-review-with-example .review-card .speaker-btn { font-size: 15px !important; }
+            .grid-review-with-example .review-card .example-en { font-size: 11px !important; }
+            .grid-review-with-example .review-card .example-zh { font-size: 10px !important; }
+            
             .grid-review-no-example { gap: 4px !important; }
-            .grid-review-no-example .review-card { min-height: 40px !important; height: 44px !important; padding: 3px 2px !important; }
-            .grid-review-no-example .review-card .en-part { font-size: 10px !important; }
-            .grid-review-no-example .review-card .zh-part { font-size: 9px !important; }
-            .grid-review-no-example .review-card .speaker-btn { font-size: 10px !important; }
+            .grid-review-no-example .review-card { min-height: 48px !important; height: 52px !important; padding: 4px 3px !important; }
+            .grid-review-no-example .review-card .en-part { font-size: 12px !important; }
+            .grid-review-no-example .review-card .zh-part { font-size: 11px !important; }
+            .grid-review-no-example .review-card .speaker-btn { font-size: 11px !important; }
+            
             .status-bar { font-size: 11px; padding: 4px 6px; min-height: 26px; }
             .status-bar .badge { font-size: 9px; padding: 1px 6px; }
             .score-popup { font-size: 26px; }
@@ -814,7 +814,6 @@
             .next-level-btn .info-text { font-size: 12px; }
             .upload-section .upload-title { font-size: 11px; }
             .upload-section .upload-status { font-size: 10px; }
-            .bottom-bar .btn { font-size: 11px; padding: 4px 8px; min-height: 30px; }
             .review-mode-tag { font-size: 9px; padding: 1px 6px; }
         }
 
@@ -825,20 +824,24 @@
             .title .horse-icon { font-size: 19px; }
             .stats { padding: 3px 4px; margin-bottom: 3px; }
             .stat-item .number { font-size: 14px; }
+            .action-bar { padding: 2px 0 3px 0; }
+            .action-bar .btn { min-height: 28px; font-size: 11px; padding: 4px 8px; }
             .status-bar { font-size: 10px; padding: 3px 6px; min-height: 22px; margin-bottom: 3px; }
             .grid { gap: 4px; }
             .card { min-height: 38px; font-size: 12px; border-radius: 6px; }
             .grid-short-sentence .card { min-height: 38px !important; font-size: 12px !important; }
-            .grid-review-with-example .review-card { min-height: 56px !important; height: auto !important; padding: 6px 8px !important; }
-            .grid-review-with-example .review-card .en-part { font-size: 12px !important; }
-            .grid-review-with-example .review-card .zh-part { font-size: 11px !important; }
-            .grid-review-with-example .review-card .example-en { font-size: 9px !important; }
-            .grid-review-with-example .review-card .example-zh { font-size: 8px !important; }
-            .grid-review-no-example .review-card { min-height: 36px !important; height: 40px !important; }
-            .grid-review-no-example .review-card .en-part { font-size: 10px !important; }
-            .grid-review-no-example .review-card .zh-part { font-size: 9px !important; }
+            
+            .grid-review-with-example .review-card { min-height: 64px !important; height: auto !important; padding: 8px 10px !important; }
+            .grid-review-with-example .review-card .en-part { font-size: 13px !important; }
+            .grid-review-with-example .review-card .zh-part { font-size: 12px !important; }
+            .grid-review-with-example .review-card .example-en { font-size: 10px !important; }
+            .grid-review-with-example .review-card .example-zh { font-size: 9px !important; }
+            
+            .grid-review-no-example .review-card { min-height: 40px !important; height: 44px !important; }
+            .grid-review-no-example .review-card .en-part { font-size: 11px !important; }
+            .grid-review-no-example .review-card .zh-part { font-size: 10px !important; }
+            
             .btn { min-height: 28px; font-size: 11px; padding: 4px 8px; }
-            .bottom-bar .btn { min-height: 28px; font-size: 11px; padding: 4px 8px; }
             .panel { padding: 6px 8px; max-height: 35vh; }
             .panel textarea { height: 40px; font-size: 10px; }
             .panel .input-group input { font-size: 10px; padding: 4px 6px; min-height: 28px; }
@@ -854,14 +857,16 @@
             .card { min-height: 64px; font-size: 18px; }
             .grid { gap: 10px; }
             .grid-short-sentence .card { min-height: 58px !important; font-size: 16px !important; }
-            .grid-review-with-example .review-card { min-height: 84px !important; padding: 12px 16px !important; }
-            .grid-review-with-example .review-card .en-part { font-size: 16px !important; }
-            .grid-review-with-example .review-card .zh-part { font-size: 15px !important; }
-            .grid-review-with-example .review-card .example-en { font-size: 12px !important; }
-            .grid-review-with-example .review-card .example-zh { font-size: 11px !important; }
-            .grid-review-no-example .review-card { min-height: 58px !important; height: 62px !important; }
-            .grid-review-no-example .review-card .en-part { font-size: 14px !important; }
-            .grid-review-no-example .review-card .zh-part { font-size: 13px !important; }
+            
+            .grid-review-with-example .review-card { min-height: 100px !important; padding: 14px 18px !important; }
+            .grid-review-with-example .review-card .en-part { font-size: 18px !important; }
+            .grid-review-with-example .review-card .zh-part { font-size: 17px !important; }
+            .grid-review-with-example .review-card .example-en { font-size: 13px !important; }
+            .grid-review-with-example .review-card .example-zh { font-size: 12px !important; }
+            
+            .grid-review-no-example .review-card { min-height: 64px !important; height: 68px !important; }
+            .grid-review-no-example .review-card .en-part { font-size: 15px !important; }
+            .grid-review-no-example .review-card .zh-part { font-size: 14px !important; }
         }
     </style>
 </head>
@@ -887,6 +892,11 @@
                 <span class="mode-label">🎯 模式</span>
                 <span class="mode-name" id="modeDisplay">普通</span>
             </div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn btn-success" id="restartBtn">🔄 重开</button>
+            <button class="btn btn-warning" id="manageBtn">📚 词库管理</button>
         </div>
 
         <div class="status-bar" id="statusBar">
@@ -920,11 +930,6 @@
                 <button class="btn btn-info" id="resetAllBtn">🔄 重置数据</button>
                 <button class="btn btn-purple" id="updateWordsBtn">📦 更新词库</button>
             </div>
-        </div>
-
-        <div class="bottom-bar">
-            <button class="btn btn-success" id="restartBtn">🔄 重开</button>
-            <button class="btn btn-warning" id="manageBtn">📚 词库管理</button>
         </div>
     </div>
 
@@ -1095,7 +1100,7 @@
         // ================================================================
         //  4. 数据层 - 完整词库
         // ================================================================
-        var DB_KEY = 'word_match_game_v22';
+        var DB_KEY = 'word_match_game_v24';
         var EXAMPLE_SENTENCES = {};
 
         function generateDefaultExample(en, zh) {
