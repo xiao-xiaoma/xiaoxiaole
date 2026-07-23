@@ -29,7 +29,7 @@
             -webkit-backdrop-filter: blur(10px);
             border-radius: 14px;
             padding: 10px 12px 6px 12px;
-            max-width: 500px;
+            max-width: 520px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideUp 0.5s ease;
@@ -74,7 +74,42 @@
             display: flex;
             gap: 4px;
             flex-shrink: 0;
+            align-items: center;
         }
+        /* 模式固定在右边 */
+        .mode-fixed {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #f3f4f6;
+            padding: 3px 8px 3px 10px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .mode-fixed .mode-label {
+            font-size: 10px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+        .mode-fixed .mode-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1f2937;
+            background: #fff;
+            padding: 0 8px;
+            border-radius: 6px;
+            min-width: 36px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .mode-fixed .mode-name:active {
+            transform: scale(0.92);
+        }
+        .mode-fixed .mode-name.normal { color: #10b981; }
+        .mode-fixed .mode-name.review { color: #f59e0b; }
+        .mode-fixed .mode-name.memory { color: #7c3aed; }
+
         .custom-select {
             padding: 5px 20px 5px 8px;
             border: 2px solid #fcd34d;
@@ -121,6 +156,13 @@
         .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .btn-info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .btn-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .btn-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #10b981;
+            color: #10b981;
+        }
+        .btn-outline:active { background: rgba(16, 185, 129, 0.1); }
 
         .stats {
             display: grid;
@@ -154,27 +196,7 @@
         .stat-item .label { font-size: 9px; color: #6b7280; }
         .stat-item.highlight .number { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
         .stat-item.warning .number { background: #f59e0b; color: #fff; }
-        .mode-switch-item {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 0 4px;
-            border-radius: 6px;
-        }
-        .mode-switch-item:active { transform: scale(0.95); background: rgba(0,0,0,0.05); }
-        .mode-switch-item .mode-label { font-size: 9px; color: #6b7280; text-align: center; }
-        .mode-switch-item .mode-name {
-            font-size: 14px;
-            font-weight: 700;
-            color: #1f2937;
-            background: #fff;
-            padding: 0 8px;
-            border-radius: 8px;
-            min-width: 40px;
-            text-align: center;
-        }
-        .mode-switch-item .mode-name.normal { color: #10b981; }
-        .mode-switch-item .mode-name.review { color: #f59e0b; }
-        .mode-switch-item .mode-name.memory { color: #7c3aed; }
+        .stat-item.success .number { background: #10b981; color: #fff; }
 
         .action-bar {
             display: flex;
@@ -224,7 +246,7 @@
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
+            gap: 8px;
             flex: 1;
             min-height: 0;
             align-content: start;
@@ -235,37 +257,37 @@
         
         .grid-short-sentence {
             grid-template-columns: repeat(3, 1fr) !important;
-            gap: 6px !important;
+            gap: 8px !important;
         }
         .grid-short-sentence .card {
-            font-size: 15px !important;
-            padding: 6px 10px !important;
+            font-size: 18px !important;
+            padding: 8px 12px !important;
             border-radius: 10px !important;
             aspect-ratio: 1 !important;
-            min-height: 52px !important;
+            min-height: 60px !important;
             height: auto !important;
             flex-direction: column !important;
             justify-content: center !important;
             gap: 3px !important;
         }
-        .grid-short-sentence .card .level-badge { font-size: 7px !important; top: 2px !important; right: 2px !important; padding: 0 4px !important; }
-        .grid-short-sentence .card .speaker-icon { font-size: 11px !important; bottom: 2px !important; right: 2px !important; }
-        .grid-short-sentence .card .card-lang-tag { font-size: 6px !important; bottom: 1px !important; }
+        .grid-short-sentence .card .level-badge { font-size: 8px !important; top: 2px !important; right: 2px !important; padding: 0 4px !important; }
+        .grid-short-sentence .card .speaker-icon { font-size: 13px !important; bottom: 2px !important; right: 2px !important; }
+        .grid-short-sentence .card .card-lang-tag { font-size: 7px !important; bottom: 1px !important; }
 
-        /* ===== 复习模式 - 有例句（2列，卡片更大） ===== */
-        .grid-review-with-example {
+        /* ===== 复习模式 - 4行2列 ===== */
+        .grid-review-mode {
             grid-template-columns: 1fr 1fr !important;
-            gap: 8px !important;
+            gap: 10px !important;
         }
-        .grid-review-with-example .review-card {
+        .grid-review-mode .review-card {
             display: flex !important;
             flex-direction: column !important;
             align-items: stretch !important;
-            padding: 12px 14px !important;
+            padding: 14px 16px !important;
             background: linear-gradient(135deg, #f9fafb, #f3f4f6);
             border: 2px solid #e5e7eb;
-            border-radius: 12px !important;
-            min-height: 90px !important;
+            border-radius: 14px !important;
+            min-height: 110px !important;
             height: auto !important;
             aspect-ratio: auto !important;
             width: 100% !important;
@@ -274,14 +296,14 @@
             gap: 4px !important;
             position: relative;
         }
-        .grid-review-with-example .review-card .card-top {
+        .grid-review-mode .review-card .card-top {
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
             justify-content: space-between !important;
             width: 100%;
         }
-        .grid-review-with-example .review-card .card-left {
+        .grid-review-mode .review-card .card-left {
             display: flex !important;
             flex-direction: column !important;
             align-items: flex-start !important;
@@ -289,7 +311,7 @@
             min-width: 0;
             gap: 2px !important;
         }
-        .grid-review-with-example .review-card .card-right {
+        .grid-review-mode .review-card .card-right {
             display: flex !important;
             flex-direction: column !important;
             align-items: flex-end !important;
@@ -298,21 +320,21 @@
             gap: 2px !important;
             padding-left: 8px;
         }
-        .grid-review-with-example .review-card .en-part {
+        .grid-review-mode .review-card .en-part {
             font-weight: 700;
-            font-size: 17px;
+            font-size: 19px;
             color: #1f2937;
             text-align: left;
             line-height: 1.3;
         }
-        .grid-review-with-example .review-card .zh-part {
+        .grid-review-mode .review-card .zh-part {
             font-weight: 500;
-            font-size: 16px;
+            font-size: 18px;
             color: #4b5563;
             text-align: right;
             line-height: 1.3;
         }
-        .grid-review-with-example .review-card .example-section {
+        .grid-review-mode .review-card .example-section {
             display: flex !important;
             flex-direction: column !important;
             width: 100%;
@@ -322,22 +344,22 @@
             border-left: 3px solid #667eea;
             margin-top: 3px;
         }
-        .grid-review-with-example .review-card .example-en {
-            font-size: 12px;
+        .grid-review-mode .review-card .example-en {
+            font-size: 13px;
             color: #1e40af;
             font-style: italic;
             line-height: 1.4;
         }
-        .grid-review-with-example .review-card .example-zh {
-            font-size: 11px;
+        .grid-review-mode .review-card .example-zh {
+            font-size: 12px;
             color: #6b7280;
             line-height: 1.4;
             margin-top: 2px;
         }
-        .grid-review-with-example .review-card .speaker-btn {
+        .grid-review-mode .review-card .speaker-btn {
             background: none;
             border: none;
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
             padding: 4px 6px;
             border-radius: 6px;
@@ -346,11 +368,11 @@
             color: #667eea;
             flex-shrink: 0;
         }
-        .grid-review-with-example .review-card .speaker-btn:active {
+        .grid-review-mode .review-card .speaker-btn:active {
             transform: scale(0.8);
             background: rgba(102, 126, 234, 0.15);
         }
-        .grid-review-with-example .review-card .card-index {
+        .grid-review-mode .review-card .card-index {
             position: absolute;
             top: 4px;
             right: 6px;
@@ -358,77 +380,34 @@
             color: #d1d5db;
             font-weight: 700;
         }
-
-        /* ===== 复习模式 - 无例句（4列，卡片更大） ===== */
-        .grid-review-no-example {
-            grid-template-columns: repeat(4, 1fr) !important;
-            gap: 6px !important;
-        }
-        .grid-review-no-example .review-card {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 6px 4px !important;
-            background: linear-gradient(135deg, #f9fafb, #f3f4f6);
-            border: 2px solid #e5e7eb;
-            border-radius: 10px !important;
-            min-height: 60px !important;
-            height: 64px !important;
-            aspect-ratio: 1 !important;
-            width: 100% !important;
-            cursor: default !important;
-            transition: all 0.3s ease;
-            gap: 2px !important;
-            position: relative;
-            text-align: center;
-        }
-        .grid-review-no-example .review-card .en-part {
-            font-weight: 700;
-            font-size: 14px;
-            color: #1f2937;
-            line-height: 1.3;
-            text-align: center;
-            word-break: break-word;
-        }
-        .grid-review-no-example .review-card .zh-part {
-            font-weight: 500;
-            font-size: 13px;
-            color: #4b5563;
-            line-height: 1.3;
-            text-align: center;
-            word-break: break-word;
-        }
-        .grid-review-no-example .review-card .speaker-btn {
-            background: none;
+        /* 已熟悉按钮 */
+        .grid-review-mode .review-card .known-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
             border: none;
-            font-size: 13px;
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
-            padding: 2px 4px;
-            border-radius: 4px;
             transition: all 0.2s ease;
             touch-action: manipulation;
-            color: #667eea;
-            flex-shrink: 0;
-            margin-top: 2px;
+            margin-top: 4px;
+            align-self: flex-end;
         }
-        .grid-review-no-example .review-card .speaker-btn:active {
-            transform: scale(0.8);
-            background: rgba(102, 126, 234, 0.15);
+        .grid-review-mode .review-card .known-btn:active {
+            transform: scale(0.92);
         }
-        .grid-review-no-example .review-card .card-index {
-            position: absolute;
-            top: 2px;
-            right: 4px;
-            font-size: 7px;
-            color: #d1d5db;
-            font-weight: 700;
+        .grid-review-mode .review-card .known-btn.done {
+            background: #d1fae5;
+            color: #065f46;
+            cursor: default;
         }
 
         .review-complete {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 16px 12px;
+            padding: 20px 12px;
             color: #6b7280;
             display: flex;
             flex-direction: column;
@@ -436,9 +415,16 @@
             align-items: center;
             height: 100%;
         }
-        .review-complete .emoji { font-size: 36px; display: block; margin-bottom: 4px; }
-        .review-complete p { font-size: 15px; }
-        .review-complete .sub { font-size: 13px; color: #9ca3af; margin-top: 3px; }
+        .review-complete .emoji { font-size: 42px; display: block; margin-bottom: 6px; }
+        .review-complete p { font-size: 17px; }
+        .review-complete .sub { font-size: 14px; color: #9ca3af; margin-top: 4px; }
+        .review-complete .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
         .card {
             aspect-ratio: 1;
@@ -452,14 +438,14 @@
             text-align: center;
             padding: 4px;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 19px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
             word-break: break-word;
             position: relative;
             color: #1f2937;
-            min-height: 52px;
+            min-height: 60px;
             line-height: 1.2;
             -webkit-touch-callout: none;
             touch-action: manipulation;
@@ -469,7 +455,7 @@
             bottom: 1px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 6px;
+            font-size: 7px;
             color: #9ca3af;
             background: rgba(255, 255, 255, 0.6);
             padding: 0 4px;
@@ -495,7 +481,7 @@
             position: absolute;
             bottom: 1px;
             right: 1px;
-            font-size: 10px;
+            font-size: 11px;
             opacity: 0.5;
             pointer-events: none;
         }
@@ -771,33 +757,28 @@
             .title .horse-icon { font-size: 21px; }
             .custom-select { font-size: 11px; padding: 4px 16px 4px 6px; min-width: 60px; max-width: 100px; }
             .btn { font-size: 11px; padding: 4px 8px; min-height: 30px; }
+            .mode-fixed .mode-name { font-size: 12px; padding: 0 5px; min-width: 30px; }
+            .mode-fixed .mode-label { font-size: 9px; }
             .stats { padding: 4px 6px; gap: 3px; }
             .stat-item .number { font-size: 16px; min-width: 18px; padding: 0 4px; }
             .stat-item .label { font-size: 8px; }
-            .mode-switch-item .mode-name { font-size: 12px; padding: 0 6px; min-width: 34px; }
             .action-bar .btn { font-size: 11px; padding: 4px 8px; min-height: 30px; }
-            .grid { gap: 5px; }
-            .card { font-size: 13px; min-height: 44px; border-radius: 8px; border-width: 1.5px; padding: 3px; }
+            .grid { gap: 6px; }
+            .card { font-size: 16px; min-height: 50px; border-radius: 8px; border-width: 1.5px; padding: 3px; }
             .card .level-badge { font-size: 5px; }
-            .card .speaker-icon { font-size: 9px; }
-            .card .card-lang-tag { font-size: 5px !important; }
-            .grid-short-sentence { gap: 4px !important; }
-            .grid-short-sentence .card { font-size: 13px !important; min-height: 44px !important; padding: 4px 6px !important; }
+            .card .speaker-icon { font-size: 10px; }
+            .card .card-lang-tag { font-size: 6px !important; }
+            .grid-short-sentence { gap: 5px !important; }
+            .grid-short-sentence .card { font-size: 16px !important; min-height: 50px !important; padding: 4px 8px !important; }
             
-            /* 复习模式 - 小屏 */
-            .grid-review-with-example { gap: 6px !important; grid-template-columns: 1fr !important; }
-            .grid-review-with-example .review-card { padding: 10px 12px !important; min-height: 76px !important; height: auto !important; }
-            .grid-review-with-example .review-card .en-part { font-size: 15px !important; }
-            .grid-review-with-example .review-card .zh-part { font-size: 14px !important; }
-            .grid-review-with-example .review-card .speaker-btn { font-size: 15px !important; }
-            .grid-review-with-example .review-card .example-en { font-size: 11px !important; }
-            .grid-review-with-example .review-card .example-zh { font-size: 10px !important; }
-            
-            .grid-review-no-example { gap: 4px !important; }
-            .grid-review-no-example .review-card { min-height: 48px !important; height: 52px !important; padding: 4px 3px !important; }
-            .grid-review-no-example .review-card .en-part { font-size: 12px !important; }
-            .grid-review-no-example .review-card .zh-part { font-size: 11px !important; }
-            .grid-review-no-example .review-card .speaker-btn { font-size: 11px !important; }
+            .grid-review-mode { gap: 6px !important; grid-template-columns: 1fr !important; }
+            .grid-review-mode .review-card { padding: 10px 12px !important; min-height: 80px !important; height: auto !important; }
+            .grid-review-mode .review-card .en-part { font-size: 16px !important; }
+            .grid-review-mode .review-card .zh-part { font-size: 15px !important; }
+            .grid-review-mode .review-card .speaker-btn { font-size: 16px !important; }
+            .grid-review-mode .review-card .example-en { font-size: 12px !important; }
+            .grid-review-mode .review-card .example-zh { font-size: 11px !important; }
+            .grid-review-mode .review-card .known-btn { font-size: 11px; padding: 3px 10px; }
             
             .status-bar { font-size: 11px; padding: 4px 6px; min-height: 26px; }
             .status-bar .badge { font-size: 9px; padding: 1px 6px; }
@@ -820,26 +801,23 @@
         @media (max-height: 700px) {
             .container { padding: 6px 8px 4px 8px; height: 100vh; max-height: 100vh; }
             .header { margin-bottom: 3px; }
-            .title { font-size: 17px; }
-            .title .horse-icon { font-size: 19px; }
+            .title { font-size: 18px; }
+            .title .horse-icon { font-size: 20px; }
             .stats { padding: 3px 4px; margin-bottom: 3px; }
             .stat-item .number { font-size: 14px; }
             .action-bar { padding: 2px 0 3px 0; }
             .action-bar .btn { min-height: 28px; font-size: 11px; padding: 4px 8px; }
             .status-bar { font-size: 10px; padding: 3px 6px; min-height: 22px; margin-bottom: 3px; }
-            .grid { gap: 4px; }
-            .card { min-height: 38px; font-size: 12px; border-radius: 6px; }
-            .grid-short-sentence .card { min-height: 38px !important; font-size: 12px !important; }
+            .grid { gap: 5px; }
+            .card { min-height: 42px; font-size: 15px; border-radius: 6px; }
+            .grid-short-sentence .card { min-height: 42px !important; font-size: 15px !important; }
             
-            .grid-review-with-example .review-card { min-height: 64px !important; height: auto !important; padding: 8px 10px !important; }
-            .grid-review-with-example .review-card .en-part { font-size: 13px !important; }
-            .grid-review-with-example .review-card .zh-part { font-size: 12px !important; }
-            .grid-review-with-example .review-card .example-en { font-size: 10px !important; }
-            .grid-review-with-example .review-card .example-zh { font-size: 9px !important; }
-            
-            .grid-review-no-example .review-card { min-height: 40px !important; height: 44px !important; }
-            .grid-review-no-example .review-card .en-part { font-size: 11px !important; }
-            .grid-review-no-example .review-card .zh-part { font-size: 10px !important; }
+            .grid-review-mode .review-card { min-height: 70px !important; height: auto !important; padding: 8px 10px !important; }
+            .grid-review-mode .review-card .en-part { font-size: 15px !important; }
+            .grid-review-mode .review-card .zh-part { font-size: 14px !important; }
+            .grid-review-mode .review-card .example-en { font-size: 11px !important; }
+            .grid-review-mode .review-card .example-zh { font-size: 10px !important; }
+            .grid-review-mode .review-card .known-btn { font-size: 10px; padding: 2px 8px; }
             
             .btn { min-height: 28px; font-size: 11px; padding: 4px 8px; }
             .panel { padding: 6px 8px; max-height: 35vh; }
@@ -854,19 +832,16 @@
 
         @media (min-height: 850px) {
             .container { max-height: 960px; }
-            .card { min-height: 64px; font-size: 18px; }
+            .card { min-height: 70px; font-size: 21px; }
             .grid { gap: 10px; }
-            .grid-short-sentence .card { min-height: 58px !important; font-size: 16px !important; }
+            .grid-short-sentence .card { min-height: 64px !important; font-size: 19px !important; }
             
-            .grid-review-with-example .review-card { min-height: 100px !important; padding: 14px 18px !important; }
-            .grid-review-with-example .review-card .en-part { font-size: 18px !important; }
-            .grid-review-with-example .review-card .zh-part { font-size: 17px !important; }
-            .grid-review-with-example .review-card .example-en { font-size: 13px !important; }
-            .grid-review-with-example .review-card .example-zh { font-size: 12px !important; }
-            
-            .grid-review-no-example .review-card { min-height: 64px !important; height: 68px !important; }
-            .grid-review-no-example .review-card .en-part { font-size: 15px !important; }
-            .grid-review-no-example .review-card .zh-part { font-size: 14px !important; }
+            .grid-review-mode .review-card { min-height: 120px !important; padding: 16px 20px !important; }
+            .grid-review-mode .review-card .en-part { font-size: 21px !important; }
+            .grid-review-mode .review-card .zh-part { font-size: 20px !important; }
+            .grid-review-mode .review-card .example-en { font-size: 14px !important; }
+            .grid-review-mode .review-card .example-zh { font-size: 13px !important; }
+            .grid-review-mode .review-card .known-btn { font-size: 13px; padding: 5px 14px; }
         }
     </style>
 </head>
@@ -876,6 +851,11 @@
             <h1 class="title"><span class="horse-icon">🐴</span>小小马消消乐</h1>
             <div class="controls">
                 <select id="groupSelect" class="custom-select"></select>
+                <!-- 模式固定在右边 -->
+                <div class="mode-fixed">
+                    <span class="mode-label">🎯</span>
+                    <span class="mode-name" id="modeDisplay">普通</span>
+                </div>
             </div>
         </div>
 
@@ -888,9 +868,9 @@
                 <span class="label">⏰ 待复习</span>
                 <span class="number" id="remainCount">--</span>
             </div>
-            <div class="stat-item mode-switch-item" id="modeSwitch">
-                <span class="mode-label">🎯 模式</span>
-                <span class="mode-name" id="modeDisplay">普通</span>
+            <div class="stat-item success" id="knownStat" style="display:none;">
+                <span class="label">✅ 已熟悉</span>
+                <span class="number" id="knownCount">0</span>
             </div>
         </div>
 
@@ -1100,7 +1080,7 @@
         // ================================================================
         //  4. 数据层 - 完整词库
         // ================================================================
-        var DB_KEY = 'word_match_game_v24';
+        var DB_KEY = 'word_match_game_v25';
         var EXAMPLE_SENTENCES = {};
 
         function generateDefaultExample(en, zh) {
@@ -1480,6 +1460,25 @@
         //  5. 数据操作函数
         // ================================================================
         var EXAMPLES_KEY = 'word_match_examples_v2';
+        var KNOWN_KEY = 'review_known_words';
+
+        function saveKnownWords() {
+            try { localStorage.setItem(KNOWN_KEY, JSON.stringify(knownWords)); } catch (e) { console.error('保存已熟悉词失败:',
+                    e); }
+        }
+
+        function loadKnownWords() {
+            try {
+                var data = localStorage.getItem(KNOWN_KEY);
+                if (data) {
+                    knownWords = JSON.parse(data);
+                    return;
+                }
+            } catch (e) { console.error('加载已熟悉词失败:', e); }
+            knownWords = {};
+        }
+
+        var knownWords = {};
 
         function saveExamples() {
             try { localStorage.setItem(EXAMPLES_KEY, JSON.stringify(EXAMPLE_SENTENCES)); } catch (e) { console.error(
@@ -1500,6 +1499,7 @@
 
         function loadDB() {
             loadExamples();
+            loadKnownWords();
             try {
                 var data = localStorage.getItem(DB_KEY);
                 if (data) {
@@ -1582,6 +1582,52 @@
             return word;
         }
 
+        // 标记为已熟悉
+        function markAsKnown(en, group) {
+            var key = group + '|' + en;
+            knownWords[key] = true;
+            saveKnownWords();
+            // 更新统计
+            updateKnownCount();
+        }
+
+        // 检查是否已熟悉
+        function isKnown(en, group) {
+            var key = group + '|' + en;
+            return knownWords[key] === true;
+        }
+
+        // 取消标记
+        function unmarkKnown(en, group) {
+            var key = group + '|' + en;
+            delete knownWords[key];
+            saveKnownWords();
+            updateKnownCount();
+        }
+
+        // 获取已熟悉数量
+        function getKnownCount(group) {
+            var count = 0;
+            Object.keys(knownWords).forEach(function(key) {
+                if (key.startsWith(group + '|')) count++;
+            });
+            return count;
+        }
+
+        // 更新已熟悉统计显示
+        function updateKnownCount() {
+            var group = document.getElementById('groupSelect').value;
+            if (!group) return;
+            var count = getKnownCount(group);
+            document.getElementById('knownCount').textContent = count;
+            var knownStat = document.getElementById('knownStat');
+            if (gameMode === 'review') {
+                knownStat.style.display = 'flex';
+            } else {
+                knownStat.style.display = 'none';
+            }
+        }
+
         // ================================================================
         //  6. 游戏状态
         // ================================================================
@@ -1622,6 +1668,9 @@
             'memory': { name: '记忆', className: 'memory', emoji: '🧠' }
         };
 
+        // 点击模式切换
+        document.getElementById('modeDisplay').addEventListener('click', toggleMode);
+
         function toggleMode() {
             var modes = ['normal', 'review', 'memory'];
             var currentIndex = modes.indexOf(gameMode);
@@ -1640,6 +1689,7 @@
             game.reset();
             loadLevel();
             updateStats();
+            updateKnownCount();
             setStatus(config.emoji + ' ' + config.name + '模式', 'info');
             speakText(config.name + '模式');
         }
@@ -1685,6 +1735,15 @@
                 remainCount.textContent = reviewWords.length;
             } else {
                 remainStat.style.display = 'none';
+            }
+
+            // 复习模式显示已熟悉
+            var knownStat = document.getElementById('knownStat');
+            if (gameMode === 'review') {
+                knownStat.style.display = 'flex';
+                updateKnownCount();
+            } else {
+                knownStat.style.display = 'none';
             }
         }
 
@@ -1747,6 +1806,7 @@
             loadReviewProgress();
             loadLevel();
             updateStats();
+            updateKnownCount();
         }
 
         function loadReviewProgress() {
@@ -1787,10 +1847,15 @@
             var grid = document.getElementById('gameGrid');
             grid.innerHTML = '';
             var group = document.getElementById('groupSelect').value;
-            grid.classList.remove('grid-short-sentence', 'grid-review-with-example', 'grid-review-no-example');
+            grid.classList.remove('grid-short-sentence', 'grid-review-mode');
 
             if (group === 'OPD短句' && gameMode !== 'review') {
                 grid.classList.add('grid-short-sentence');
+            }
+
+            // 复习模式使用专门的样式
+            if (gameMode === 'review') {
+                grid.classList.add('grid-review-mode');
             }
 
             var modeTag = document.getElementById('reviewModeTag');
@@ -1830,138 +1895,119 @@
 
             // ===== 复习模式 =====
             if (gameMode === 'review') {
-                var totalWords = availableWords.length;
-                var hasExample = group === 'OPD短句';
+                // 过滤掉已熟悉的词
+                var unknownWords = availableWords.filter(function(w) {
+                    return !isKnown(w.en, group);
+                });
 
-                var cardsPerPage = hasExample ? 4 : 8;
-                var gridClass = hasExample ? 'grid-review-with-example' : 'grid-review-no-example';
-                grid.classList.add(gridClass);
-
+                var totalWords = unknownWords.length;
                 modeTag.style.display = 'inline-block';
-                modeTag.textContent = hasExample ? '📖 带例句 (4/页)' : '📝 快速复习 (8/页)';
+                modeTag.textContent = '📖 复习 (' + totalWords + ' 个未熟悉)';
 
                 if (totalWords === 0) {
                     grid.innerHTML =
-                        '<div class="review-complete"><span class="emoji">📚</span><p>暂无词条，请先导入词库！</p></div>';
-                    setStatus('📚 请先导入词库', 'info');
+                        '<div class="review-complete"><span class="emoji">🎉</span><p>所有词条已熟悉！</p><span class="sub">共 ' +
+                        availableWords.length + ' 个词条已全部掌握</span>' +
+                        '<div class="btn-group"><button class="btn btn-purple" onclick="resetReview()">🔄 重置复习</button>' +
+                        '<button class="btn btn-warning" onclick="clearAllKnown()">📖 显示全部</button></div></div>';
+                    setStatus('🎉 所有词条已熟悉！', 'success', '已掌握 ✅');
                     return;
                 }
+
+                var cardsPerPage = 8;
                 var totalPages = Math.ceil(totalWords / cardsPerPage);
                 if (game.reviewPage >= totalPages) game.reviewPage = totalPages - 1;
                 if (game.reviewPage < 0) game.reviewPage = 0;
                 var startIdx = game.reviewPage * cardsPerPage;
                 var endIdx = Math.min(startIdx + cardsPerPage, totalWords);
-                var pageWords = availableWords.slice(startIdx, endIdx);
+                var pageWords = unknownWords.slice(startIdx, endIdx);
                 pageWords.forEach(function(w) { if (game.reviewViewed.indexOf(w.en) === -1) game.reviewViewed.push(w
                     .en); });
                 saveReviewProgress();
 
-                if (pageWords.length === 0) {
-                    grid.innerHTML =
-                        '<div class="review-complete"><span class="emoji">🎉</span><p>所有词条已复习完毕！</p><span class="sub">共 ' +
-                        totalWords + ' 个词条</span><div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;"><button class="btn btn-purple" onclick="resetReview()">🔄 重新复习</button></div></div>';
-                    setStatus('🎉 复习完成！共 ' + totalWords + ' 个词条', 'success', '已掌握 ✅');
-                    return;
-                }
+                pageWords.forEach(function(w, idx) {
+                    var card = document.createElement('div');
+                    card.className = 'review-card';
 
-                if (hasExample) {
-                    pageWords.forEach(function(w, idx) {
-                        var card = document.createElement('div');
-                        card.className = 'review-card';
+                    var example = EXAMPLE_SENTENCES[w.en] || generateDefaultExample(w.en, w.zh);
+                    var globalIdx = startIdx + idx + 1;
 
-                        var example = EXAMPLE_SENTENCES[w.en] || generateDefaultExample(w.en, w.zh);
-                        var globalIdx = startIdx + idx + 1;
+                    var topDiv = document.createElement('div');
+                    topDiv.className = 'card-top';
 
-                        var topDiv = document.createElement('div');
-                        topDiv.className = 'card-top';
+                    var leftDiv = document.createElement('div');
+                    leftDiv.className = 'card-left';
+                    leftDiv.innerHTML = '<span class="en-part">' + globalIdx + '. ' + w.en + '</span>';
 
-                        var leftDiv = document.createElement('div');
-                        leftDiv.className = 'card-left';
-                        leftDiv.innerHTML = '<span class="en-part">' + globalIdx + '. ' + w.en + '</span>';
+                    var rightDiv = document.createElement('div');
+                    rightDiv.className = 'card-right';
+                    rightDiv.innerHTML = '<span class="zh-part">' + w.zh + '</span>';
 
-                        var rightDiv = document.createElement('div');
-                        rightDiv.className = 'card-right';
-                        rightDiv.innerHTML = '<span class="zh-part">' + w.zh + '</span>';
+                    var speakerBtn = document.createElement('button');
+                    speakerBtn.className = 'speaker-btn';
+                    speakerBtn.textContent = '🔊';
+                    speakerBtn.dataset.en = w.en;
+                    speakerBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        speakText(w.en);
+                        setStatus('🔊 ' + w.en, 'info', '🔊 朗读');
+                    });
 
-                        var speakerBtn = document.createElement('button');
-                        speakerBtn.className = 'speaker-btn';
-                        speakerBtn.textContent = '🔊';
-                        speakerBtn.dataset.en = w.en;
-                        speakerBtn.addEventListener('click', function(e) {
-                            e.stopPropagation();
+                    topDiv.appendChild(leftDiv);
+                    topDiv.appendChild(rightDiv);
+                    topDiv.appendChild(speakerBtn);
+
+                    var exampleDiv = document.createElement('div');
+                    exampleDiv.className = 'example-section';
+                    exampleDiv.innerHTML =
+                        '<span class="example-en">💬 ' + example.en + '</span><span class="example-zh">📌 ' +
+                        example.zh + '</span>';
+
+                    // 已熟悉按钮
+                    var knownBtn = document.createElement('button');
+                    knownBtn.className = 'known-btn';
+                    knownBtn.textContent = '✅ 已熟悉';
+                    knownBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        markAsKnown(w.en, group);
+                        // 移除卡片
+                        card.style.display = 'none';
+                        // 更新统计
+                        updateKnownCount();
+                        setStatus('✅ 已标记 "' + w.en + '" 为熟悉', 'success', '✅');
+                        // 检查是否全部完成
+                        var remaining = document.querySelectorAll('.grid-review-mode .review-card:not([style*="display: none"])')
+                            .length;
+                        if (remaining === 0) {
+                            setTimeout(function() { loadLevel(); }, 500);
+                        }
+                    });
+
+                    var indexBadge = document.createElement('span');
+                    indexBadge.className = 'card-index';
+                    indexBadge.textContent = globalIdx;
+
+                    card.appendChild(topDiv);
+                    card.appendChild(exampleDiv);
+                    card.appendChild(knownBtn);
+                    card.appendChild(indexBadge);
+
+                    var pressTimer = null;
+                    var isPressLong = false;
+                    card.addEventListener('pointerdown', function() {
+                        isPressLong = false;
+                        pressTimer = setTimeout(function() {
+                            isPressLong = true;
                             speakText(w.en);
                             setStatus('🔊 ' + w.en, 'info', '🔊 朗读');
-                        });
-
-                        topDiv.appendChild(leftDiv);
-                        topDiv.appendChild(rightDiv);
-                        topDiv.appendChild(speakerBtn);
-
-                        var exampleDiv = document.createElement('div');
-                        exampleDiv.className = 'example-section';
-                        exampleDiv.innerHTML =
-                            '<span class="example-en">💬 ' + example.en + '</span><span class="example-zh">📌 ' +
-                            example.zh + '</span>';
-
-                        var indexBadge = document.createElement('span');
-                        indexBadge.className = 'card-index';
-                        indexBadge.textContent = globalIdx;
-
-                        card.appendChild(topDiv);
-                        card.appendChild(exampleDiv);
-                        card.appendChild(indexBadge);
-
-                        var pressTimer = null;
-                        var isPressLong = false;
-                        card.addEventListener('pointerdown', function() {
-                            isPressLong = false;
-                            pressTimer = setTimeout(function() {
-                                isPressLong = true;
-                                speakText(w.en);
-                                setStatus('🔊 ' + w.en, 'info', '🔊 朗读');
-                                if (navigator.vibrate) navigator.vibrate(12);
-                            }, 350);
-                        });
-                        card.addEventListener('pointerup', function() { clearTimeout(pressTimer); });
-                        card.addEventListener('pointerleave', function() { clearTimeout(pressTimer); });
-
-                        grid.appendChild(card);
+                            if (navigator.vibrate) navigator.vibrate(12);
+                        }, 350);
                     });
-                } else {
-                    pageWords.forEach(function(w, idx) {
-                        var card = document.createElement('div');
-                        card.className = 'review-card';
-                        var globalIdx = startIdx + idx + 1;
+                    card.addEventListener('pointerup', function() { clearTimeout(pressTimer); });
+                    card.addEventListener('pointerleave', function() { clearTimeout(pressTimer); });
 
-                        card.innerHTML =
-                            '<span class="en-part">' + w.en + '</span><span class="zh-part">' + w.zh +
-                            '</span><button class="speaker-btn" data-en="' + w.en + '">🔊</button><span class="card-index">' +
-                            globalIdx + '</span>';
-
-                        var speakerBtn = card.querySelector('.speaker-btn');
-                        speakerBtn.addEventListener('click', function(e) {
-                            e.stopPropagation();
-                            speakText(w.en);
-                            setStatus('🔊 ' + w.en, 'info', '🔊 朗读');
-                        });
-
-                        var pressTimer = null;
-                        var isPressLong = false;
-                        card.addEventListener('pointerdown', function() {
-                            isPressLong = false;
-                            pressTimer = setTimeout(function() {
-                                isPressLong = true;
-                                speakText(w.en);
-                                setStatus('🔊 ' + w.en, 'info', '🔊 朗读');
-                                if (navigator.vibrate) navigator.vibrate(12);
-                            }, 350);
-                        });
-                        card.addEventListener('pointerup', function() { clearTimeout(pressTimer); });
-                        card.addEventListener('pointerleave', function() { clearTimeout(pressTimer); });
-
-                        grid.appendChild(card);
-                    });
-                }
+                    grid.appendChild(card);
+                });
 
                 var navDiv = document.createElement('div');
                 navDiv.className = 'nav-buttons';
@@ -1969,7 +2015,8 @@
                     '<button class="btn btn-primary" id="reviewPrevBtn" ' + (game.reviewPage === 0 ? 'disabled' :
                         '') + '>⬅</button><span class="nav-info">' + (game.reviewPage + 1) + ' / ' + totalPages +
                     '</span><button class="btn btn-success" id="reviewNextBtn" ' + (game.reviewPage >= totalPages -
-                        1 ? 'disabled' : '') + '>➡</button>' + (game.reviewPage >= totalPages - 1 ?
+                        1 ? 'disabled' : '') + '>➡</button>' +
+                    (game.reviewPage >= totalPages - 1 ?
                         '<button class="btn btn-purple" onclick="resetReview()">🔄</button>' : '');
                 grid.appendChild(navDiv);
                 var nextBtn = document.getElementById('reviewNextBtn');
@@ -1983,7 +2030,8 @@
                         loadLevel(); }
                 });
                 updateStats();
-                setStatus('📝 复习 · ' + pageWords.length + ' 个词条' + (hasExample ? ' (含例句)' : ''), 'info');
+                updateKnownCount();
+                setStatus('📝 复习 · ' + pageWords.length + ' 个词条（未熟悉）', 'info');
                 return;
             }
 
@@ -2120,10 +2168,28 @@
             });
 
             updateStats();
+            updateKnownCount();
             var modeText = MODE_CONFIG[gameMode].name;
             var cardCount = game.cards.length;
             setStatus('🎯 ' + modeText + ' · 第' + game.currentLevel + '关 · ' + selected.length + '对 (' + cardCount +
                 '张)', 'info');
+        }
+
+        // 清除所有已熟悉标记
+        function clearAllKnown() {
+            var group = document.getElementById('groupSelect').value;
+            if (!group) return;
+            if (!confirm('清除所有 "' + group + '" 分组中已熟悉的标记？')) return;
+            Object.keys(knownWords).forEach(function(key) {
+                if (key.startsWith(group + '|')) {
+                    delete knownWords[key];
+                }
+            });
+            saveKnownWords();
+            updateKnownCount();
+            loadLevel();
+            setStatus('🔄 已清除所有已熟悉标记', 'info');
+            speakText('已清除所有已熟悉标记');
         }
 
         // ================================================================
@@ -2396,6 +2462,13 @@
             var db = loadDB();
             db = db.filter(function(w) { return w.group !== group; });
             saveDB(db);
+            // 同时清除该分组的已熟悉标记
+            Object.keys(knownWords).forEach(function(key) {
+                if (key.startsWith(group + '|')) {
+                    delete knownWords[key];
+                }
+            });
+            saveKnownWords();
             renderGroups();
             initGame();
             updateStats();
@@ -2413,6 +2486,9 @@
             ALL_WORDS.forEach(function(w) { if (!EXAMPLE_SENTENCES[w.en]) EXAMPLE_SENTENCES[w.en] =
                     generateDefaultExample(w.en, w.zh); });
             saveExamples();
+            // 清除已熟悉标记
+            knownWords = {};
+            saveKnownWords();
             renderGroups();
             initGame();
             updateStats();
@@ -2454,7 +2530,7 @@
             renderGroups();
             initGame();
 
-            document.getElementById('modeSwitch').addEventListener('click', toggleMode);
+            // 模式切换已绑定到 modeDisplay 的 click 事件
 
             document.getElementById('groupSelect').addEventListener('change', function() {
                 game.usedWords = [];
@@ -2464,6 +2540,7 @@
                 game.reset();
                 loadLevel();
                 updateStats();
+                updateKnownCount();
             });
 
             document.getElementById('restartBtn').addEventListener('click', function() {
@@ -2474,6 +2551,7 @@
                 game.reset();
                 loadLevel();
                 updateStats();
+                updateKnownCount();
                 setStatus('🔄 重新开始', 'info');
                 speakText('重新开始');
             });
@@ -2508,7 +2586,12 @@
                 if (e.key === 'Enter' && e.ctrlKey) importWords();
             });
 
+            // 暴露清除所有已熟悉到全局
+            window.clearAllKnown = clearAllKnown;
+            window.resetReview = resetReview;
+
             updateStats();
+            updateKnownCount();
         });
     </script>
 </body>
