@@ -581,47 +581,19 @@
             border-color: #ef4444;
         }
         @keyframes matchPop {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            25% {
-                transform: scale(1.15) rotate(5deg);
-                opacity: 1;
-                background: linear-gradient(135deg, #10b981, #059669);
-                border-color: #10b981;
-                box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
-            }
-            50% {
-                transform: scale(0.9) rotate(-2deg);
-                opacity: 0.8;
-            }
-            100% {
-                transform: scale(0);
-                opacity: 0;
-            }
+            0% { transform: scale(1); opacity: 1; }
+            25% { transform: scale(1.15) rotate(5deg); opacity: 1; background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; box-shadow: 0 0 25px rgba(16,185,129,0.4); }
+            50% { transform: scale(0.9) rotate(-2deg); opacity: 0.8; }
+            100% { transform: scale(0); opacity: 0; }
         }
         @keyframes fadeOut {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.5);
-            }
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
         }
         @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            20% {
-                transform: translateX(-5px) rotate(-2deg);
-            }
-            60% {
-                transform: translateX(5px) rotate(2deg);
-            }
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-5px) rotate(-2deg); }
+            60% { transform: translateX(5px) rotate(2deg); }
         }
         .card::after {
             content: '';
@@ -831,14 +803,8 @@
             animation: confettiFall linear forwards;
         }
         @keyframes confettiFall {
-            0% {
-                transform: translateY(-10vh) rotate(0deg) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(110vh) rotate(720deg) scale(0.4);
-                opacity: 0;
-            }
+            0% { transform: translateY(-10vh) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg) scale(0.4); opacity: 0; }
         }
         .score-popup {
             position: fixed;
@@ -851,18 +817,9 @@
             text-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
         }
         @keyframes scoreFloat {
-            0% {
-                transform: translateY(0) scale(0.5);
-                opacity: 0;
-            }
-            30% {
-                transform: translateY(-20px) scale(1.1);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-80px) scale(1);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            30% { transform: translateY(-20px) scale(1.1); opacity: 1; }
+            100% { transform: translateY(-80px) scale(1); opacity: 0; }
         }
 
         ::-webkit-scrollbar {
@@ -984,7 +941,6 @@
                 min-height: 50px !important;
                 padding: 4px 8px !important;
             }
-
             .grid-review-mode {
                 gap: 6px !important;
                 grid-template-columns: 1fr 1fr !important;
@@ -1014,7 +970,6 @@
                 padding: 3px 10px;
                 min-width: 60px;
             }
-
             .status-bar {
                 font-size: 11px;
                 padding: 4px 6px;
@@ -1169,7 +1124,6 @@
                 min-height: 42px !important;
                 font-size: 15px !important;
             }
-
             .grid-review-mode .review-card {
                 min-height: 80px !important;
                 height: auto !important;
@@ -1192,7 +1146,6 @@
                 padding: 2px 8px;
                 min-width: 55px;
             }
-
             .btn {
                 min-height: 28px;
                 font-size: 11px;
@@ -1249,7 +1202,6 @@
                 min-height: 64px !important;
                 font-size: 19px !important;
             }
-
             .grid-review-mode .review-card {
                 min-height: 130px !important;
                 padding: 16px 20px !important;
@@ -1503,10 +1455,13 @@
         }
 
         // ================================================================
-        //  4. 词库数据（精简版，与之前保持一致）
+        //  4. 数据层 - 完整词库
         // ================================================================
-        var DB_KEY = 'word_match_game_v34';
+        var DB_KEY = 'word_match_game_v35';
         var STATE_KEY = 'word_match_game_state';
+        var EXAMPLES_KEY = 'word_match_examples_v2';
+        var KNOWN_KEY = 'review_known_words_v10';
+
         var EXAMPLE_SENTENCES = {};
         var knownWords = {};
 
@@ -1521,7 +1476,7 @@
             return templates[Math.floor(Math.random() * templates.length)];
         }
 
-        // ===== 基础词汇（精简版） =====
+        // ===== 基础词汇 =====
         var BASE_WORDS = [
             { en: "apple", zh: "苹果" }, { en: "banana", zh: "香蕉" }, { en: "cat", zh: "猫" }, { en: "dog", zh: "狗" },
             { en: "elephant", zh: "大象" }, { en: "fish", zh: "鱼" }, { en: "grape", zh: "葡萄" }, { en: "house",
@@ -1578,7 +1533,7 @@
             { en: "smart", zh: "聪明" }
         ];
 
-        // ===== OPD 单词（精简版） =====
+        // ===== OPD 单词（精简） =====
         var OPD_WORDS = [
             { en: "hello", zh: "你好" }, { en: "hi", zh: "嗨" }, { en: "goodbye", zh: "再见" }, { en: "thanks",
                 zh: "谢谢" },
@@ -1860,12 +1815,8 @@
         var ALL_WORDS = buildFullWordList();
 
         // ================================================================
-        //  5. 数据操作函数 + 状态持久化
+        //  5. 数据操作函数
         // ================================================================
-        var EXAMPLES_KEY = 'word_match_examples_v2';
-        var KNOWN_KEY = 'review_known_words_v9';
-
-        // ---- 已熟悉词操作 ----
         function saveKnownWords() {
             try { localStorage.setItem(KNOWN_KEY, JSON.stringify(knownWords)); } catch (e) { console.error('保存已熟悉词失败:',
                     e); }
@@ -1882,7 +1833,6 @@
             knownWords = {};
         }
 
-        // ---- 例句操作 ----
         function saveExamples() {
             try { localStorage.setItem(EXAMPLES_KEY, JSON.stringify(EXAMPLE_SENTENCES)); } catch (e) { console.error(
                     '保存例句失败:', e); }
@@ -1900,7 +1850,6 @@
             } catch (e) { console.error('加载例句失败:', e); }
         }
 
-        // ---- 词库操作 ----
         function loadDB() {
             loadExamples();
             loadKnownWords();
@@ -1986,16 +1935,13 @@
             return word;
         }
 
-        // ---- 已熟悉核心操作 ----
         function markAsKnown(en, group) {
             var key = group + '|' + en;
             knownWords[key] = true;
             saveKnownWords();
             updateKnownCount();
             if (gameMode === 'review') {
-                setTimeout(function() {
-                    loadLevel();
-                }, 400);
+                setTimeout(function() { loadLevel(); }, 400);
             }
         }
 
@@ -2009,9 +1955,7 @@
             delete knownWords[key];
             saveKnownWords();
             updateKnownCount();
-            if (gameMode === 'review') {
-                loadLevel();
-            }
+            if (gameMode === 'review') { loadLevel(); }
         }
 
         function getKnownCount(group) {
@@ -2031,7 +1975,7 @@
         }
 
         // ================================================================
-        //  6. 状态持久化 - 保存和恢复
+        //  6. 状态持久化
         // ================================================================
         function saveGameState() {
             try {
@@ -2045,7 +1989,6 @@
                     matchedPairs: game.matchedPairs,
                     totalPairs: game.totalPairs,
                     isLevelComplete: game.isLevelComplete,
-                    // 保存时间戳用于恢复判断
                     timestamp: Date.now()
                 };
                 localStorage.setItem(STATE_KEY, JSON.stringify(state));
@@ -2057,7 +2000,6 @@
                 var data = localStorage.getItem(STATE_KEY);
                 if (data) {
                     var state = JSON.parse(data);
-                    // 检查是否有效（超过30天则视为无效）
                     if (state.timestamp && (Date.now() - state.timestamp) > 30 * 24 * 60 * 60 * 1000) {
                         return null;
                     }
@@ -2069,8 +2011,6 @@
 
         function restoreGameState(state) {
             if (!state) return false;
-
-            // 恢复模式
             if (state.mode && ['normal', 'review', 'memory'].indexOf(state.mode) !== -1) {
                 gameMode = state.mode;
                 var modeDisplay = document.getElementById('modeDisplay');
@@ -2080,11 +2020,8 @@
                     modeDisplay.className = 'mode-name ' + config.className;
                 }
             }
-
-            // 恢复分组
             if (state.group) {
                 var select = document.getElementById('groupSelect');
-                // 检查该分组是否存在
                 var options = select.querySelectorAll('option');
                 var found = false;
                 for (var i = 0; i < options.length; i++) {
@@ -2098,8 +2035,6 @@
                     select.value = options[0].value;
                 }
             }
-
-            // 恢复游戏进度
             if (state.currentLevel !== undefined) game.currentLevel = state.currentLevel || 1;
             if (state.usedWords) game.usedWords = state.usedWords;
             if (state.reviewPage !== undefined) game.reviewPage = state.reviewPage || 0;
@@ -2107,7 +2042,6 @@
             if (state.matchedPairs !== undefined) game.matchedPairs = state.matchedPairs || 0;
             if (state.totalPairs !== undefined) game.totalPairs = state.totalPairs || 0;
             if (state.isLevelComplete !== undefined) game.isLevelComplete = state.isLevelComplete || false;
-
             return true;
         }
 
@@ -2246,20 +2180,518 @@
         }
 
         // ================================================================
-        //  9. 初始化 - 恢复状态
+        //  9. 核心: loadLevel (完整实现)
+        // ================================================================
+        function loadLevel() {
+            var grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
+            var group = document.getElementById('groupSelect').value;
+            grid.classList.remove('grid-short-sentence', 'grid-review-mode');
+
+            if (group === 'OPD短句' && gameMode !== 'review') {
+                grid.classList.add('grid-short-sentence');
+            }
+
+            if (gameMode === 'review') {
+                grid.classList.add('grid-review-mode');
+            }
+
+            var modeTag = document.getElementById('reviewModeTag');
+            modeTag.style.display = 'none';
+
+            if (!group) {
+                grid.innerHTML =
+                    '<div class="empty-state"><span class="emoji">📚</span><p>请选择一个分组</p></div>';
+                return;
+            }
+
+            var db = loadDB();
+            var availableWords = [];
+            db.forEach(function(w) { if (w.group === group) availableWords.push(w); });
+
+            if (gameMode !== 'review') {
+                var words = availableWords.filter(function(w) { return game.usedWords.indexOf(w.en) === -1; });
+                if (words.length < 2) { game.usedWords = [];
+                    words = availableWords; }
+                availableWords = words;
+            }
+
+            // ===== 复习模式 =====
+            if (gameMode === 'review') {
+                var unknownWords = availableWords.filter(function(w) {
+                    return !isKnown(w.en, group);
+                });
+                var totalWords = unknownWords.length;
+                modeTag.style.display = 'inline-block';
+                modeTag.textContent = '📖 复习 (' + totalWords + ' 个未熟悉)';
+
+                if (totalWords === 0) {
+                    grid.innerHTML =
+                        '<div class="review-complete"><span class="emoji">🎉</span><p>所有词条已熟悉！</p><span class="sub">共 ' +
+                        availableWords.length + ' 个词条已全部掌握</span>' +
+                        '<div class="btn-group"><button class="btn btn-purple" onclick="resetReview()">🔄 重置复习</button>' +
+                        '<button class="btn btn-warning" onclick="clearAllKnown()">📖 显示全部</button></div></div>';
+                    setStatus('🎉 所有词条已熟悉！', 'success', '已掌握 ✅');
+                    saveGameState();
+                    return;
+                }
+
+                var cardsPerPage = 4;
+                var totalPages = Math.ceil(totalWords / cardsPerPage);
+                if (game.reviewPage >= totalPages) game.reviewPage = totalPages - 1;
+                if (game.reviewPage < 0) game.reviewPage = 0;
+                var startIdx = game.reviewPage * cardsPerPage;
+                var endIdx = Math.min(startIdx + cardsPerPage, totalWords);
+                var pageWords = unknownWords.slice(startIdx, endIdx);
+                pageWords.forEach(function(w) { if (game.reviewViewed.indexOf(w.en) === -1) game.reviewViewed.push(w
+                    .en); });
+                saveReviewProgress();
+
+                pageWords.forEach(function(w, idx) {
+                    var card = document.createElement('div');
+                    card.className = 'review-card';
+
+                    var example = EXAMPLE_SENTENCES[w.en] || generateDefaultExample(w.en, w.zh);
+                    var globalIdx = startIdx + idx + 1;
+
+                    var topDiv = document.createElement('div');
+                    topDiv.className = 'card-top';
+
+                    var leftDiv = document.createElement('div');
+                    leftDiv.className = 'card-left';
+                    leftDiv.innerHTML = '<span class="en-part">' + globalIdx + '. ' + w.en + '</span>';
+
+                    var rightDiv = document.createElement('div');
+                    rightDiv.className = 'card-right';
+                    rightDiv.innerHTML = '<span class="zh-part">' + w.zh + '</span>';
+
+                    var speakerBtn = document.createElement('button');
+                    speakerBtn.className = 'speaker-btn';
+                    speakerBtn.textContent = '🔊';
+                    speakerBtn.dataset.en = w.en;
+                    speakerBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        speakText(w.en);
+                        setStatus('🔊 ' + w.en, 'info', '🔊 朗读');
+                    });
+
+                    topDiv.appendChild(leftDiv);
+                    topDiv.appendChild(rightDiv);
+                    topDiv.appendChild(speakerBtn);
+
+                    var exampleDiv = document.createElement('div');
+                    exampleDiv.className = 'example-section';
+                    exampleDiv.innerHTML =
+                        '<span class="example-en">💬 ' + example.en + '</span><span class="example-zh">📌 ' +
+                        example.zh + '</span>';
+
+                    var knownBtn = document.createElement('button');
+                    knownBtn.className = 'known-btn';
+                    knownBtn.textContent = '熟悉';
+
+                    if (isKnown(w.en, group)) {
+                        knownBtn.classList.add('checked');
+                        knownBtn.textContent = '熟悉';
+                    }
+
+                    knownBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        if (knownBtn.classList.contains('checked')) {
+                            knownBtn.classList.remove('checked');
+                            knownBtn.textContent = '熟悉';
+                            unmarkKnown(w.en, group);
+                            setStatus('↩️ 已取消 "' + w.en + '" 的熟悉标记', 'info');
+                        } else {
+                            knownBtn.classList.add('checked');
+                            knownBtn.textContent = '熟悉';
+                            markAsKnown(w.en, group);
+                            setStatus('✅ 已标记 "' + w.en + '" 为熟悉', 'success', '✅');
+                        }
+                        updateKnownCount();
+                    });
+
+                    var indexBadge = document.createElement('span');
+                    indexBadge.className = 'card-index';
+                    indexBadge.textContent = globalIdx;
+
+                    card.appendChild(topDiv);
+                    card.appendChild(exampleDiv);
+                    card.appendChild(knownBtn);
+                    card.appendChild(indexBadge);
+
+                    var pressTimer = null;
+                    var isPressLong = false;
+                    card.addEventListener('pointerdown', function() {
+                        isPressLong = false;
+                        pressTimer = setTimeout(function() {
+                            isPressLong = true;
+                            speakText(w.en);
+                            setStatus('🔊 ' + w.en, 'info', '🔊 朗读');
+                            if (navigator.vibrate) navigator.vibrate(12);
+                        }, 350);
+                    });
+                    card.addEventListener('pointerup', function() { clearTimeout(pressTimer); });
+                    card.addEventListener('pointerleave', function() { clearTimeout(pressTimer); });
+
+                    grid.appendChild(card);
+                });
+
+                var navDiv = document.createElement('div');
+                navDiv.className = 'nav-buttons';
+                navDiv.innerHTML =
+                    '<button class="btn btn-primary" id="reviewPrevBtn" ' + (game.reviewPage === 0 ? 'disabled' :
+                        '') + '>⬅</button><span class="nav-info">' + (game.reviewPage + 1) + ' / ' + totalPages +
+                    '</span><button class="btn btn-success" id="reviewNextBtn" ' + (game.reviewPage >= totalPages -
+                        1 ? 'disabled' : '') + '>➡</button>' +
+                    (game.reviewPage >= totalPages - 1 ?
+                        '<button class="btn btn-purple" onclick="resetReview()">🔄</button>' : '');
+                grid.appendChild(navDiv);
+                var nextBtn = document.getElementById('reviewNextBtn');
+                var prevBtn = document.getElementById('reviewPrevBtn');
+                if (nextBtn) nextBtn.addEventListener('click', function() {
+                    if (game.reviewPage < totalPages - 1) { game.reviewPage++;
+                        loadLevel(); }
+                });
+                if (prevBtn) prevBtn.addEventListener('click', function() {
+                    if (game.reviewPage > 0) { game.reviewPage--;
+                        loadLevel(); }
+                });
+                updateStats();
+                updateKnownCount();
+                setStatus('📝 复习 · ' + pageWords.length + ' 个词条（未熟悉）', 'info');
+                saveGameState();
+                return;
+            }
+
+            // ===== 普通模式 & 记忆模式 =====
+            if (availableWords.length === 0) {
+                grid.innerHTML =
+                    '<div class="empty-state"><span class="emoji">🎉</span><p>所有词条已完成！</p></div>';
+                setStatus('🎉 全部完成！', 'success', '已掌握 ✅');
+                saveGameState();
+                return;
+            }
+
+            var maxPairs = (group === 'OPD短句') ? 6 : 8;
+            var selected = availableWords.slice(0, Math.min(maxPairs, availableWords.length));
+            if (selected.length === 0) {
+                grid.innerHTML =
+                    '<div class="empty-state"><span class="emoji">🎉</span><p>所有词条已完成！</p></div>';
+                setStatus('🎉 全部完成！', 'success', '已掌握 ✅');
+                saveGameState();
+                return;
+            }
+
+            selected.forEach(function(w) { game.usedWords.push(w.en); });
+            game.totalPairs = selected.length;
+            game.matchedPairs = 0;
+            game.matchCount = 0;
+            game.isLevelComplete = false;
+
+            var cards = [];
+            selected.forEach(function(w) {
+                cards.push({ id: w.en, text: w.en, type: 'en', pairId: w.en });
+                cards.push({ id: w.en + '_zh', text: w.zh, type: 'zh', pairId: w.en });
+            });
+            game.cards = cards.sort(function() { return 0.5 - Math.random(); });
+
+            var enCards = game.cards.filter(function(c) { return c.type === 'en'; });
+            var zhCards = game.cards.filter(function(c) { return c.type === 'zh'; });
+            for (var i = enCards.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1));
+                var temp = enCards[i];
+                enCards[i] = enCards[j];
+                enCards[j] = temp; }
+            for (var i2 = zhCards.length - 1; i2 > 0; i2--) { var j2 = Math.floor(Math.random() * (i2 + 1));
+                var temp2 = zhCards[i2];
+                zhCards[i2] = zhCards[j2];
+                zhCards[j2] = temp2; }
+
+            var reorderedCards = [];
+            var enCount = enCards.length;
+            var zhCount = zhCards.length;
+            var totalCards = enCount + zhCount;
+            var cols = (group === 'OPD短句') ? 3 : 4;
+            var rows = Math.ceil(totalCards / cols);
+            var enIdx = 0,
+                zhIdx = 0;
+
+            for (var row = 0; row < rows; row++) {
+                var halfCols = Math.floor(cols / 2);
+                for (var col = 0; col < halfCols; col++) {
+                    if (enIdx < enCount) reorderedCards.push(enCards[enIdx++]);
+                    else if (zhIdx < zhCount) reorderedCards.push(zhCards[zhIdx++]);
+                }
+                for (var col2 = halfCols; col2 < cols; col2++) {
+                    if (zhIdx < zhCount) reorderedCards.push(zhCards[zhIdx++]);
+                    else if (enIdx < enCount) reorderedCards.push(enCards[enIdx++]);
+                }
+            }
+            game.cards = reorderedCards;
+
+            game.cards.forEach(function(card, index) {
+                var div = document.createElement('div');
+                div.className = 'card';
+                div.textContent = card.text;
+                div.dataset.index = index;
+                div.dataset.pairId = card.pairId;
+                div.dataset.type = card.type;
+                div.dataset.en = card.type === 'en' ? card.text : card.pairId;
+
+                if (gameMode === 'memory') {
+                    var wordData = null;
+                    for (var k = 0; k < selected.length; k++) {
+                        if (selected[k].en === card.pairId) { wordData = selected[k]; break; }
+                    }
+                    if (wordData) {
+                        var level = Math.min(wordData.level, EBBINGHAUS_INTERVALS.length);
+                        var label = LEVEL_LABELS[level] || '已掌握';
+                        var badge = document.createElement('span');
+                        badge.className = 'level-badge';
+                        badge.textContent = label.replace('复习', '').replace('学习', '').substring(0, 2);
+                        div.appendChild(badge);
+                    }
+                }
+
+                var langTag = document.createElement('span');
+                langTag.className = 'card-lang-tag';
+                langTag.textContent = card.type === 'en' ? 'EN' : '中文';
+                div.appendChild(langTag);
+
+                if (card.type === 'en') {
+                    var speaker = document.createElement('span');
+                    speaker.className = 'speaker-icon';
+                    speaker.textContent = '🔊';
+                    div.appendChild(speaker);
+                }
+
+                var pressTimer = null;
+                var isPressLong = false;
+
+                div.onclick = function(e) {
+                    if (isPressLong) { isPressLong = false; return; }
+                    flipCard(this);
+                };
+
+                div.addEventListener('pointerdown', function(e) {
+                    var self = this;
+                    isPressLong = false;
+                    pressTimer = setTimeout(function() {
+                        isPressLong = true;
+                        var finalText = self.dataset.en || self.textContent;
+                        if (self.dataset.type === 'zh') {
+                            for (var m = 0; m < game.cards.length; m++) {
+                                if (game.cards[m].pairId === self.dataset.pairId && game.cards[m]
+                                    .type === 'en') {
+                                    finalText = game.cards[m].text;
+                                    break;
+                                }
+                            }
+                        }
+                        speakText(finalText);
+                        setStatus('🔊 ' + finalText, 'info', '🔊 朗读');
+                        if (navigator.vibrate) navigator.vibrate(12);
+                    }, 350);
+                });
+
+                div.addEventListener('pointerup', function() { clearTimeout(pressTimer); });
+                div.addEventListener('pointerleave', function() { clearTimeout(pressTimer); });
+
+                grid.appendChild(div);
+            });
+
+            updateStats();
+            updateKnownCount();
+            var modeText = MODE_CONFIG[gameMode].name;
+            var cardCount = game.cards.length;
+            setStatus('🎯 ' + modeText + ' · 第' + game.currentLevel + '关 · ' + selected.length + '对 (' + cardCount +
+                '张)', 'info');
+            saveGameState();
+        }
+
+        // ================================================================
+        //  10. 翻牌逻辑
+        // ================================================================
+        function flipCard(cardEl) {
+            if (game.locked || cardEl.classList.contains('matched') || cardEl.classList.contains('hidden') || game
+                .isLevelComplete) return;
+
+            if (cardEl.classList.contains('flipped')) {
+                var idx = game.flipped.indexOf(cardEl);
+                if (idx !== -1) game.flipped.splice(idx, 1);
+                cardEl.classList.remove('flipped');
+                sound.play('unflip');
+                setStatus(game.flipped.length === 0 ? '💡 已取消' : '💡 已选 ' + game.flipped.length + '/2', '');
+                saveGameState();
+                return;
+            }
+
+            sound.play('flip');
+            cardEl.classList.add('flipped');
+            game.flipped.push(cardEl);
+
+            if (game.flipped.length === 2) {
+                game.locked = true;
+                var c1 = game.flipped[0];
+                var c2 = game.flipped[1];
+                var isMatch = c1.dataset.pairId === c2.dataset.pairId && c1 !== c2;
+
+                if (isMatch) {
+                    game.matchCount++;
+                    var enText = c1.dataset.type === 'en' ? c1.text : c2.text;
+                    speakText(enText);
+
+                    if (game.matchCount >= 3) {
+                        sound.play('match_combo');
+                        setStatus('🔥 连击 ' + game.matchCount + ' 次！', 'success', '🔥');
+                    } else {
+                        sound.play('match');
+                        setStatus('✅ 匹配！(' + (game.matchedPairs + 1) + '/' + game.totalPairs + ')', 'success',
+                            '✨');
+                    }
+
+                    c1.classList.add('matched');
+                    c2.classList.add('matched');
+
+                    var r1 = c1.getBoundingClientRect(),
+                        r2 = c2.getBoundingClientRect();
+                    var mx = (r1.left + r1.right + r2.left + r2.right) / 4;
+                    var my = (r1.top + r1.bottom + r2.top + r2.bottom) / 4;
+                    var txt = '✨+1';
+                    if (game.matchCount >= 3) txt = '🔥x' + game.matchCount;
+                    else if (game.matchCount === 2) txt = '⭐+2';
+                    showScorePopup(mx, my, txt);
+
+                    game.matched.add(c1.dataset.pairId);
+                    game.matchedPairs++;
+                    if (gameMode === 'memory') updateWordMemory(c1.dataset.pairId, true);
+                    updateStats();
+
+                    setTimeout(function() {
+                        c1.classList.add('hidden');
+                        c2.classList.add('hidden');
+                        game.flipped = [];
+                        game.locked = false;
+
+                        if (game.matchedPairs === game.totalPairs) {
+                            game.isLevelComplete = true;
+                            if (game.matchCount === game.totalPairs) { sound.play('perfect');
+                                setStatus('🌟 完美通关！', 'success', '🏆'); } else { sound.play('win'); }
+                            setTimeout(function() { showLevelComplete(); }, 400);
+                        } else {
+                            var remain = game.totalPairs - game.matchedPairs;
+                            if (game.matchCount >= 3) setStatus('🔥 连击 ' + game.matchCount + ' 次！还剩 ' +
+                                remain + ' 对', 'success', '🔥');
+                            else setStatus('💡 继续配对，还剩 ' + remain + ' 对', '');
+                        }
+                        saveGameState();
+                    }, 400);
+                } else {
+                    sound.play('fail');
+                    c1.classList.add('fail');
+                    c2.classList.add('fail');
+                    game.matchCount = 0;
+                    if (gameMode === 'memory') { updateWordMemory(c1.dataset.pairId, false);
+                        updateWordMemory(c2.dataset.pairId, false); }
+                    setStatus('❌ 不匹配，再试一次', 'error', '😅');
+
+                    setTimeout(function() {
+                        c1.classList.remove('flipped', 'fail');
+                        c2.classList.remove('flipped', 'fail');
+                        game.flipped = [];
+                        game.locked = false;
+                        var remain = game.totalPairs - game.matchedPairs;
+                        setStatus('💡 继续配对，还剩 ' + remain + ' 对', '');
+                        saveGameState();
+                    }, 450);
+                }
+            } else {
+                setStatus('💡 已选 ' + game.flipped.length + '/2', '');
+                saveGameState();
+            }
+        }
+
+        // ================================================================
+        //  11. 通关与辅助函数
+        // ================================================================
+        function showLevelComplete() {
+            var grid = document.getElementById('gameGrid');
+            var group = document.getElementById('groupSelect').value;
+            var db = loadDB();
+            var availableWords = [];
+            db.forEach(function(w) { if (w.group === group) availableWords.push(w); });
+            if (gameMode === 'memory') {
+                var reviewWords = availableWords.filter(function(w) { return isWordDueForReview(w); });
+                if (reviewWords.length > 0) { reviewWords.sort(function(a, b) { var pa = getWordPriority(a);
+                        var pb = getWordPriority(b); return pb - pa; });
+                    availableWords = reviewWords; }
+                if (availableWords.length === 0) {
+                    availableWords = [];
+                    db.forEach(function(w) { if (w.group === group) availableWords.push(w); });
+                }
+            }
+            var remaining = availableWords.filter(function(w) { return game.usedWords.indexOf(w.en) === -1; }).length;
+            grid.innerHTML =
+                '<div class="next-level-btn"><button onclick="continueToNextLevel()">🚀 下一关</button><div class="info-text">剩余 ' +
+                remaining + ' 个词条</div></div>';
+            sound.play('levelup');
+            showCelebration();
+            setStatus('🎉 第 ' + game.currentLevel + ' 关完成！', 'success', '🌟');
+            saveGameState();
+        }
+
+        function continueToNextLevel() {
+            game.currentLevel++;
+            game.reset();
+            loadLevel();
+        }
+
+        function showCelebration() {
+            var container = document.createElement('div');
+            container.className = 'celebration';
+            document.body.appendChild(container);
+            var colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+            var emojis = ['🎉', '⭐', '🌟', '🎊', '💪'];
+            for (var i = 0; i < 30; i++) {
+                var el = document.createElement('div');
+                el.className = 'confetti';
+                el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                el.style.left = Math.random() * 100 + '%';
+                el.style.color = colors[Math.floor(Math.random() * colors.length)];
+                el.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                el.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+                el.style.animationDelay = (Math.random() * 0.8) + 's';
+                container.appendChild(el);
+            }
+            setTimeout(function() { container.remove(); }, 3000);
+        }
+
+        function isWordDueForReview(word) {
+            var now = Date.now();
+            var level = Math.min(word.level, EBBINGHAUS_INTERVALS.length);
+            if (level >= EBBINGHAUS_INTERVALS.length) return (now - word.last) >= 30 * 24 * 60 * 60 * 1000;
+            var interval = EBBINGHAUS_INTERVALS[level];
+            return word.last === 0 || (now - word.last) >= interval;
+        }
+
+        function getWordPriority(word) {
+            var now = Date.now();
+            var level = Math.min(word.level, EBBINGHAUS_INTERVALS.length - 1);
+            var interval = EBBINGHAUS_INTERVALS[level] || 30 * 24 * 60 * 60 * 1000;
+            var elapsed = now - word.last;
+            var ratio = Math.min(elapsed / interval, 3);
+            return Math.round(ratio * 33);
+        }
+
+        // ================================================================
+        //  12. 初始化
         // ================================================================
         function initGame() {
             renderGroups();
-
-            // 尝试恢复状态
             var savedState = loadGameState();
             var stateRestored = false;
-
             if (savedState) {
                 stateRestored = restoreGameState(savedState);
             }
-
-            // 获取当前分组
             var select = document.getElementById('groupSelect');
             if (!select || !select.value) {
                 if (select && select.options.length > 0) {
@@ -2268,21 +2700,16 @@
                     return;
                 }
             }
-
             game.currentGroup = select.value;
 
-            // 如果状态恢复成功，加载对应的关卡
             if (stateRestored) {
                 loadLevel();
                 updateStats();
                 updateKnownCount();
-                setStatus('📌 已恢复上次进度', 'info');
-                // 显示恢复信息
                 var modeText = MODE_CONFIG[gameMode] ? MODE_CONFIG[gameMode].name : '普通';
                 var levelInfo = game.currentLevel || 1;
                 setStatus('📌 已恢复 · ' + modeText + '模式 · 第' + levelInfo + '关', 'info');
             } else {
-                // 首次使用或状态失效
                 game.currentLevel = 1;
                 game.usedWords = [];
                 game.reviewPage = 0;
@@ -2293,97 +2720,11 @@
                 updateKnownCount();
                 setStatus('💡 点击配对 · 长按发音', 'info');
             }
-
-            // 保存当前状态
             saveGameState();
         }
 
         // ================================================================
-        //  10. loadLevel 和 flipCard（核心游戏逻辑）
-        // ================================================================
-        // 由于代码太长，这里保留之前实现的 loadLevel 和 flipCard
-        // 但需要确保在每次操作后调用 saveGameState()
-
-        // 这里省略 loadLevel 和 flipCard 的完整实现，因为它们与之前相同
-        // 但在实际使用时需要包含完整的游戏逻辑
-
-        // ================================================================
-        //  11. 事件绑定
-        // ================================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化词库
-            loadDB();
-            initGame();
-
-            // 分组切换
-            document.getElementById('groupSelect').addEventListener('change', function() {
-                game.usedWords = [];
-                game.currentLevel = 1;
-                game.reviewPage = 0;
-                game.reviewViewed = [];
-                game.reset();
-                loadLevel();
-                updateStats();
-                updateKnownCount();
-                saveGameState();
-            });
-
-            // 重开按钮 - 重置当前模式进度但保留已熟悉标记
-            document.getElementById('restartBtn').addEventListener('click', function() {
-                game.usedWords = [];
-                game.currentLevel = 1;
-                game.reviewPage = 0;
-                game.reviewViewed = [];
-                game.reset();
-                loadLevel();
-                updateStats();
-                updateKnownCount();
-                saveGameState();
-                setStatus('🔄 重新开始', 'info');
-                speakText('重新开始');
-            });
-
-            // 词库管理
-            document.getElementById('manageBtn').addEventListener('click', function() {
-                var panel = document.getElementById('managePanel');
-                var grid = document.getElementById('gameGrid');
-                panel.classList.toggle('active');
-                grid.classList.toggle('hidden');
-
-                if (panel.classList.contains('active')) {
-                    setTimeout(function() { panel.scrollTop = 0; }, 100);
-                }
-            });
-
-            // 上传、导入等功能...
-            document.getElementById('uploadBtn').addEventListener('click', function() {
-                document.getElementById('uploadInput').click();
-            });
-            document.getElementById('uploadInput').addEventListener('change', function(e) {
-                if (e.target.files.length > 0) {
-                    handleFileUpload(e.target.files[0]);
-                    e.target.value = '';
-                }
-            });
-            document.getElementById('importBtn').addEventListener('click', importWords);
-            document.getElementById('clearBtn').addEventListener('click', clearGroup);
-            document.getElementById('resetAllBtn').addEventListener('click', resetAll);
-            document.getElementById('updateWordsBtn').addEventListener('click', updateWords);
-
-            document.getElementById('wordInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && e.ctrlKey) importWords();
-            });
-
-            // 暴露全局函数
-            window.clearAllKnown = clearAllKnown;
-            window.resetReview = resetReview;
-
-            updateStats();
-            updateKnownCount();
-        });
-
-        // ================================================================
-        //  12. 管理功能
+        //  13. 管理功能
         // ================================================================
         function handleFileUpload(file) {
             var statusEl = document.getElementById('uploadStatus');
@@ -2524,7 +2865,6 @@
             saveExamples();
             knownWords = {};
             saveKnownWords();
-            // 清除状态
             localStorage.removeItem(STATE_KEY);
             renderGroups();
             initGame();
@@ -2560,7 +2900,6 @@
             alert('✅ 已添加 ' + added + ' 个新词条！');
         }
 
-        // 重置复习
         function resetReview() {
             var group = document.getElementById('groupSelect').value;
             if (group) {
@@ -2596,34 +2935,96 @@
             speakText('已清除所有已熟悉标记');
         }
 
-        // 暴露全局函数
-        window.clearAllKnown = clearAllKnown;
-        window.resetReview = resetReview;
-
-        // ================================================================
-        //  13. 核心游戏逻辑（loadLevel 和 flipCard）
-        //    注意：这里的实现与之前相同，但添加了 saveGameState() 调用
-        // ================================================================
-        // 由于篇幅限制，这里需要包含完整的 loadLevel 和 flipCard 实现
-        // 在实际使用时，请确保包含完整的游戏逻辑
-
-        // 提示：以下是占位，实际使用时需要替换为完整的实现
-        function loadLevel() {
-            // 完整实现在之前的对话中已经提供
-            // 每次加载关卡后调用 saveGameState()
-            // ... 完整代码 ...
-            saveGameState();
+        function loadReviewProgress() {
+            try {
+                var key = 'review_progress_' + game.currentGroup;
+                var data = localStorage.getItem(key);
+                if (data) {
+                    var parsed = JSON.parse(data);
+                    game.reviewPage = parsed.page || 0;
+                    game.reviewViewed = parsed.viewed || [];
+                }
+            } catch (e) { console.log('加载复习进度失败:', e); }
         }
 
-        function flipCard(cardEl) {
-            // 完整实现在之前的对话中已经提供
-            // 每次匹配或翻转后调用 saveGameState()
-            // ... 完整代码 ...
-            saveGameState();
+        function saveReviewProgress() {
+            try {
+                var key = 'review_progress_' + game.currentGroup;
+                localStorage.setItem(key, JSON.stringify({
+                    page: game.reviewPage,
+                    viewed: game.reviewViewed
+                }));
+            } catch (e) { console.log('保存复习进度失败:', e); }
         }
 
-        console.log('🐴 小小马单词消消乐已加载！');
-        console.log('💡 页面状态会自动保存，下次打开时恢复进度。');
+        // ================================================================
+        //  14. 事件绑定
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDB();
+            initGame();
+
+            document.getElementById('groupSelect').addEventListener('change', function() {
+                game.usedWords = [];
+                game.currentLevel = 1;
+                game.reviewPage = 0;
+                game.reviewViewed = [];
+                game.reset();
+                loadLevel();
+                updateStats();
+                updateKnownCount();
+                saveGameState();
+            });
+
+            document.getElementById('restartBtn').addEventListener('click', function() {
+                game.usedWords = [];
+                game.currentLevel = 1;
+                game.reviewPage = 0;
+                game.reviewViewed = [];
+                game.reset();
+                loadLevel();
+                updateStats();
+                updateKnownCount();
+                saveGameState();
+                setStatus('🔄 重新开始', 'info');
+                speakText('重新开始');
+            });
+
+            document.getElementById('manageBtn').addEventListener('click', function() {
+                var panel = document.getElementById('managePanel');
+                var grid = document.getElementById('gameGrid');
+                panel.classList.toggle('active');
+                grid.classList.toggle('hidden');
+                if (panel.classList.contains('active')) {
+                    setTimeout(function() { panel.scrollTop = 0; }, 100);
+                }
+            });
+
+            document.getElementById('uploadBtn').addEventListener('click', function() {
+                document.getElementById('uploadInput').click();
+            });
+            document.getElementById('uploadInput').addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                    e.target.value = '';
+                }
+            });
+
+            document.getElementById('importBtn').addEventListener('click', importWords);
+            document.getElementById('clearBtn').addEventListener('click', clearGroup);
+            document.getElementById('resetAllBtn').addEventListener('click', resetAll);
+            document.getElementById('updateWordsBtn').addEventListener('click', updateWords);
+
+            document.getElementById('wordInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) importWords();
+            });
+
+            window.clearAllKnown = clearAllKnown;
+            window.resetReview = resetReview;
+
+            updateStats();
+            updateKnownCount();
+        });
     </script>
 </body>
 </html>
