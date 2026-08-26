@@ -96,25 +96,27 @@ body{
 .card.fail{animation:shake .3s ease;border-color:#ef4444}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
 
-.review-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:8px;padding:4px 2px}
+.review-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:6px;padding:4px 2px}
 .review-top-bar{display:flex;align-items:center;gap:8px;padding:5px 8px;background:#ede9fe;border-radius:8px;flex-shrink:0;font-size:13px}
-.review-card{background:#fff;border-radius:8px;padding:10px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.review-card{background:#fff;border-radius:8px;padding:6px 8px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
 .review-card.not-due{opacity:0.6;background:#f8f8f8}
-.rev-word{font-size:26px;font-weight:900;color:#d81b60;margin-bottom:3px}
-.rev-phonetic{font-size:14px;color:#3949ab;margin-bottom:4px;font-style:italic}
-.rev-zh{font-size:16px;color:#00695c;margin-bottom:4px;font-weight:600}
-.rev-meta{font-size:10px;color:#666;margin-bottom:5px;background:#f3f4f6;padding:3px 5px;border-radius:4px}
+.rev-line{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:15px;margin-bottom:4px;}
+.rev-word{font-weight:900;color:#d81b60;}
+.rev-phonetic{color:#3949ab;font-style:italic}
+.rev-zh{color:#00695c;font-weight:600}
+.rev-meta{font-size:10px;color:#666;margin-bottom:4px;background:#f3f4f6;padding:2px 4px;border-radius:4px}
 .rev-buttons{display:flex;gap:6px;flex-wrap:wrap}
-.rev-buttons .btn{font-size:11px;padding:3px 6px;min-height:26px}
-.nav-row{display:flex;gap:8px;margin-top:8px;justify-content:center;flex-shrink:0}
+.rev-buttons .btn{font-size:11px;padding:2px 5px;min-height:24px}
+.nav-row{display:flex;gap:8px;margin-top:6px;justify-content:center;flex-shrink:0}
 
-.browse-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:8px;padding:4px 2px}
-.browse-card{background:#fff;border-radius:8px;padding:12px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
-.b-word{font-size:23px;font-weight:bold;color:#7c3aed;margin-bottom:3px}
-.b-pho{font-size:14px;color:#777;font-style:italic;margin-bottom:4px}
-.b-zh{font-size:16px;color:#b45309;margin-bottom:6px}
+.browse-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:6px;padding:4px 2px}
+.browse-card{background:#fff;border-radius:8px;padding:6px 8px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.b-line{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:15px;margin-bottom:4px;}
+.b-word{font-weight:bold;color:#7c3aed;}
+.b-pho{color:#777;font-style:italic}
+.b-zh{color:#b45309;}
 .b-buttons{display:flex;gap:6px;flex-wrap:wrap}
-.b-buttons .btn{font-size:11px;padding:3px 6px;min-height:26px}
+.b-buttons .btn{font-size:11px;padding:2px 5px;min-height:24px}
 
 .panel{flex:1;background:#f9fafb;border-radius:10px;padding:10px 12px;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}
 .panel.active{display:block}
@@ -251,11 +253,10 @@ let appMode = MODE_ORDER[currentModeIndex];
 
 let reviewPage = 0;
 let browsePage = 0;
-const REVIEW_PAGE_SIZE = 4;
-const BROWSE_PAGE_SIZE = 6;
+const REVIEW_PAGE_SIZE = 6;
+const BROWSE_PAGE_SIZE = 8;
 const NORMAL_PAIRS = 8;     //普通模式8对=16张，左2列英文，右2列中文
 const SENTENCE_PAIRS =4;    //句子模式4对=8张，每行2张
-
 
 function saveDb(){localStorage.setItem(DB_KEY, JSON.stringify(wordDb));}
 function saveSentenceDb(){localStorage.setItem(SENTENCE_DB_KEY, JSON.stringify(sentenceDb));}
@@ -427,12 +428,14 @@ function renderReview(){
         const remain = Math.max(0, w.nextReview - now);
         const remainText = formatMs(remain);
         const isNotDue = (now < w.nextReview) && w.level <8;
-        const phoneticHtml = w.phon ? `<div class="rev-phonetic">${w.phon}</div>` : "";
+        const phoneticHtml = w.phon ? `<span class="rev-phonetic">${w.phon}</span>` : "";
         html += `
         <div class="review-card ${isNotDue?"not-due":""}">
-            <div class="rev-word">${w.en}</div>
-            ${phoneticHtml}
-            <div class="rev-zh">${w.zh}</div>
+            <div class="rev-line">
+                <span class="rev-word">${w.en}</span>
+                ${phoneticHtml}
+                <span class="rev-zh">${w.zh}</span>
+            </div>
             <div class="rev-meta">📖等级：${LEVEL_TEXT[w.level]}｜⏱${isNotDue?"未到期":"到期可复习"}：${remainText}</div>
             <div class="rev-buttons">
                 <button class="btn btn-success" onclick="speakWord('${w.en}')">🔊朗读</button>
@@ -463,12 +466,14 @@ function renderBrowse(){
     const pageArr = list.slice(start, start + BROWSE_PAGE_SIZE);
     let html = "";
     pageArr.forEach(w=>{
-        let phoHtml = w.phon ? `<div class="b-pho">${w.phon}</div>` : "";
+        let phoHtml = w.phon ? `<span class="b-pho">${w.phon}</span>` : "";
         html +=`
         <div class="browse-card">
-            <div class="b-word">${w.en}</div>
-            ${phoHtml}
-            <div class="b-zh">${w.zh}</div>
+            <div class="b-line">
+                <span class="b-word">${w.en}</span>
+                ${phoHtml}
+                <span class="b-zh">${w.zh}</span>
+            </div>
             <div class="b-buttons">
                 <button class="btn btn-success" onclick="speakWord('${w.en}')">🔊朗读</button>
             </div>
