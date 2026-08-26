@@ -45,7 +45,6 @@ body{
     font-weight:bold;cursor:pointer;white-space:nowrap;
 }
 .stat-item.level-stat .number{background:linear-gradient(135deg,#ec4899,#f43f5e);color:#fff}
-
 .btn{padding:5px 10px;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;transition:transform .15s ease;color:#fff;display:inline-flex;align-items:center;gap:2px;touch-action:manipulation;white-space:nowrap;min-height:32px}
 .btn:active{transform:scale(.94)}
 .btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
@@ -96,7 +95,13 @@ body{
 .card.fail{animation:shake .3s ease;border-color:#ef4444}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
 
-.review-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:8px;padding:4px 2px;}
+.review-wrap{
+    flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    display:flex;flex-direction:column;gap:8px;padding:4px 2px;
+    opacity:1;
+    transition:opacity 0.25s ease;
+}
+.review-wrap.page-transition{opacity:0.35;}
 .review-top-bar{display:flex;align-items:center;gap:8px;padding:5px 8px;background:#ede9fe;border-radius:8px;flex-shrink:0;font-size:13px}
 .review-card{background:#fff;border-radius:8px;padding:8px 10px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
 .review-card.not-due{opacity:0.6;background:#f8f8f8}
@@ -118,7 +123,13 @@ body{
 .rev-meta{font-size:11px;color:#666;margin:4px 0;background:#f3f4f6;padding:2px 6px;border-radius:4px}
 .rev-buttons{display:flex;gap:6px;flex-wrap:wrap}
 
-.browse-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:8px;padding:4px 2px}
+.browse-wrap{
+    flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    display:flex;flex-direction:column;gap:8px;padding:4px 2px;
+    opacity:1;
+    transition:opacity 0.25s ease;
+}
+.browse-wrap.page-transition{opacity:0.35;}
 .browse-card{background:#fff;border-radius:8px;padding:10px 10px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
 .b-line{display:flex;flex-wrap:nowrap;gap:10px;align-items:center;font-size:19px;margin-bottom:6px;overflow-x:auto;padding-bottom:2px;}
 .b-word{font-weight:bold;color:#7c3aed;white-space:nowrap;-webkit-touch-callout:none;}
@@ -264,8 +275,8 @@ let reviewPage = 0;
 let browsePage = 0;
 const REVIEW_PAGE_SIZE = 6;
 const BROWSE_PAGE_SIZE = 8;
-const NORMAL_PAIRS = 8;     //普通模式8对=16张，左2列英文，右2列中文
-const SENTENCE_PAIRS =4;    //句子模式4对=8张，每行2张
+const NORMAL_PAIRS = 8;     //普通模式8对=16张，上面两行英文，下面两行中文
+const SENTENCE_PAIRS =4;    //句子模式4对=8张
 
 //长按朗读定时器
 let longPressTimer = null;
@@ -356,14 +367,18 @@ function updateUiVisible(){
     }
 }
 
-//绑定滑动手势
+//绑定滑动手势，翻页增加过渡class
 function bindSwipe(el, type){
     el.ontouchstart = (e)=>{
         touchStartX = e.changedTouches[0].screenX;
     };
     el.ontouchend = (e)=>{
         touchEndX = e.changedTouches[0].screenX;
-        handleSwipe(type);
+        el.classList.add("page-transition");
+        setTimeout(()=>{
+            handleSwipe(type);
+            setTimeout(()=>{el.classList.remove("page-transition");},250);
+        },50);
     }
 }
 
@@ -581,6 +596,16 @@ function renderBrowse(){
     bindSwipe(wrap, "browse");
 }
 
+//洗牌工具函数
+function shuffle(arr){
+    let tmp = [...arr];
+    for(let i=tmp.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [tmp[i],tmp[j]] = [tmp[j],tmp[i]];
+    }
+    return tmp;
+}
+
 function buildGame(){
     updateUiVisible();
     const grid = document.getElementById("gameGrid");
@@ -594,9 +619,9 @@ function buildGame(){
     }
     const shuffled = [...list].sort(()=>Math.random()-0.5);
     const pick = shuffled.slice(0,NORMAL_PAIRS);
-    //普通模式：前两列英文，后两列中文，英文全部放前面，中文放后面
-    let enCards = pick.map(w=>({text:w.en,type:"en",key:w.en}));
-    let zhCards = pick.map(w=>({text:w.zh,type:"zh",key:w.en}));
+    //上面两行英文（8张）行内打乱；下面两行中文（8张）行内打乱
+    let enCards = shuffle(pick.map(w=>({text:w.en,type:"en",key:w.en})));
+    let zhCards = shuffle(pick.map(w=>({text:w.zh,type:"zh",key:w.en})));
     let finalCards = [...enCards,...zhCards];
     game.cards = finalCards;
     finalCards.forEach((c)=>{
@@ -606,7 +631,6 @@ function buildGame(){
         div.dataset.key=c.key;
         div.dataset.type=c.type;
         div.onclick=()=>{
-            //点击英文卡片直接朗读
             if(c.type==="en") speakWord(c.text);
             flipCard(div,"word");
         }
@@ -627,8 +651,9 @@ function buildSentenceGame(){
     }
     const shuffled = [...senList].sort(()=>Math.random()-0.5);
     const pick = shuffled.slice(0,SENTENCE_PAIRS);
-    let enCards = pick.map((s)=> ({text:s.en,type:"sen-en",key:String(senList.indexOf(s))})).sort(()=>Math.random()-0.5);
-    let zhCards = pick.map((s)=> ({text:s.zh,type:"sen-zh",key:String(senList.indexOf(s))})).sort(()=>Math.random()-0.5);
+    //上面两行放英文句子卡片，行内打乱；下面两行放中文句子卡片，行内打乱
+    let enCards = shuffle(pick.map((s)=> ({text:s.en,type:"sen-en",key:String(senList.indexOf(s))})));
+    let zhCards = shuffle(pick.map((s)=> ({text:s.zh,type:"sen-zh",key:String(senList.indexOf(s))})));
     let finalCards = [...enCards,...zhCards];
     game.cards = finalCards;
     finalCards.forEach((c)=>{
