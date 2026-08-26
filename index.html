@@ -96,27 +96,36 @@ body{
 .card.fail{animation:shake .3s ease;border-color:#ef4444}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
 
-.review-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:6px;padding:4px 2px}
+.review-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:8px;padding:4px 2px;}
 .review-top-bar{display:flex;align-items:center;gap:8px;padding:5px 8px;background:#ede9fe;border-radius:8px;flex-shrink:0;font-size:13px}
-.review-card{background:#fff;border-radius:8px;padding:6px 8px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.review-card{background:#fff;border-radius:8px;padding:8px 10px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
 .review-card.not-due{opacity:0.6;background:#f8f8f8}
-.rev-line{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:15px;margin-bottom:4px;}
-.rev-word{font-weight:900;color:#d81b60;}
-.rev-phonetic{color:#3949ab;font-style:italic}
-.rev-zh{color:#00695c;font-weight:600}
-.rev-meta{font-size:10px;color:#666;margin-bottom:4px;background:#f3f4f6;padding:2px 4px;border-radius:4px}
-.rev-buttons{display:flex;gap:6px;flex-wrap:wrap}
-.rev-buttons .btn{font-size:11px;padding:2px 5px;min-height:24px}
-.nav-row{display:flex;gap:8px;margin-top:6px;justify-content:center;flex-shrink:0}
 
-.browse-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:6px;padding:4px 2px}
-.browse-card{background:#fff;border-radius:8px;padding:6px 8px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
-.b-line{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:15px;margin-bottom:4px;}
-.b-word{font-weight:bold;color:#7c3aed;}
-.b-pho{color:#777;font-style:italic}
-.b-zh{color:#b45309;}
-.b-buttons{display:flex;gap:6px;flex-wrap:wrap}
-.b-buttons .btn{font-size:11px;padding:2px 5px;min-height:24px}
+/* 全部同一行横向，支持横向滚动 */
+.rev-line{
+    display:flex;
+    flex-wrap:nowrap;
+    gap:6px;
+    align-items:center;
+    font-size:16px;
+    overflow-x:auto;
+    padding-bottom:4px;
+}
+.rev-word{font-weight:900;color:#d81b60;white-space:nowrap;-webkit-touch-callout:none;}
+.rev-phonetic{color:#3949ab;font-style:italic;white-space:nowrap}
+.rev-zh{color:#00695c;font-weight:600;white-space:nowrap}
+
+.rev-meta{font-size:11px;color:#666;margin:4px 0;background:#f3f4f6;padding:2px 6px;border-radius:4px}
+.rev-buttons{display:flex;gap:6px;flex-wrap:wrap}
+
+.browse-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:8px;padding:4px 2px}
+.browse-card{background:#fff;border-radius:8px;padding:10px 10px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.b-line{display:flex;flex-wrap:nowrap;gap:10px;align-items:center;font-size:19px;margin-bottom:6px;overflow-x:auto;padding-bottom:2px;}
+.b-word{font-weight:bold;color:#7c3aed;white-space:nowrap;-webkit-touch-callout:none;}
+.b-pho{color:#777;font-style:italic;white-space:nowrap}
+.b-zh{color:#b45309;white-space:nowrap;}
+
+.nav-row{display:flex;gap:10px;margin-top:8px;justify-content:center;flex-shrink:0}
 
 .panel{flex:1;background:#f9fafb;border-radius:10px;padding:10px 12px;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}
 .panel.active{display:block}
@@ -258,6 +267,33 @@ const BROWSE_PAGE_SIZE = 8;
 const NORMAL_PAIRS = 8;     //普通模式8对=16张，左2列英文，右2列中文
 const SENTENCE_PAIRS =4;    //句子模式4对=8张，每行2张
 
+//长按朗读定时器
+let longPressTimer = null;
+const LONG_PRESS_DELAY = 450;
+
+//滑动翻页变量
+let touchStartX = 0;
+let touchEndX = 0;
+const SWIPE_THRESHOLD = 60;
+
+//配对成功音效
+function playMatchSound(){
+    try{
+        const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime+0.12);
+        gain.gain.setValueAtTime(0.22, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.25);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime+0.25);
+    }catch(e){}
+}
+
 function saveDb(){localStorage.setItem(DB_KEY, JSON.stringify(wordDb));}
 function saveSentenceDb(){localStorage.setItem(SENTENCE_DB_KEY, JSON.stringify(sentenceDb));}
 function saveLevel(){
@@ -311,8 +347,44 @@ function updateUiVisible(){
         }else{
             gridEl.classList.add("grid","sentence-grid");
         }
-    }else if(appMode === "review") revEl.style.display = "flex";
-    else if(appMode === "browse") brEl.style.display = "flex";
+    }else if(appMode === "review") {
+        revEl.style.display = "flex";
+        bindSwipe(revEl, "review");
+    }else if(appMode === "browse") {
+        brEl.style.display = "flex";
+        bindSwipe(brEl, "browse");
+    }
+}
+
+//绑定滑动手势
+function bindSwipe(el, type){
+    el.ontouchstart = (e)=>{
+        touchStartX = e.changedTouches[0].screenX;
+    };
+    el.ontouchend = (e)=>{
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe(type);
+    }
+}
+
+function handleSwipe(type){
+    const diff = touchEndX - touchStartX;
+    if(Math.abs(diff) < SWIPE_THRESHOLD) return;
+    if(diff > 0){
+        //右滑 →上一页
+        if(type === "review"){
+            reviewPage--; renderReview();
+        }else{
+            browsePage--; renderBrowse();
+        }
+    }else{
+        //左滑 →下一页
+        if(type === "review"){
+            reviewPage++; renderReview();
+        }else{
+            browsePage++; renderBrowse();
+        }
+    }
 }
 
 function renderGroup(){
@@ -370,6 +442,21 @@ function speakWord(text){
     utt.rate = 0.85;
     speechSynthesis.speak(utt);
 }
+
+function bindLongPress(el, wordText){
+    el.addEventListener("mousedown",()=>{
+        longPressTimer = setTimeout(()=> speakWord(wordText), LONG_PRESS_DELAY);
+    });
+    el.addEventListener("mouseup",()=> clearTimeout(longPressTimer));
+    el.addEventListener("mouseleave",()=> clearTimeout(longPressTimer));
+
+    el.addEventListener("touchstart",(e)=>{
+        longPressTimer = setTimeout(()=> speakWord(wordText), LONG_PRESS_DELAY);
+    },{passive:true});
+    el.addEventListener("touchend",()=> clearTimeout(longPressTimer),{passive:true});
+    el.addEventListener("touchcancel",()=> clearTimeout(longPressTimer),{passive:true});
+}
+
 function wordRight(en){
     const idx = wordDb.findIndex(x=>x.en===en && (x.group||"默认")===getCurrentGroup());
     if(idx===-1) return;
@@ -432,16 +519,15 @@ function renderReview(){
         html += `
         <div class="review-card ${isNotDue?"not-due":""}">
             <div class="rev-line">
-                <span class="rev-word">${w.en}</span>
+                <span class="rev-word" data-word="${w.en}">${w.en}</span>
                 ${phoneticHtml}
                 <span class="rev-zh">${w.zh}</span>
+                <div class="rev-buttons">
+                    <button class="btn btn-success" onclick="handleRight('${w.en}')">✅记得</button>
+                    <button class="btn btn-danger" onclick="handleWrong('${w.en}')">❌忘记</button>
+                </div>
             </div>
             <div class="rev-meta">📖等级：${LEVEL_TEXT[w.level]}｜⏱${isNotDue?"未到期":"到期可复习"}：${remainText}</div>
-            <div class="rev-buttons">
-                <button class="btn btn-success" onclick="speakWord('${w.en}')">🔊朗读</button>
-                <button class="btn btn-success" onclick="handleRight('${w.en}')">✅记得</button>
-                <button class="btn btn-danger" onclick="handleWrong('${w.en}')">❌忘记</button>
-            </div>
         </div>`;
     });
     html += `<div class="nav-row">
@@ -450,6 +536,11 @@ function renderReview(){
         <button class="btn btn-success" ${reviewPage >= totalPages-1?"disabled":""} onclick="reviewPage++;renderReview()">下一页➡</button>
     </div>`;
     wrap.innerHTML = html;
+    //绑定长按朗读
+    wrap.querySelectorAll(".rev-word").forEach(dom=>{
+        bindLongPress(dom, dom.dataset.word);
+    })
+    bindSwipe(wrap, "review");
 }
 
 function renderBrowse(){
@@ -470,12 +561,9 @@ function renderBrowse(){
         html +=`
         <div class="browse-card">
             <div class="b-line">
-                <span class="b-word">${w.en}</span>
+                <span class="b-word" data-word="${w.en}">${w.en}</span>
                 ${phoHtml}
                 <span class="b-zh">${w.zh}</span>
-            </div>
-            <div class="b-buttons">
-                <button class="btn btn-success" onclick="speakWord('${w.en}')">🔊朗读</button>
             </div>
         </div>
         `
@@ -486,6 +574,11 @@ function renderBrowse(){
         <button class="btn btn-success" ${browsePage >= totalPages-1?"disabled":""} onclick="browsePage++;renderBrowse()">下一页➡</button>
     </div>`;
     wrap.innerHTML = html;
+    //绑定长按朗读
+    wrap.querySelectorAll(".b-word").forEach(dom=>{
+        bindLongPress(dom, dom.dataset.word);
+    })
+    bindSwipe(wrap, "browse");
 }
 
 function buildGame(){
@@ -512,12 +605,11 @@ function buildGame(){
         div.textContent=c.text;
         div.dataset.key=c.key;
         div.dataset.type=c.type;
-        let pressTimer=null;
-        div.onclick=()=>flipCard(div,"word");
-        div.addEventListener("pointerdown",()=>{
-            pressTimer=setTimeout(()=>{ if(c.type==="en") speakWord(c.text); },350)
-        })
-        div.addEventListener("pointerup pointerleave",()=>clearTimeout(pressTimer));
+        div.onclick=()=>{
+            //点击英文卡片直接朗读
+            if(c.type==="en") speakWord(c.text);
+            flipCard(div,"word");
+        }
         grid.appendChild(div);
     })
 }
@@ -545,12 +637,10 @@ function buildSentenceGame(){
         div.textContent=c.text;
         div.dataset.key=c.key;
         div.dataset.type=c.type;
-        let pressTimer=null;
-        div.onclick=()=>flipCard(div,"sentence");
-        div.addEventListener("pointerdown",()=>{
-            pressTimer=setTimeout(()=>{ if(c.type==="sen-en") speakWord(c.text); },400)
-        })
-        div.addEventListener("pointerup pointerleave",()=>clearTimeout(pressTimer));
+        div.onclick=()=>{
+            if(c.type==="sen-en") speakWord(c.text);
+            flipCard(div,"sentence");
+        }
         grid.appendChild(div);
     })
 }
@@ -567,6 +657,7 @@ function flipCard(el,modeType="word"){
         const matchKey = a.dataset.key;
         const match = a.dataset.key === b.dataset.key;
         if(match){
+            playMatchSound();
             a.classList.add("matched");b.classList.add("matched");
             if(modeType === "word") wordRight(matchKey);
             else sentenceRight(matchKey);
