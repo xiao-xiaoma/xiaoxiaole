@@ -38,7 +38,6 @@ body{
 .stat-item.highlight .number{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
 .stat-item.success .number{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
 .stat-item.mode-stat{gap:3px;position:relative}
-/* 当前模式显示按钮 */
 .current-mode-btn{
     font-size:12px;padding:3px 8px;border:none;border-radius:4px;
     color:#fff;background:linear-gradient(135deg,#8b5cf6,#7c3aed);
@@ -52,40 +51,40 @@ body{
 .btn-warning{background:linear-gradient(135deg,#f59e0b,#d97706)}
 .btn-purple{background:linear-gradient(135deg,#8b5cf6,#7c3aed)}
 .btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626)}
-/* 操作栏：关卡框放在最前面，横向并列 */
 .action-bar-wrap{display:flex;gap:6px;flex-shrink:0;padding:4px 0 6px 0;align-items:center;flex-wrap:wrap}
 .level-box{background:linear-gradient(135deg,#ec4899,#f43f5e);color:#fff;padding:0 10px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;flex-shrink:0;white-space:nowrap;}
 .action-bar{display:flex;gap:5px;flex:1;flex-wrap:wrap}
 .action-bar .btn{flex:1;justify-content:center;font-size:12px;padding:4px 4px;min-height:32px;border-radius:7px}
-/* 单词闯关网格：4列 */
 .grid.word-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1;min-height:0;align-content:start}
-/* 句子闯关网格：每行2张卡片 */
-.grid.sentence-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;flex:1;min-height:0;align-content:start}
+.grid.sentence-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;flex:1;min-height:0;align-content:start}
 .grid.hidden{display:none}
-
 .card{
     background:#f3f4f6;
     border:2px solid #e5e7eb;
     border-radius:10px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-    padding:6px;font-weight:700;cursor:pointer;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+    padding:12px 10px;
+    font-weight:700;cursor:pointer;
     transition:transform .18s ease, background .18s ease, border-color .18s ease;
-    user-select:none;word-break:break-word;position:relative;color:#1f2937;
-    line-height:1.2;-webkit-touch-callout:none;touch-action:manipulation;overflow:hidden;
+    user-select:none;word-break:break-word;word-wrap:break-word;position:relative;color:#1f2937;
+    line-height:1.4;-webkit-touch-callout:none;touch-action:manipulation;overflow:hidden;
 }
-/* 单词卡片正方形 */
 .word-grid .card{
     aspect-ratio:1;
     min-height:56px;
-    font-size:19px;
+    font-size:24px;
 }
-/* 句子卡片：拉长，不要固定宽高比 */
+.word-grid .card[data-type="zh"]{
+    font-size:16px;
+}
 .sentence-grid .card{
-    min-height:110px;
+    min-height:130px;
     height:auto;
     font-size:14px;
+    justify-content:flex-start;
+    align-items:flex-start;
+    text-align:left;
 }
-
 .card:active{transform:scale(.95)}
 .card.flipped{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-color:#667eea;transform:scale(1.01)}
 .card.matched{
@@ -97,8 +96,6 @@ body{
 .card.hidden{visibility:hidden;pointer-events:none}
 .card.fail{animation:shake .3s ease;border-color:#ef4444}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
-
-/* 星星飘落动画 */
 .star{
     position:absolute;
     font-size:20px;
@@ -110,7 +107,6 @@ body{
     0%{opacity:1;transform:translateY(0) scale(1);}
     100%{opacity:0;transform:translateY(-60px) scale(0.2);}
 }
-
 .review-wrap{
     flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
     display:flex;flex-direction:column;gap:8px;padding:4px 2px;
@@ -119,27 +115,22 @@ body{
 }
 .review-wrap.page-transition{opacity:0.35;}
 .review-top-bar{display:flex;align-items:center;gap:8px;padding:5px 8px;background:#ede9fe;border-radius:8px;flex-shrink:0;font-size:13px}
-.review-card{background:#fff;border-radius:8px;padding:8px 10px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.review-card{background:#fff;border-radius:8px;padding:10px 12px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
 .review-card.not-due{opacity:0.6;background:#f8f8f8}
 .review-card.error-word{border-left:6px solid #ef4444;}
-
-/* 全部同一行横向，支持横向滚动 */
-.rev-line{
+.rev-row{
     display:flex;
-    flex-wrap:nowrap;
-    gap:6px;
+    flex-wrap:wrap;
     align-items:center;
-    font-size:16px;
-    overflow-x:auto;
-    padding-bottom:4px;
+    gap:6px 10px;
+    margin-bottom:6px;
 }
-.rev-word{font-weight:900;color:#d81b60;white-space:nowrap;-webkit-touch-callout:none;}
-.rev-phonetic{color:#3949ab;font-style:italic;white-space:nowrap}
-.rev-zh{color:#00695c;font-weight:600;white-space:nowrap}
-
+.rev-word{font-weight:900;color:#c2185b !important;font-size:22px;}
+.rev-phonetic{color:#3949ab;font-style:italic;font-size:14px;}
+.rev-zh{color:#00796b;font-weight:600;font-size:15px;}
+.rev-buttons{display:flex;gap:10px;flex-wrap:wrap;}
+.rev-buttons .btn{flex:1;min-width:80px;}
 .rev-meta{font-size:11px;color:#666;margin:4px 0;background:#f3f4f6;padding:2px 6px;border-radius:4px}
-.rev-buttons{display:flex;gap:6px;flex-wrap:wrap}
-
 .browse-wrap{
     flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
     display:flex;flex-direction:column;gap:8px;padding:4px 2px;
@@ -147,14 +138,17 @@ body{
     transition:opacity 0.25s ease;
 }
 .browse-wrap.page-transition{opacity:0.35;}
-.browse-card{background:#fff;border-radius:8px;padding:10px 10px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
-.b-line{display:flex;flex-wrap:nowrap;gap:10px;align-items:center;font-size:19px;margin-bottom:6px;overflow-x:auto;padding-bottom:2px;}
-.b-word{font-weight:bold;color:#7c3aed;white-space:nowrap;-webkit-touch-callout:none;}
-.b-pho{color:#777;font-style:italic;white-space:nowrap}
-.b-zh{color:#b45309;white-space:nowrap;}
-
+.browse-card{background:#fff;border-radius:8px;padding:10px 12px;border:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.b-row{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:4px 8px;
+}
+.b-word{font-weight:bold;color:#c2185b !important;font-size:18px;}
+.b-pho{color:#777;font-style:italic;font-size:14px;}
+.b-zh{color:#00796b;font-size:15px;}
 .nav-row{display:flex;gap:10px;margin-top:8px;justify-content:center;flex-shrink:0}
-
 .panel{flex:1;background:#f9fafb;border-radius:10px;padding:10px 12px;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}
 .panel.active{display:block}
 .panel-title{font-size:14px;font-weight:700;color:#1f2937;margin-bottom:6px;position:sticky;top:0;background:#f9fafb;padding:4px 0 6px 0;z-index:10;border-bottom:2px solid #e5e7eb}
@@ -180,7 +174,7 @@ body{
         <div class="stat-item success"><span class="label">⏰待复习</span><span class="number" id="dueCount">0</span></div>
         <div class="stat-item mode-stat">
             <span class="label">🎯模式</span>
-            <button class="current-mode-btn" id="currentModeBtn">单词闯关</button>
+            <button class="current-mode-btn" id="currentModeBtn">闯关</button>
         </div>
     </div>
 
@@ -202,8 +196,8 @@ body{
 
     <div class="panel" id="managePanel">
         <h3 class="panel-title">📚词库管理</h3>
-        <div class="hint">单词格式：英文,音标,中文｜句子格式：英文句子,中文句子</div>
-        <textarea id="wordInput" placeholder="apple,/ˈæpl/,苹果&#10;I like cat,我喜欢猫"></textarea>
+        <div class="hint">单词导入格式：英文；音标、中文1、中文2｜句子格式：英文句子+中文句子</div>
+        <textarea id="wordInput" placeholder="pour；/pɔː(r)/；灌、倒、流出&#10;sore；/sɔː(r)/；疼痛的、痛处"></textarea>
         <div class="input-group">
             <input id="groupNameInput" placeholder="分组名称">
             <button class="btn btn-success" id="importBtn">📥导入</button>
@@ -212,669 +206,664 @@ body{
             <button class="btn btn-warning" id="resetAllBtn">🔄重置全部</button>
             <button class="btn btn-purple" id="resetReviewBtn">🔄重置记忆进度</button>
             <button class="btn btn-danger" id="resetLevelBtn">🎖重置关卡</button>
+            <button class="btn btn-danger" id="delGroupAllBtn">🗑删除本组内容</button>
         </div>
     </div>
 </div>
-   <script>
- const EBBINGHAUS = [
-       5*60*1000,
-       30*60*1000,
-       12*60*60*1000,
-       24*60*60*1000,
-       2*24*60*60*1000,
-       4*24*60*60*1000,
-       7*24*60*60*1000,
-       15*24*60*60*1000
-   ];
- const LEVEL_TEXT = ["初次学习","5分钟","30分钟","12小时","1天","2天","4天","7天","✅已掌握"];
+<script>
+const EBBINGHAUS = [
+        5*60*1000,
+        30*60*1000,
+        12*60*60*1000,
+        24*60*60*1000,
+        2*24*60*60*1000,
+        4*24*60*60*1000,
+        7*24*60*60*1000,
+        15*24*60*60*1000
+];
+const LEVEL_TEXT = ["初次学习","5分钟","30分钟","12小时","1天","2天","4天","7天","✅已掌握"];
 
- const BASE = [
-       {en:"apple",phon:"/ˈæpl/",zh:"苹果",group:"默认",level:0,nextReview:0},
-       {en:"banana",phon:"/bəˈnɑːnə/",zh:"香蕉",group:"默认",level:0,nextReview:0},
-       {en:"book",phon:"/bʊk/",zh:"书",group:"默认",level:0,nextReview:0},
-       {en:"pen",phon:"/pen/",zh:"钢笔",group:"默认",level:0,nextReview:0},
-       {en:"sun",phon:"/sʌn/",zh:"太阳",group:"默认",level:0,nextReview:0},
-       {en:"moon",phon:"/muːn/",zh:"月亮",group:"默认",level:0,nextReview:0},
-       {en:"water",phon:"/ˈwɔːtə(r)/",zh:"水",group:"默认",level:0,nextReview:0},
-       {en:"milk",phon:"/mɪlk/",zh:"牛奶",group:"默认",level:0,nextReview:0},
-       {en:"bread",phon:"/bred/",zh:"面包",group:"默认",level:0,nextReview:0},
-       {en:"rice",phon:"/raɪs/",zh:"米饭",group:"默认",level:0,nextReview:0},
-       {en:"red",phon:"/red/",zh:"红色",group:"默认",level:0,nextReview:0},
-       {en:"blue",phon:"/bluː/",zh:"蓝色",group:"默认",level:0,nextReview:0},
-       {en:"yellow",phon:"/ˈjeləʊ/",zh:"黄色",group:"默认",level:0,nextReview:0},
-       {en:"green",phon:"/ɡriːn/",zh:"绿色",group:"默认",level:0,nextReview:0},
-       {en:"one",phon:"/wʌn/",zh:"一",group:"默认",level:0,nextReview:0},
-       {en:"two",phon:"/tuː/",zh:"二",group:"默认",level:0,nextReview:0},
-       {en:"happy",phon:"/ˈhæpi/",zh:"开心的",group:"默认",level:0,nextReview:0},
-       {en:"sad",phon:"/sæd/",zh:"难过的",group:"默认",level:0,nextReview:0},
-       {en:"big",phon:"/bɪɡ/",zh:"大的",group:"默认",level:0,nextReview:0},
-       {en:"small",phon:"/smɔːl/",zh:"小的",group:"默认",level:0,nextReview:0},
-       {en:"cat",phon:"/kæt/",zh:"猫",group:"动物",level:0,nextReview:0},
-       {en:"dog",phon:"/dɒɡ/",zh:"狗",group:"动物",level:0,nextReview:0},
-       {en:"bird",phon:"/bɜːd/",zh:"鸟",group:"动物",level:0,nextReview:0},
-       {en:"fish",phon:"/fɪʃ/",zh:"鱼",group:"动物",level:0,nextReview:0},
-       {en:"tiger",phon:"/ˈtaɪɡə(r)/",zh:"老虎",group:"动物",level:0,nextReview:0},
-       {en:"lion",phon:"/ˈlaɪən/",zh:"狮子",group:"动物",level:0,nextReview:0},
-       {en:"panda",phon:"/ˈpændə/",zh:"熊猫",group:"动物",level:0,nextReview:0},
-       {en:"rabbit",phon:"/ˈræbɪt/",zh:"兔子",group:"动物",level:0,nextReview:0},
-       {en:"monkey",phon:"/ˈmʌŋki/",zh:"猴子",group:"动物",level:0,nextReview:0},
-       {en:"elephant",phon:"/ˈelɪfənt/",zh:"大象",group:"动物",level:0,nextReview:0}
-   ];
- const SENTENCE_BASE = [
-       {en:"I get up early.",zh:"我起得很早。",group:"句子库",level:0,nextReview:0},
-       {en:"She likes reading books.",zh:"她喜欢读书。",group:"句子库",level:0,nextReview:0},
-       {en:"It is raining outside.",zh:"外面正在下雨。",group:"句子库",level:0,nextReview:0},
-       {en:"We will go shopping.",zh:"我们将要去购物。",group:"句子库",level:0,nextReview:0},
-       {en:"He drinks milk every day.",zh:"他每天喝牛奶。",group:"句子库",level:0,nextReview:0},
-       {en:"The sky is blue.",zh:"天空是蓝色的。",group:"句子库",level:0,nextReview:0},
-       {en:"Cats love fish.",zh:"猫爱吃鱼。",group:"句子库",level:0,nextReview:0},
-       {en:"Time flies fast.",zh:"时光飞逝。",group:"句子库",level:0,nextReview:0},
-   ];
+const BASE = [
+        {en:"apple",phon:"/ˈæpl/",zh:"苹果",group:"默认",level:0,nextReview:0},
+        {en:"banana",phon:"/bəˈnɑːnə/",zh:"香蕉",group:"默认",level:0,nextReview:0},
+        {en:"book",phon:"/bʊk/",zh:"书",group:"默认",level:0,nextReview:0},
+        {en:"pen",phon:"/pen/",zh:"钢笔",group:"默认",level:0,nextReview:0},
+        {en:"sun",phon:"/sʌn/",zh:"太阳",group:"默认",level:0,nextReview:0},
+        {en:"moon",phon:"/muːn/",zh:"月亮",group:"默认",level:0,nextReview:0},
+        {en:"water",phon:"/ˈwɔːtə(r)/",zh:"水",group:"默认",level:0,nextReview:0},
+        {en:"milk",phon:"/mɪlk/",zh:"牛奶",group:"默认",level:0,nextReview:0},
+        {en:"bread",phon:"/bred/",zh:"面包",group:"默认",level:0,nextReview:0},
+        {en:"rice",phon:"/raɪs/",zh:"米饭",group:"默认",level:0,nextReview:0},
+        {en:"red",phon:"/red/",zh:"红色",group:"默认",level:0,nextReview:0},
+        {en:"blue",phon:"/bluː/",zh:"蓝色",group:"默认",level:0,nextReview:0},
+        {en:"yellow",phon:"/ˈjeləʊ/",zh:"黄色",group:"默认",level:0,nextReview:0},
+        {en:"green",phon:"/ɡriːn/",zh:"绿色",group:"默认",level:0,nextReview:0},
+        {en:"one",phon:"/wʌn/",zh:"一",group:"默认",level:0,nextReview:0},
+        {en:"two",phon:"/tuː/",zh:"二",group:"默认",level:0,nextReview:0},
+        {en:"happy",phon:"/ˈhæpi/",zh:"开心的",group:"默认",level:0,nextReview:0},
+        {en:"sad",phon:"/sæd/",zh:"难过的",group:"默认",level:0,nextReview:0},
+        {en:"big",phon:"/bɪɡ/",zh:"大的",group:"默认",level:0,nextReview:0},
+        {en:"small",phon:"/smɔːl/",zh:"小的",group:"默认",level:0,nextReview:0},
+];
 
- const DB_KEY = "wordGameDbV7";
- const SENTENCE_DB_KEY = "sentenceGameDbV1";
- const LEVEL_STORE_KEY = "wordGameCurrentLevel";
- const ERROR_WORD_KEY = "wordGameErrorWordsV1";
+const SENTENCE_BASE = [
+        {en:"I get up early.",zh:"我起得很早。",group:"句子库",level:0,nextReview:0},
+        {en:"She likes reading books.",zh:"她喜欢读书。",group:"句子库",level:0,nextReview:0},
+        {en:"It is raining outside.",zh:"外面正在下雨。",group:"句子库",level:0,nextReview:0},
+        {en:"We will go shopping.",zh:"我们将要去购物。",group:"句子库",level:0,nextReview:0},
+        {en:"He drinks milk every day.",zh:"他每天喝牛奶。",group:"句子库",level:0,nextReview:0},
+        {en:"The sky is blue.",zh:"天空是蓝色的。",group:"句子库",level:0,nextReview:0},
+        {en:"Cats love fish.",zh:"猫爱吃鱼。",group:"句子库",level:0,nextReview:0},
+        {en:"Time flies fast.",zh:"时光飞逝。",group:"句子库",level:0,nextReview:0},
+];
 
- let wordDb = JSON.parse(localStorage.getItem(DB_KEY)) || JSON.parse(JSON.stringify(BASE));
- let sentenceDb = JSON.parse(localStorage.getItem(SENTENCE_DB_KEY)) || JSON.parse(JSON.stringify(SENTENCE_BASE));
- let errorWordSet = new Set(JSON.parse(localStorage.getItem(ERROR_WORD_KEY) || "[]"));
- let currentLevel = Number(localStorage.getItem(LEVEL_STORE_KEY)) || 1;
+const DB_KEY = "wordGameDbV7";
+const SENTENCE_DB_KEY = "sentenceGameDbV1";
+const LEVEL_STORE_KEY = "wordGameCurrentLevel";
+const ERROR_WORD_KEY = "wordGameErrorWordsV1";
 
- let game = {cards:[],flipped:[],locked:false,matched:0};
- //模式循环顺序
- const MODE_ORDER = ["normal","review","browse","sentence"];
- const modeNameMap = {normal:"闯关",review:"复习",browse:"浏览",sentence:"句闯"};
- let currentModeIndex = 0;
- let appMode = MODE_ORDER[currentModeIndex];
+let wordDb = JSON.parse(localStorage.getItem(DB_KEY)) || JSON.parse(JSON.stringify(BASE));
+let sentenceDb = JSON.parse(localStorage.getItem(SENTENCE_DB_KEY)) || JSON.parse(JSON.stringify(SENTENCE_BASE));
+let errorWordSet = new Set(JSON.parse(localStorage.getItem(ERROR_WORD_KEY) || "[]"));
+let currentLevel = Number(localStorage.getItem(LEVEL_STORE_KEY)) || 1;
 
- let reviewPage = 0;
- let browsePage = 0;
- const REVIEW_PAGE_SIZE = 6;
- const BROWSE_PAGE_SIZE = 8;
- const NORMAL_PAIRS = 8;     //普通模式8对=16张
- const SENTENCE_PAIRS =4;    //句子模式4对=8张
+let game = {cards:[],flipped:[],locked:false,matched:0};
+const MODE_ORDER = ["normal","review","browse","sentence"];
+const modeNameMap = {normal:"闯关",review:"复习",browse:"浏览",sentence:"句闯"};
+let currentModeIndex = 0;
+let appMode = MODE_ORDER[currentModeIndex];
 
- //长按朗读定时器
- let longPressTimer = null;
- const LONG_PRESS_DELAY = 450;
+let reviewPage = 0;
+let browsePage = 0;
+const REVIEW_PAGE_SIZE = 6;
+const BROWSE_PAGE_SIZE = 8;
+const NORMAL_PAIRS = 8;
+const SENTENCE_PAIRS =4;
 
- //滑动翻页变量
- let touchStartX = 0;
- let touchEndX = 0;
- const SWIPE_THRESHOLD = 60;
+let longPressTimer = null;
+const LONG_PRESS_DELAY = 450;
+let touchStartX = 0;
+let touchEndX = 0;
+const SWIPE_THRESHOLD = 60;
 
- //错题持久化
- function saveErrorWords(){
-     localStorage.setItem(ERROR_WORD_KEY, JSON.stringify([...errorWordSet]));
- }
- function addErrorWord(en){
-     errorWordSet.add(en);
-     saveErrorWords();
- }
- function removeErrorWord(en){
-     errorWordSet.delete(en);
-     saveErrorWords();
- }
+function saveErrorWords(){
+    localStorage.setItem(ERROR_WORD_KEY, JSON.stringify([...errorWordSet]));
+}
+function addErrorWord(en){
+    errorWordSet.add(en);
+    saveErrorWords();
+}
+function removeErrorWord(en){
+    errorWordSet.delete(en);
+    saveErrorWords();
+}
 
- //生成星星
- function spawnStar(el){
-     for(let i=0;i<3;i++){
-         const star = document.createElement("span");
-         star.className="star";
-         star.textContent="✨";
-         star.style.left = (10 + Math.random()*60)+"%";
-         star.style.top="10%";
-         el.appendChild(star);
-         setTimeout(()=>star.remove(),700);
-     }
- }
+function spawnStar(el){
+    for(let i=0;i<3;i++){
+        const star = document.createElement("span");
+        star.className="star";
+        star.textContent="✨";
+        star.style.left = (10 + Math.random()*60)+"%";
+        star.style.top="10%";
+        el.appendChild(star);
+        setTimeout(()=>star.remove(),700);
+    }
+}
 
- //计算当前分组总关卡：单词数 /8，向上取整
- function calcTotalLevel(){
-       const g = getCurrentGroup();
-       const cnt = wordDb.filter(w=>(w.group||"默认")===g).length;
-       if(cnt <=0) return 1;
-       return Math.ceil(cnt / NORMAL_PAIRS);
- }
+function calcTotalLevel(){
+  const g = getCurrentGroup();
+  const cnt = wordDb.filter(w=>(w.group||"默认")===g).length;
+  if(cnt <=0) return 1;
+  return Math.ceil(cnt / NORMAL_PAIRS);
+}
 
- //配对成功音效
- function playMatchSound(){
-       try{
-           const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-           const osc = audioCtx.createOscillator();
-           const gain = audioCtx.createGain();
-           osc.connect(gain);
-           gain.connect(audioCtx.destination);
-           osc.type = "sine";
-           osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-           osc.frequency.setValueAtTime(880, audioCtx.currentTime+0.12);
-           gain.gain.setValueAtTime(0.22, audioCtx.currentTime);
-           gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.25);
-           osc.start(audioCtx.currentTime);
-           osc.stop(audioCtx.currentTime+0.25);
-       }catch(e){}
- }
+function playMatchSound(){
+  try{
+      const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime+0.12);
+      gain.gain.setValueAtTime(0.22, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.25);
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime+0.25);
+  }catch(e){}
+}
 
- function saveDb(){localStorage.setItem(DB_KEY, JSON.stringify(wordDb));}
- function saveSentenceDb(){localStorage.setItem(SENTENCE_DB_KEY, JSON.stringify(sentenceDb));}
- function saveLevel(){
-       const maxLvl = calcTotalLevel();
-       currentLevel = Math.min(currentLevel, maxLvl);
-       localStorage.setItem(LEVEL_STORE_KEY, String(currentLevel));
-       updateLevelUi();
- }
+function saveDb(){localStorage.setItem(DB_KEY, JSON.stringify(wordDb));}
+function saveSentenceDb(){localStorage.setItem(SENTENCE_DB_KEY, JSON.stringify(sentenceDb));}
+function saveLevel(){
+    const maxLvl = calcTotalLevel();
+    currentLevel = Math.min(currentLevel, maxLvl);
+    localStorage.setItem(LEVEL_STORE_KEY, String(currentLevel));
+    updateLevelUi();
+}
 
- function updateLevelUi(){
-       const totalLvl = calcTotalLevel();
-       document.getElementById("levelCount").textContent = currentLevel;
-       document.getElementById("totalLevelCount").textContent = totalLvl;
- }
+function updateLevelUi(){
+    const totalLvl = calcTotalLevel();
+    document.getElementById("levelCount").textContent = currentLevel;
+    document.getElementById("totalLevelCount").textContent = totalLvl;
+}
 
- function updateModeStatText(){
-       document.getElementById("currentModeBtn").textContent = modeNameMap[appMode];
- }
+function updateModeStatText(){
+    document.getElementById("currentModeBtn").textContent = modeNameMap[appMode];
+}
 
- //点击按钮循环切换模式
- const modeBtn = document.getElementById("currentModeBtn");
- modeBtn.onclick = ()=>{
-       currentModeIndex = (currentModeIndex +1) % MODE_ORDER.length;
-       const nextMode = MODE_ORDER[currentModeIndex];
-       switchMode(nextMode);
- };
+const modeBtn = document.getElementById("currentModeBtn");
+modeBtn.onclick = ()=>{
+  currentModeIndex = (currentModeIndex +1) % MODE_ORDER.length;
+  const nextMode = MODE_ORDER[currentModeIndex];
+  switchMode(nextMode);
+};
 
- function switchMode(mode){
-       appMode = mode;
-       reviewPage =0; browsePage=0;
-       if(mode === "normal") buildGame();
-       else if(mode === "review") renderReview();
-       else if(mode === "browse") renderBrowse();
-       else if(mode === "sentence") buildSentenceGame();
-       updateUiVisible(); updateDueCount(); updateModeStatText();
- }
+function switchMode(mode){
+   appMode = mode;
+   reviewPage =0; browsePage=0;
+   if(mode === "normal") buildGame();
+   else if(mode === "review") renderReview();
+   else if(mode === "browse") renderBrowse();
+   else if(mode === "sentence") buildSentenceGame();
+   updateUiVisible(); updateDueCount(); updateModeStatText();
+}
 
- document.getElementById("showAllWordToggle").onchange = ()=>{ reviewPage=0; renderReview(); };
+document.getElementById("showAllWordToggle").onchange = ()=>{ reviewPage=0; renderReview(); };
 
- function updateUiVisible(){
-       const gridEl = document.getElementById("gameGrid");
-       const revEl = document.getElementById("reviewView");
-       const brEl = document.getElementById("browseView");
-       gridEl.style.display = "none";
-       revEl.style.display = "none";
-       brEl.style.display = "none";
-       gridEl.className = "";
+function updateUiVisible(){
+    const gridEl = document.getElementById("gameGrid");
+    const revEl = document.getElementById("reviewView");
+    const brEl = document.getElementById("browseView");
+    gridEl.style.display = "none";
+    revEl.style.display = "none";
+    brEl.style.display = "none";
+    gridEl.className = "";
 
-        if(appMode === "normal" || appMode === "sentence"){
-           gridEl.style.display = "grid";
-           if(appMode === "normal"){
-               gridEl.classList.add("grid","word-grid");
+    if(appMode === "normal" || appMode === "sentence"){
+          gridEl.style.display = "grid";
+          if(appMode === "normal"){
+              gridEl.classList.add("grid","word-grid");
+          }else{
+              gridEl.classList.add("grid","sentence-grid");
+          }
+      }else if(appMode === "review") {
+          revEl.style.display = "flex";
+          bindSwipe(revEl, "review");
+      }else if(appMode === "browse") {
+          brEl.style.display = "flex";
+          bindSwipe(brEl, "browse");
+      }
+}
+
+function bindSwipe(el, type){
+    el.ontouchstart = (e)=>{
+        touchStartX = e.changedTouches[0].screenX;
+    };
+    el.ontouchend = (e)=>{
+        touchEndX = e.changedTouches[0].screenX;
+        el.classList.add("page-transition");
+        setTimeout(()=>{
+            handleSwipe(type);
+            setTimeout(()=>{el.classList.remove("page-transition");},250);
+        },50);
+    }
+}
+
+function handleSwipe(type){
+    const diff = touchEndX - touchStartX;
+    if(Math.abs(diff) < SWIPE_THRESHOLD) return;
+    if(diff > 0){
+        if(type === "review"){
+            reviewPage--; renderReview();
+        }else{
+            browsePage--; renderBrowse();
+        }
+    }else{
+        if(type === "review"){
+            reviewPage++; renderReview();
+        }else{
+            browsePage++; renderBrowse();
+        }
+    }
+}
+
+function renderGroup(){
+    const sel = document.getElementById("groupSelect");
+    const wordGroups = [...new Set(wordDb.map(i=>i.group||"默认"))];
+    const senGroups = [...new Set(sentenceDb.map(i=>i.group||"句子库"))];
+    const allGroups = Array.from(new Set([...wordGroups,...senGroups]));
+    sel.innerHTML="";
+    allGroups.forEach(g=>{
+        const opt=document.createElement("option");
+        opt.value=g;opt.textContent=g;sel.appendChild(opt);
+    })
+    document.getElementById("totalCount").textContent = wordDb.length + sentenceDb.length;
+    updateDueCount();
+    updateLevelUi();
+    updateModeStatText();
+}
+
+function getCurrentGroup(){ return document.getElementById("groupSelect").value || "默认"; }
+
+function getDueWords(){
+    const g = getCurrentGroup();
+    const now = Date.now();
+    return wordDb.filter(w=>{
+        const grp = w.group||"默认";
+        if(grp !== g) return false;
+        if(w.level >=8) return false;
+        return now >= w.nextReview;
+    })
+}
+function getAllGroupWords(){ const g=getCurrentGroup(); return wordDb.filter(w=>(w.group||"默认")===g); }
+function getAllGroupSentences(){ const g=getCurrentGroup(); return sentenceDb.filter(s=>(s.group||"句子库")===g); }
+
+function updateDueCount(){
+    const due = getDueWords();
+    document.getElementById("dueCount").textContent = due.length;
+}
+
+function formatMs(ms){
+    if(ms<=0) return "立即复习";
+    let s = Math.floor(ms/1000);
+    if(s<60) return s+"秒";
+    let m=Math.floor(s/60);s=s%60;
+    if(m<60) return m+"分"+s+"秒";
+    let h=Math.floor(m/60);m=m%60;
+    if(h<24) return h+"时"+m+"分";
+    let d=Math.floor(h/24);h=h%24;
+    return d+"天"+h+"时";
+}
+
+function speakWord(text){
+    speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = "en-US";
+    utt.rate = 0.85;
+    speechSynthesis.speak(utt);
+}
+
+function bindLongPress(el, wordText){
+    el.addEventListener("mousedown",()=>{
+        longPressTimer = setTimeout(()=> speakWord(wordText), LONG_PRESS_DELAY);
+    });
+    el.addEventListener("mouseup",()=> clearTimeout(longPressTimer));
+    el.addEventListener("mouseleave",()=> clearTimeout(longPressTimer));
+
+    el.addEventListener("touchstart",(e)=>{
+          longPressTimer = setTimeout(()=> speakWord(wordText), LONG_PRESS_DELAY);
+      },{passive:true});
+      el.addEventListener("touchend",()=> clearTimeout(longPressTimer),{passive:true});
+      el.addEventListener("touchcancel",()=> clearTimeout(longPressTimer),{passive:true});
+}
+
+function wordRight(en){
+    const idx = wordDb.findIndex(x=>x.en===en && (x.group||"默认")===getCurrentGroup());
+    if(idx===-1) return;
+    let w = wordDb[idx];
+    if(w.level < EBBINGHAUS.length){
+        w.nextReview = Date.now() + EBBINGHAUS[w.level];
+        w.level +=1;
+    }else w.level =8;
+    removeErrorWord(en);
+    saveDb(); updateDueCount();
+}
+function wordWrong(en){
+    const idx = wordDb.findIndex(x=>x.en===en && (x.group||"默认")===getCurrentGroup());
+    if(idx===-1) return;
+    let w = wordDb[idx];
+    w.level =0; w.nextReview = 0;
+    addErrorWord(en);
+    saveDb(); updateDueCount();
+}
+function sentenceRight(key){
+    const idx = Number(key);
+    if(!sentenceDb[idx])return;
+    let s = sentenceDb[idx];
+    if(s.level < EBBINGHAUS.length){
+        s.nextReview = Date.now() + EBBINGHAUS[s.level];
+        s.level +=1;
+    }else s.level=8;
+    saveSentenceDb();
+}
+function sentenceWrong(key){
+    const idx = Number(key);
+    if(!sentenceDb[idx])return;
+    let s = sentenceDb[idx];
+    s.level =0;s.nextReview=0;
+    saveSentenceDb();
+}
+
+function handleRight(en){ wordRight(en); renderReview(); }
+function handleWrong(en){ wordWrong(en); renderReview(); }
+
+function renderReview(){
+    const wrap = document.getElementById("reviewView");
+    const showAll = document.getElementById("showAllWordToggle").checked;
+    let sourceList;
+    const g = getCurrentGroup();
+    const groupAll = getAllGroupWords();
+    const now = Date.now();
+          if(showAll){
+              sourceList = [...groupAll];
            }else{
-               gridEl.classList.add("grid","sentence-grid");
+               sourceList = groupAll.filter(w=>{
+                   if(w.level >=8) return false;
+                   return now >= w.nextReview;
+               })
            }
-       }else if(appMode === "review") {
-           revEl.style.display = "flex";
-           bindSwipe(revEl, "review");
-       }else if(appMode === "browse") {
-           brEl.style.display = "flex";
-           bindSwipe(brEl, "browse");
-       }
- }
+          sourceList.sort((a,b)=>{
+              const aErr = errorWordSet.has(a.en) ? 1 :0;
+              const bErr = errorWordSet.has(b.en) ?1:0;
+              return bErr - aErr;
+          })
+          const total = sourceList.length;
+             const topBarDom = wrap.querySelector(".review-top-bar").outerHTML;
+             if(total === 0){
+               wrap.innerHTML = topBarDom + `<div class="empty-state"><span class="emoji">✅</span><p>${showAll?"本分组没有单词":"当前分组暂无到期复习单词"}</p><p style="font-size:12px;color:#888">可去闯关模式做配对，生成复习计划</p></div>`;
+               return;
+            }
+             const totalPages = Math.ceil(total / REVIEW_PAGE_SIZE);
+             reviewPage = Math.max(0, Math.min(reviewPage, totalPages-1));
+             const start = reviewPage * REVIEW_PAGE_SIZE;
+             const pageData = sourceList.slice(start, start + REVIEW_PAGE_SIZE);
 
- //绑定滑动手势，翻页增加过渡class
- function bindSwipe(el, type){
-       el.ontouchstart = (e)=>{
-           touchStartX = e.changedTouches[0].screenX;
-       };
-       el.ontouchend = (e)=>{
-           touchEndX = e.changedTouches[0].screenX;
-           el.classList.add("page-transition");
-           setTimeout(()=>{
-               handleSwipe(type);
-               setTimeout(()=>{el.classList.remove("page-transition");},250);
-           },50);
-       }
- }
+             let html = topBarDom;
+            pageData.forEach(w=>{
+                 const remain = Math.max(0, w.nextReview - now);
+                 const remainText = formatMs(remain);
+                 const isNotDue = (now < w.nextReview) && w.level <8;
+                 const isErr = errorWordSet.has(w.en);
+                 const phoneticHtml = w.phon ? `<span class="rev-phonetic">${w.phon}</span>` : "";
+                 html += `
+                 <div class="review-card ${isNotDue?"not-due":""} ${isErr?"error-word":""}">
+                     <div class="rev-row">
+                         <span class="rev-word" data-word="${w.en}">${w.en}</span>
+                         ${phoneticHtml}
+                         <span class="rev-zh">${w.zh}</span>
+                         <div class="rev-buttons">
+                             <button class="btn btn-success" onclick="handleRight('${w.en}')">✅记得</button>
+                             <button class="btn btn-danger" onclick="handleWrong('${w.en}')">❌忘记</button>
+                         </div>
+                     </div>
+                     <div class="rev-meta">📖等级：${LEVEL_TEXT[w.level]}${isErr?"｜🔴错题":""}｜⏱${isNotDue?"未到期":"到期可复习"}：${remainText}</div>
+                 </div>`;
+             });
+                 html += `<div class="nav-row">
+                 <button class="btn btn-success" ${reviewPage<=0?"disabled":""} onclick="reviewPage--;renderReview()">⬅上一页</button>
+                 <span style="align-self:center">${reviewPage+1}/${totalPages}</span>
+                 <button class="btn btn-success" ${reviewPage >= totalPages-1?"disabled":""} onclick="reviewPage++;renderReview()">下一页➡</button>
+             </div>`;
+             wrap.innerHTML = html;
+             wrap.querySelectorAll(".rev-word").forEach(dom=>{
+                 bindLongPress(dom, dom.dataset.word);
+             })
+             bindSwipe(wrap, "review");
+}
 
- function handleSwipe(type){
-       const diff = touchEndX - touchStartX;
-       if(Math.abs(diff) < SWIPE_THRESHOLD) return;
-       if(diff > 0){
-           //右滑 →上一页
-           if(type === "review"){
-               reviewPage--; renderReview();
-           }else{
-               browsePage--; renderBrowse();
-           }
-       }else{
-           //左滑 →下一页
-           if(type === "review"){
-               reviewPage++; renderReview();
-           }else{
-               browsePage++; renderBrowse();
-           }
-       }
- }
+function renderBrowse(){
+    const wrap = document.getElementById("browseView");
+    const list = getAllGroupWords();
+    const total = list.length;
+    if(total === 0){
+        wrap.innerHTML = `<div class="empty-state"><span class="emoji">📖</span><p>当前分组暂无单词，请导入单词</p></div>`;
+        return;
+    }
+    const totalPages = Math.ceil(total / BROWSE_PAGE_SIZE);
+    browsePage = Math.max(0, Math.min(browsePage, totalPages-1));
+    const start = browsePage * BROWSE_PAGE_SIZE;
+    const pageArr = list.slice(start, start + BROWSE_PAGE_SIZE);
+    let html = "";
+    pageArr.forEach(w=>{
+        let phoHtml = w.phon ? `<span class="b-pho">${w.phon}</span>` : "";
+        html +=`
+        <div class="browse-card">
+            <div class="b-row">
+                <span class="b-word" data-word="${w.en}">${w.en}</span>
+                ${phoHtml}
+                <span class="b-zh">${w.zh}</span>
+            </div>
+        </div>
+        `
+    })
+    html += `<div class="nav-row">
+        <button class="btn btn-success" ${browsePage<=0?"disabled":""} onclick="browsePage--;renderBrowse()">⬅上一页</button>
+        <span style="align-self:center">${browsePage+1}/${totalPages} 共${total}词</span>
+        <button class="btn btn-success" ${browsePage >= totalPages-1?"disabled":""} onclick="browsePage++;renderBrowse()">下一页➡</button>
+    </div>`;
+    wrap.innerHTML = html;
+    wrap.querySelectorAll(".b-word").forEach(dom=>{
+        bindLongPress(dom, dom.dataset.word);
+    })
+    bindSwipe(wrap, "browse");
+}
 
- function renderGroup(){
-       const sel = document.getElementById("groupSelect");
-       const wordGroups = [...new Set(wordDb.map(i=>i.group||"默认"))];
-       const senGroups = [...new Set(sentenceDb.map(i=>i.group||"句子库"))];
-       const allGroups = Array.from(new Set([...wordGroups,...senGroups]));
-       sel.innerHTML="";
-       allGroups.forEach(g=>{
-           const opt=document.createElement("option");
-           opt.value=g;opt.textContent=g;sel.appendChild(opt);
-       })
-       document.getElementById("totalCount").textContent = wordDb.length + sentenceDb.length;
-       updateDueCount();
-       updateLevelUi();
-       updateModeStatText();
- }
+function shuffle(arr){
+    let tmp = [...arr];
+    for(let i=tmp.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [tmp[i],tmp[j]] = [tmp[j],tmp[i]];
+    }
+    return tmp;
+}
 
- function getCurrentGroup(){ return document.getElementById("groupSelect").value || "默认"; }
+function buildGame(){
+    updateUiVisible();
+    const grid = document.getElementById("gameGrid");
+    grid.innerHTML="";
+    game.matched = 0; game.flipped=[];game.locked=false;
+    const g = getCurrentGroup();
+    const list = wordDb.filter(w=>(w.group||"默认")===g);
+    if(list.length < NORMAL_PAIRS){
+        grid.innerHTML=`<div class="empty-state"><span class="emoji">📖</span><p>当前分组单词至少需要${NORMAL_PAIRS}个，请导入更多单词</p></div>`;
+        return;
+    }
+    const shuffled = [...list].sort(()=>Math.random()-0.5);
+    const pick = shuffled.slice(0,NORMAL_PAIRS);
+    let enCards = shuffle(pick.map(w=>({text:w.en,type:"en",key:w.en})));
+    let zhCards = shuffle(pick.map(w=>({text:w.zh,type:"zh",key:w.en})));
+    let finalCards = [...enCards,...zhCards];
+    game.cards = finalCards;
+    finalCards.forEach((c)=>{
+        const div=document.createElement("div");
+        div.className="card";
+        div.textContent=c.text;
+        div.dataset.key=c.key;
+        div.dataset.type=c.type;
+        div.onclick=()=>{
+            if(c.type==="en") speakWord(c.text);
+            flipCard(div,"word");
+        }
+        grid.appendChild(div);
+    })
+}
 
- function getDueWords(){
-       const g = getCurrentGroup();
-       const now = Date.now();
-       return wordDb.filter(w=>{
-           const grp = w.group||"默认";
-           if(grp !== g) return false;
-           if(w.level >=8) return false;
-           return now >= w.nextReview;
-       })
- }
- function getAllGroupWords(){ const g=getCurrentGroup(); return wordDb.filter(w=>(w.group||"默认")===g); }
- function getAllGroupSentences(){ const g=getCurrentGroup(); return sentenceDb.filter(s=>(s.group||"句子库")===g); }
+function buildSentenceGame(){
+    updateUiVisible();
+    const grid = document.getElementById("gameGrid");
+    grid.innerHTML="";
+    game.matched =0; game.flipped=[];game.locked=false;
+    const g = getCurrentGroup();
+    const senList = sentenceDb.filter(s=>(s.group||"句子库")===g);
+    if(senList.length < SENTENCE_PAIRS){
+        grid.innerHTML=`<div class="empty-state"><span class="emoji">📝</span><p>句子库至少需要${SENTENCE_PAIRS}条句子，请导入句子</p></div>`;
+        return;
+    }
+    const shuffled = [...senList].sort(()=>Math.random()-0.5);
+    const pick = shuffled.slice(0,SENTENCE_PAIRS);
+    let enCards = shuffle(pick.map((s)=> ({text:s.en,type:"sen-en",key:String(senList.indexOf(s))})));
+    let zhCards = shuffle(pick.map((s)=> ({text:s.zh,type:"sen-zh",key:String(senList.indexOf(s))})));
+    let finalCards = [...enCards,...zhCards];
+    game.cards = finalCards;
+    finalCards.forEach((c)=>{
+        const div=document.createElement("div");
+        div.className="card";
+        div.textContent=c.text;
+        div.dataset.key=c.key;
+        div.dataset.type=c.type;
+        div.onclick=()=>{
+            if(c.type==="sen-en") speakWord(c.text);
+            flipCard(div,"sentence");
+        }
+        grid.appendChild(div);
+    })
+}
 
- function updateDueCount(){
-       const due = getDueWords();
-       document.getElementById("dueCount").textContent = due.length;
- }
+function flipCard(el,modeType="word"){
+    if(game.locked) return;
+    if(el.classList.contains("flipped")) return;
+    el.classList.add("flipped");
+    game.flipped.push(el);
+    if(game.flipped.length===2){
+        game.locked=true;
+        const a=game.flipped[0];
+        const b=game.flipped[1];
+        const matchKey = a.dataset.key;
+        const match = a.dataset.key === b.dataset.key;
+        if(match){
+            playMatchSound();
+            a.classList.add("matched");b.classList.add("matched");
+            spawnStar(a);
+            spawnStar(b);
+            if(modeType === "word") wordRight(matchKey);
+            else sentenceRight(matchKey);
+            setTimeout(()=>{
+                a.classList.add("hidden");b.classList.add("hidden");
+                game.flipped=[];game.locked=false;
+                const remain = document.querySelectorAll(".card:not(.hidden)");
+                if(remain.length===0){
+                    const maxLvl = calcTotalLevel();
+                    if(currentLevel < maxLvl) currentLevel +=1;
+                    saveLevel();
+                    setTimeout(()=>{
+                        if(appMode==="sentence") buildSentenceGame();
+                        else buildGame();
+                    },750);
+                }
+            },400)
+        }else{
+            a.classList.add("fail");b.classList.add("fail");
+            setTimeout(()=>{
+                a.classList.remove("flipped","fail");
+                b.classList.remove("flipped","fail");
+                game.flipped=[];game.locked=false;
+            },450)
+        }
+    }
+}
 
- function formatMs(ms){
-       if(ms<=0) return "立即复习";
-       let s = Math.floor(ms/1000);
-       if(s<60) return s+"秒";
-       let m=Math.floor(s/60);s=s%60;
-       if(m<60) return m+"分"+s+"秒";
-       let h=Math.floor(m/60);m=m%60;
-       if(h<24) return h+"时"+m+"分";
-       let d=Math.floor(h/24);h=h%24;
-       return d+"天"+h+"时";
- }
+document.getElementById("importBtn").onclick=()=>{
+    const text = document.getElementById("wordInput").value.trim();
+    const gname = document.getElementById("groupNameInput").value.trim()||"默认";
+    if(!text){alert("请粘贴单词/句子");return;}
+    const lines = text.split("\n");
+    let importCount = 0;
+    lines.forEach(line=>{
+        line=line.trim();
+        if(!line) return;
+        if(line.includes("+")){
+            const sp = line.split("+");
+            const enSen = sp[0].trim();
+            const zhSen = sp[1].trim();
+            if(enSen && zhSen){
+                sentenceDb.push({en:enSen,zh:zhSen,group:gname,level:0,nextReview:0});
+                importCount++;
+            }
+        }else{
+            const sp = line.split("；");
+            if(sp.length >=3){
+                let en = sp[0].trim();
+                let phon = sp[1].trim();
+                let zh = sp.slice(2).join("，").trim();
+                if(en && zh){
+                    wordDb.push({en,phon,zh,group:gname,level:0,nextReview:0});
+                    importCount++;
+                }
+            }
+        }
+    })
+    saveDb(); saveSentenceDb();
+    renderGroup();
+    if(appMode==="review") renderReview();
+    else if(appMode==="browse") renderBrowse();
+    else if(appMode==="sentence") buildSentenceGame();
+    else buildGame();
+    alert(`✅导入完成，共导入${importCount}条`);
+};
 
- function speakWord(text){
-       speechSynthesis.cancel();
-       const utt = new SpeechSynthesisUtterance(text);
-       utt.lang = "en-US";
-       utt.rate = 0.85;
-       speechSynthesis.speak(utt);
- }
+document.getElementById("restartBtn").onclick=()=>{
+    reviewPage=0; browsePage=0;
+    if(appMode==="review") renderReview();
+    else if(appMode==="browse") renderBrowse();
+    else if(appMode==="sentence") buildSentenceGame();
+    else buildGame();
+};
+document.getElementById("manageBtn").onclick=()=> document.getElementById("managePanel").classList.toggle("active");
+document.getElementById("resetLevelBtn").onclick = function(){
+    if(confirm("确定把关卡重置回第1关吗？记忆进度不受影响")){
+        currentLevel =1; saveLevel();
+    }
+};
 
- function bindLongPress(el, wordText){
-       el.addEventListener("mousedown",()=>{
-           longPressTimer = setTimeout(()=> speakWord(wordText), LONG_PRESS_DELAY);
-       });
-       el.addEventListener("mouseup",()=> clearTimeout(longPressTimer));
-       el.addEventListener("mouseleave",()=> clearTimeout(longPressTimer));
+document.getElementById("resetAllBtn").onclick=()=>{
+    if(confirm("⚠️重置全部为内置测试单词&句子，自定义内容、记忆进度、错题全部丢失？")){
+        wordDb=JSON.parse(JSON.stringify(BASE));
+        sentenceDb=JSON.parse(JSON.stringify(SENTENCE_BASE));
+        errorWordSet.clear();
+        saveErrorWords();
+        saveDb(); saveSentenceDb();
+        currentLevel=1; saveLevel();
+        renderGroup(); reviewPage=0;browsePage=0;
+        if(appMode==="review") renderReview();
+        else if(appMode==="browse") renderBrowse();
+        else if(appMode==="sentence") buildSentenceGame();
+        else buildGame();
+    }
+};
 
-        el.addEventListener("touchstart",(e)=>{
-           longPressTimer = setTimeout(()=> speakWord(wordText), LONG_PRESS_DELAY);
-       },{passive:true});
-       el.addEventListener("touchend",()=> clearTimeout(longPressTimer),{passive:true});
-       el.addEventListener("touchcancel",()=> clearTimeout(longPressTimer),{passive:true});
- }
+document.getElementById("resetReviewBtn").onclick = function(){
+    if(confirm("⚠️重置所有单词、句子记忆等级为【初次学习】，复习时间清零，错题本清空？")){
+        wordDb.forEach(w=>{w.level=0;w.nextReview=0;});
+        sentenceDb.forEach(s=>{s.level=0;s.nextReview=0;});
+        errorWordSet.clear();
+        saveErrorWords();
+        saveDb(); saveSentenceDb(); updateDueCount();
+        if(appMode === "review") renderReview();
+    }
+};
 
- function wordRight(en){
-       const idx = wordDb.findIndex(x=>x.en===en && (x.group||"默认")===getCurrentGroup());
-       if(idx===-1) return;
-       let w = wordDb[idx];
-       if(w.level < EBBINGHAUS.length){
-           w.nextReview = Date.now() + EBBINGHAUS[w.level];
-           w.level +=1;
-       }else w.level =8;
-       removeErrorWord(en);
-       saveDb(); updateDueCount();
- }
- function wordWrong(en){
-       const idx = wordDb.findIndex(x=>x.en===en && (x.group||"默认")===getCurrentGroup());
-       if(idx===-1) return;
-       let w = wordDb[idx];
-       w.level =0; w.nextReview = 0;
-       addErrorWord(en);
-       saveDb(); updateDueCount();
- }
- function sentenceRight(key){
-       const idx = Number(key);
-       if(!sentenceDb[idx])return;
-       let s = sentenceDb[idx];
-       if(s.level < EBBINGHAUS.length){
-           s.nextReview = Date.now() + EBBINGHAUS[s.level];
-           s.level +=1;
-       }else s.level=8;
-       saveSentenceDb();
- }
- function sentenceWrong(key){
-       const idx = Number(key);
-       if(!sentenceDb[idx])return;
-       let s = sentenceDb[idx];
-       s.level =0;s.nextReview=0;
-       saveSentenceDb();
- }
+document.getElementById("delGroupAllBtn").onclick=()=>{
+    const g = getCurrentGroup();
+    if(!confirm(`⚠️确定删除分组【${g}】全部单词+句子？不可恢复！`)) return;
+    wordDb = wordDb.filter(w=>(w.group||"默认")!==g);
+    sentenceDb = sentenceDb.filter(s=>(s.group||"句子库")!==g);
+    saveDb(); saveSentenceDb();
+    renderGroup();
+    reviewPage=0;browsePage=0;
+    if(appMode==="review") renderReview();
+    else if(appMode==="browse") renderBrowse();
+    else if(appMode==="sentence") buildSentenceGame();
+    else buildGame();
+    alert("本组全部内容已删除");
+}
 
- function handleRight(en){ wordRight(en); renderReview(); }
- function handleWrong(en){ wordWrong(en); renderReview(); }
+document.getElementById("groupSelect").onchange=()=>{
+    game.flipped=[];game.locked=false;
+    reviewPage = 0; browsePage =0;
+    updateDueCount(); updateLevelUi();
+    if(appMode==="review") renderReview();
+    else if(appMode==="browse") renderBrowse();
+    else if(appMode==="sentence") buildSentenceGame();
+    else buildGame();
+};
 
- function renderReview(){
-       const wrap = document.getElementById("reviewView");
-       const showAll = document.getElementById("showAllWordToggle").checked;
-       let sourceList;
-       const g = getCurrentGroup();
-       const groupAll = getAllGroupWords();
-       const now = Date.now();
-
-       if(showAll){
-           sourceList = [...groupAll];
-       }else{
-           sourceList = groupAll.filter(w=>{
-               if(w.level >=8) return false;
-               return now >= w.nextReview;
-           })
-       }
-       // 排序：**错题优先排最前面**
-       sourceList.sort((a,b)=>{
-           const aErr = errorWordSet.has(a.en) ? 1 :0;
-           const bErr = errorWordSet.has(b.en) ?1:0;
-           return bErr - aErr;
-       })
-
-       const total = sourceList.length;
-       const topBarDom = wrap.querySelector(".review-top-bar").outerHTML;
-       if(total === 0){
-           wrap.innerHTML = topBarDom + `<div class="empty-state"><span class="emoji">✅</span><p>${showAll?"本分组没有单词":"当前分组暂无到期复习单词"}</p><p style="font-size:12px;color:#888">可去闯关模式做配对，生成复习计划</p></div>`;
-           return;
-       }
-       const totalPages = Math.ceil(total / REVIEW_PAGE_SIZE);
-       reviewPage = Math.max(0, Math.min(reviewPage, totalPages-1));
-       const start = reviewPage * REVIEW_PAGE_SIZE;
-       const pageData = sourceList.slice(start, start + REVIEW_PAGE_SIZE);
-
-       let html = topBarDom;
-       pageData.forEach(w=>{
-           const remain = Math.max(0, w.nextReview - now);
-           const remainText = formatMs(remain);
-           const isNotDue = (now < w.nextReview) && w.level <8;
-           const isErr = errorWordSet.has(w.en);
-           const phoneticHtml = w.phon ? `<span class="rev-phonetic">${w.phon}</span>` : "";
-           html += `
-           <div class="review-card ${isNotDue?"not-due":""} ${isErr?"error-word":""}">
-               <div class="rev-line">
-                   <span class="rev-word" data-word="${w.en}">${w.en}</span>
-                   ${phoneticHtml}
-                   <span class="rev-zh">${w.zh}</span>
-                   <div class="rev-buttons">
-                       <button class="btn btn-success" onclick="handleRight('${w.en}')">✅记得</button>
-                       <button class="btn btn-danger" onclick="handleWrong('${w.en}')">❌忘记</button>
-                   </div>
-               </div>
-               <div class="rev-meta">📖等级：${LEVEL_TEXT[w.level]}${isErr?"｜🔴错题":""}｜⏱${isNotDue?"未到期":"到期可复习"}：${remainText}</div>
-           </div>`;
-       });
-       html += `<div class="nav-row">
-           <button class="btn btn-success" ${reviewPage<=0?"disabled":""} onclick="reviewPage--;renderReview()">⬅上一页</button>
-           <span style="align-self:center">${reviewPage+1}/${totalPages}</span>
-           <button class="btn btn-success" ${reviewPage >= totalPages-1?"disabled":""} onclick="reviewPage++;renderReview()">下一页➡</button>
-       </div>`;
-       wrap.innerHTML = html;
-       //绑定长按朗读
-       wrap.querySelectorAll(".rev-word").forEach(dom=>{
-           bindLongPress(dom, dom.dataset.word);
-       })
-       bindSwipe(wrap, "review");
- }
-
- function renderBrowse(){
-       const wrap = document.getElementById("browseView");
-       const list = getAllGroupWords();
-       const total = list.length;
-       if(total === 0){
-           wrap.innerHTML = `<div class="empty-state"><span class="emoji">📖</span><p>当前分组暂无单词，请导入单词</p></div>`;
-           return;
-       }
-       const totalPages = Math.ceil(total / BROWSE_PAGE_SIZE);
-       browsePage = Math.max(0, Math.min(browsePage, totalPages-1));
-       const start = browsePage * BROWSE_PAGE_SIZE;
-       const pageArr = list.slice(start, start + BROWSE_PAGE_SIZE);
-       let html = "";
-       pageArr.forEach(w=>{
-           let phoHtml = w.phon ? `<span class="b-pho">${w.phon}</span>` : "";
-           html +=`
-           <div class="browse-card">
-               <div class="b-line">
-                   <span class="b-word" data-word="${w.en}">${w.en}</span>
-                   ${phoHtml}
-                   <span class="b-zh">${w.zh}</span>
-               </div>
-           </div>
-           `
-       })
-       html += `<div class="nav-row">
-           <button class="btn btn-success" ${browsePage<=0?"disabled":""} onclick="browsePage--;renderBrowse()">⬅上一页</button>
-           <span style="align-self:center">${browsePage+1}/${totalPages} 共${total}词</span>
-           <button class="btn btn-success" ${browsePage >= totalPages-1?"disabled":""} onclick="browsePage++;renderBrowse()">下一页➡</button>
-       </div>`;
-       wrap.innerHTML = html;
-       //绑定长按朗读
-       wrap.querySelectorAll(".b-word").forEach(dom=>{
-           bindLongPress(dom, dom.dataset.word);
-       })
-       bindSwipe(wrap, "browse");
- }
-
- //洗牌工具函数
- function shuffle(arr){
-       let tmp = [...arr];
-       for(let i=tmp.length-1;i>0;i--){
-           const j = Math.floor(Math.random()*(i+1));
-           [tmp[i],tmp[j]] = [tmp[j],tmp[i]];
-       }
-       return tmp;
- }
-
- function buildGame(){
-       updateUiVisible();
-       const grid = document.getElementById("gameGrid");
-       grid.innerHTML="";
-       game.matched = 0; game.flipped=[];game.locked=false;
-       const g = getCurrentGroup();
-       const list = wordDb.filter(w=>(w.group||"默认")===g);
-       if(list.length < NORMAL_PAIRS){
-           grid.innerHTML=`<div class="empty-state"><span class="emoji">📖</span><p>当前分组单词至少需要${NORMAL_PAIRS}个，请导入更多单词</p></div>`;
-           return;
-       }
-       const shuffled = [...list].sort(()=>Math.random()-0.5);
-       const pick = shuffled.slice(0,NORMAL_PAIRS);
-       //上面两行英文（8张）行内打乱；下面两行中文（8张）行内打乱
-       let enCards = shuffle(pick.map(w=>({text:w.en,type:"en",key:w.en})));
-       let zhCards = shuffle(pick.map(w=>({text:w.zh,type:"zh",key:w.en})));
-       let finalCards = [...enCards,...zhCards];
-       game.cards = finalCards;
-       finalCards.forEach((c)=>{
-           const div=document.createElement("div");
-           div.className="card";
-           div.textContent=c.text;
-           div.dataset.key=c.key;
-           div.dataset.type=c.type;
-           div.onclick=()=>{
-               if(c.type==="en") speakWord(c.text);
-               flipCard(div,"word");
-           }
-           grid.appendChild(div);
-       })
- }
-
- function buildSentenceGame(){
-       updateUiVisible();
-       const grid = document.getElementById("gameGrid");
-       grid.innerHTML="";
-       game.matched =0; game.flipped=[];game.locked=false;
-       const g = getCurrentGroup();
-       const senList = sentenceDb.filter(s=>(s.group||"句子库")===g);
-       if(senList.length < SENTENCE_PAIRS){
-           grid.innerHTML=`<div class="empty-state"><span class="emoji">📝</span><p>句子库至少需要${SENTENCE_PAIRS}条句子，请导入句子</p></div>`;
-           return;
-       }
-       const shuffled = [...senList].sort(()=>Math.random()-0.5);
-       const pick = shuffled.slice(0,SENTENCE_PAIRS);
-       //上面两行放英文句子卡片，行内打乱；下面两行放中文句子卡片，行内打乱
-       let enCards = shuffle(pick.map((s)=> ({text:s.en,type:"sen-en",key:String(senList.indexOf(s))})));
-       let zhCards = shuffle(pick.map((s)=> ({text:s.zh,type:"sen-zh",key:String(senList.indexOf(s))})));
-       let finalCards = [...enCards,...zhCards];
-       game.cards = finalCards;
-       finalCards.forEach((c)=>{
-           const div=document.createElement("div");
-           div.className="card";
-           div.textContent=c.text;
-           div.dataset.key=c.key;
-           div.dataset.type=c.type;
-           div.onclick=()=>{
-               if(c.type==="sen-en") speakWord(c.text);
-               flipCard(div,"sentence");
-           }
-           grid.appendChild(div);
-       })
- }
-
- function flipCard(el,modeType="word"){
-       if(game.locked) return;
-       if(el.classList.contains("flipped")) return;
-       el.classList.add("flipped");
-       game.flipped.push(el);
-       if(game.flipped.length===2){
-           game.locked=true;
-           const a=game.flipped[0];
-           const b=game.flipped[1];
-           const matchKey = a.dataset.key;
-           const match = a.dataset.key === b.dataset.key;
-           if(match){
-               playMatchSound();
-               a.classList.add("matched");b.classList.add("matched");
-               spawnStar(a);
-               spawnStar(b);
-               if(modeType === "word") wordRight(matchKey);
-               else sentenceRight(matchKey);
-               setTimeout(()=>{
-                   a.classList.add("hidden");b.classList.add("hidden");
-                   game.flipped=[];game.locked=false;
-                   const remain = document.querySelectorAll(".card:not(.hidden)");
-                   if(remain.length===0){
-                       const maxLvl = calcTotalLevel();
-                       if(currentLevel < maxLvl) currentLevel +=1;
-                       saveLevel();
-                       setTimeout(()=>{
-                           if(appMode==="sentence") buildSentenceGame();
-                           else buildGame();
-                       },750);
-                   }
-               },400)
-           }else{
-               //配对失败：加入错题本
-               if(modeType==="word"){
-                   addErrorWord(matchKey);
-               }
-               a.classList.add("fail");b.classList.add("fail");
-               setTimeout(()=>{
-                   a.classList.remove("flipped","fail");
-                   b.classList.remove("flipped","fail");
-                   game.flipped=[];game.locked=false;
-               },450)
-           }
-       }
- }
-
- document.getElementById("restartBtn").onclick=()=>{
-       reviewPage=0; browsePage=0;
-       if(appMode==="review") renderReview();
-       else if(appMode==="browse") renderBrowse();
-       else if(appMode==="sentence") buildSentenceGame();
-       else buildGame();
- };
- document.getElementById("manageBtn").onclick=()=> document.getElementById("managePanel").classList.toggle("active");
- document.getElementById("resetLevelBtn").onclick = function(){
-       if(confirm("确定把关卡重置回第1关吗？记忆进度不受影响")){
-           currentLevel =1; saveLevel();
-       }
- };
- document.getElementById("importBtn").onclick=()=>{
-       const text = document.getElementById("wordInput").value.trim();
-       const gname = document.getElementById("groupNameInput").value.trim()||"默认";
-       if(!text){alert("请粘贴单词/句子");return;}
-       const lines = text.split("\n");
-       lines.forEach(line=>{
-           line=line.trim();
-           if(!line) return;
-           const sp = line.split(/[,，]/);
-           if(sp.length >=2){
-               if(sp.length >=3){
-                   let en = sp[0].trim();
-                   let phon = sp[1].trim();
-                   let zh = sp[2].trim();
-                   wordDb.push({en,phon,zh,group:gname,level:0,nextReview:0});
-               }else{
-                   let enSen = sp[0].trim();
-                   let zhSen = sp[1].trim();
-                   sentenceDb.push({en:enSen,zh:zhSen,group:gname,level:0,nextReview:0});
-               }
-           }
-       })
-       saveDb(); saveSentenceDb();
-       renderGroup();
-       if(appMode==="review") renderReview();
-       else if(appMode==="browse") renderBrowse();
-       else if(appMode==="sentence") buildSentenceGame();
-       else buildGame();
-       alert("✅导入完成！");
- };
- document.getElementById("resetAllBtn").onclick=()=>{
-       if(confirm("⚠️重置全部为内置测试单词&句子，自定义内容、记忆进度、错题全部丢失？")){
-           wordDb=JSON.parse(JSON.stringify(BASE));
-           sentenceDb=JSON.parse(JSON.stringify(SENTENCE_BASE));
-           errorWordSet.clear();
-           saveErrorWords();
-           saveDb(); saveSentenceDb();
-           currentLevel=1; saveLevel();
-           renderGroup(); reviewPage=0;browsePage=0;
-           if(appMode==="review") renderReview();
-           else if(appMode==="browse") renderBrowse();
-           else if(appMode==="sentence") buildSentenceGame();
-           else buildGame();
-       }
- };
- document.getElementById("resetReviewBtn").onclick = function(){
-       if(confirm("⚠️重置所有单词、句子记忆等级为【初次学习】，复习时间清零，错题本清空？")){
-           wordDb.forEach(w=>{w.level=0;w.nextReview=0;});
-           sentenceDb.forEach(s=>{s.level=0;s.nextReview=0;});
-           errorWordSet.clear();
-           saveErrorWords();
-           saveDb(); saveSentenceDb(); updateDueCount();
-           if(appMode === "review") renderReview();
-       }
- };
- document.getElementById("groupSelect").onchange=()=>{
-       game.flipped=[];game.locked=false;
-       reviewPage = 0; browsePage =0;
-       updateDueCount(); updateLevelUi();
-       if(appMode==="review") renderReview();
-       else if(appMode==="browse") renderBrowse();
-       else if(appMode==="sentence") buildSentenceGame();
-       else buildGame();
- };
-
- document.addEventListener("DOMContentLoaded",()=>{
-       renderGroup();
-       if(appMode === "sentence") buildSentenceGame();
-       else buildGame();
- })
- </script>
+document.addEventListener("DOMContentLoaded",()=>{
+    renderGroup();
+    if(appMode === "sentence") buildSentenceGame();
+    else buildGame();
+})
+</script>
 </body>
 </html>
