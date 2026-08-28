@@ -63,19 +63,28 @@ body{
     border:2px solid #e5e7eb;
     border-radius:10px;
     display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
-    padding:12px 10px;
+    padding:8px 6px;
     font-weight:700;cursor:pointer;
     transition:transform .18s ease, background .18s ease, border-color .18s ease;
-    user-select:none;word-break:break-word;word-wrap:break-word;position:relative;color:#1f2937;
-    line-height:1.4;-webkit-touch-callout:none;touch-action:manipulation;overflow:hidden;
+    user-select:none;
+    word-break:break-all;
+    word-wrap:break-word;
+    position:relative;color:#1f2937;
+    line-height:1.35;
+    -webkit-touch-callout:none;touch-action:manipulation;overflow:hidden;
 }
 .word-grid .card{
     aspect-ratio:1;
     min-height:56px;
-    font-size:24px;
+}
+.word-grid .card[data-type="en"]{
+    /* JS动态控制字号，css只控制换行 */
+    white-space:normal;
 }
 .word-grid .card[data-type="zh"]{
-    font-size:16px;
+    font-size:13px;
+    line-height:1.45;
+    white-space:normal;
 }
 .sentence-grid .card{
     min-height:130px;
@@ -187,11 +196,13 @@ body{
     </div>
 
     <div id="gameGrid"></div>
+
     <div id="reviewView" class="review-wrap" style="display:none;">
         <div class="review-top-bar">
             <label><input type="checkbox" id="showAllWordToggle"> 强制显示全部单词(无视到期)</label>
         </div>
     </div>
+
     <div id="browseView" class="browse-wrap" style="display:none;"></div>
 
     <div class="panel" id="managePanel">
@@ -244,7 +255,7 @@ const BASE = [
         {en:"sad",phon:"/sæd/",zh:"难过的",group:"默认",level:0,nextReview:0},
         {en:"big",phon:"/bɪɡ/",zh:"大的",group:"默认",level:0,nextReview:0},
         {en:"small",phon:"/smɔːl/",zh:"小的",group:"默认",level:0,nextReview:0},
-];
+ ];
 
 const SENTENCE_BASE = [
         {en:"I get up early.",zh:"我起得很早。",group:"句子库",level:0,nextReview:0},
@@ -255,7 +266,7 @@ const SENTENCE_BASE = [
         {en:"The sky is blue.",zh:"天空是蓝色的。",group:"句子库",level:0,nextReview:0},
         {en:"Cats love fish.",zh:"猫爱吃鱼。",group:"句子库",level:0,nextReview:0},
         {en:"Time flies fast.",zh:"时光飞逝。",group:"句子库",level:0,nextReview:0},
-];
+ ];
 
 const DB_KEY = "wordGameDbV7";
 const SENTENCE_DB_KEY = "sentenceGameDbV1";
@@ -318,20 +329,20 @@ function calcTotalLevel(){
 }
 
 function playMatchSound(){
-  try{
-      const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-      osc.frequency.setValueAtTime(880, audioCtx.currentTime+0.12);
-      gain.gain.setValueAtTime(0.22, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.25);
-      osc.start(audioCtx.currentTime);
-      osc.stop(audioCtx.currentTime+0.25);
-  }catch(e){}
+    try{
+        const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime+0.12);
+        gain.gain.setValueAtTime(0.22, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.25);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime+0.25);
+    }catch(e){}
 }
 
 function saveDb(){localStorage.setItem(DB_KEY, JSON.stringify(wordDb));}
@@ -355,9 +366,9 @@ function updateModeStatText(){
 
 const modeBtn = document.getElementById("currentModeBtn");
 modeBtn.onclick = ()=>{
-  currentModeIndex = (currentModeIndex +1) % MODE_ORDER.length;
-  const nextMode = MODE_ORDER[currentModeIndex];
-  switchMode(nextMode);
+    currentModeIndex = (currentModeIndex +1) % MODE_ORDER.length;
+    const nextMode = MODE_ORDER[currentModeIndex];
+    switchMode(nextMode);
 };
 
 function switchMode(mode){
@@ -382,19 +393,19 @@ function updateUiVisible(){
     gridEl.className = "";
 
     if(appMode === "normal" || appMode === "sentence"){
-          gridEl.style.display = "grid";
-          if(appMode === "normal"){
-              gridEl.classList.add("grid","word-grid");
-          }else{
-              gridEl.classList.add("grid","sentence-grid");
-          }
-      }else if(appMode === "review") {
-          revEl.style.display = "flex";
-          bindSwipe(revEl, "review");
-      }else if(appMode === "browse") {
-          brEl.style.display = "flex";
-          bindSwipe(brEl, "browse");
-      }
+         gridEl.style.display = "grid";
+         if(appMode === "normal"){
+             gridEl.classList.add("grid","word-grid");
+         }else{
+             gridEl.classList.add("grid","sentence-grid");
+         }
+    }else if(appMode === "review") {
+        revEl.style.display = "flex";
+        bindSwipe(revEl, "review");
+    }else if(appMode === "browse") {
+        brEl.style.display = "flex";
+        bindSwipe(brEl, "browse");
+    }
 }
 
 function bindSwipe(el, type){
@@ -493,10 +504,10 @@ function bindLongPress(el, wordText){
     el.addEventListener("mouseleave",()=> clearTimeout(longPressTimer));
 
     el.addEventListener("touchstart",(e)=>{
-          longPressTimer = setTimeout(()=> speakWord(wordText), LONG_PRESS_DELAY);
-      },{passive:true});
-      el.addEventListener("touchend",()=> clearTimeout(longPressTimer),{passive:true});
-      el.addEventListener("touchcancel",()=> clearTimeout(longPressTimer),{passive:true});
+        longPressTimer = setTimeout(()=> speakWord(wordText), LONG_PRESS_DELAY);
+    },{passive:true});
+    el.addEventListener("touchend",()=> clearTimeout(longPressTimer),{passive:true});
+    el.addEventListener("touchcancel",()=> clearTimeout(longPressTimer),{passive:true});
 }
 
 function wordRight(en){
@@ -546,61 +557,67 @@ function renderReview(){
     const g = getCurrentGroup();
     const groupAll = getAllGroupWords();
     const now = Date.now();
-          if(showAll){
-              sourceList = [...groupAll];
-           }else{
-               sourceList = groupAll.filter(w=>{
-                   if(w.level >=8) return false;
-                   return now >= w.nextReview;
-               })
-           }
-          sourceList.sort((a,b)=>{
-              const aErr = errorWordSet.has(a.en) ? 1 :0;
-              const bErr = errorWordSet.has(b.en) ?1:0;
-              return bErr - aErr;
-          })
-          const total = sourceList.length;
-             const topBarDom = wrap.querySelector(".review-top-bar").outerHTML;
-             if(total === 0){
-               wrap.innerHTML = topBarDom + `<div class="empty-state"><span class="emoji">✅</span><p>${showAll?"本分组没有单词":"当前分组暂无到期复习单词"}</p><p style="font-size:12px;color:#888">可去闯关模式做配对，生成复习计划</p></div>`;
-               return;
-            }
-             const totalPages = Math.ceil(total / REVIEW_PAGE_SIZE);
-             reviewPage = Math.max(0, Math.min(reviewPage, totalPages-1));
-             const start = reviewPage * REVIEW_PAGE_SIZE;
-             const pageData = sourceList.slice(start, start + REVIEW_PAGE_SIZE);
 
-             let html = topBarDom;
-            pageData.forEach(w=>{
-                 const remain = Math.max(0, w.nextReview - now);
-                 const remainText = formatMs(remain);
-                 const isNotDue = (now < w.nextReview) && w.level <8;
-                 const isErr = errorWordSet.has(w.en);
-                 const phoneticHtml = w.phon ? `<span class="rev-phonetic">${w.phon}</span>` : "";
-                 html += `
-                 <div class="review-card ${isNotDue?"not-due":""} ${isErr?"error-word":""}">
-                     <div class="rev-row">
-                         <span class="rev-word" data-word="${w.en}">${w.en}</span>
-                         ${phoneticHtml}
-                         <span class="rev-zh">${w.zh}</span>
-                         <div class="rev-buttons">
-                             <button class="btn btn-success" onclick="handleRight('${w.en}')">✅记得</button>
-                             <button class="btn btn-danger" onclick="handleWrong('${w.en}')">❌忘记</button>
-                         </div>
-                     </div>
-                     <div class="rev-meta">📖等级：${LEVEL_TEXT[w.level]}${isErr?"｜🔴错题":""}｜⏱${isNotDue?"未到期":"到期可复习"}：${remainText}</div>
-                 </div>`;
-             });
-                 html += `<div class="nav-row">
-                 <button class="btn btn-success" ${reviewPage<=0?"disabled":""} onclick="reviewPage--;renderReview()">⬅上一页</button>
-                 <span style="align-self:center">${reviewPage+1}/${totalPages}</span>
-                 <button class="btn btn-success" ${reviewPage >= totalPages-1?"disabled":""} onclick="reviewPage++;renderReview()">下一页➡</button>
-             </div>`;
-             wrap.innerHTML = html;
-             wrap.querySelectorAll(".rev-word").forEach(dom=>{
-                 bindLongPress(dom, dom.dataset.word);
-             })
-             bindSwipe(wrap, "review");
+    if(showAll){
+        sourceList = [...groupAll];
+    }else{
+         sourceList = groupAll.filter(w=>{
+             if(w.level >=8) return false;
+             return now >= w.nextReview;
+         })
+    }
+
+    sourceList.sort((a,b)=>{
+        const aErr = errorWordSet.has(a.en) ? 1 :0;
+        const bErr = errorWordSet.has(b.en) ?1:0;
+        return bErr - aErr;
+    })
+
+    const total = sourceList.length;
+    const topBarDom = wrap.querySelector(".review-top-bar").outerHTML;
+    if(total === 0){
+        wrap.innerHTML = topBarDom + `<div class="empty-state"><span class="emoji">✅</span><p>${showAll?"本分组没有单词":"当前分组暂无到期复习单词"}</p><p style="font-size:12px;color:#888">可去闯关模式做配对，生成复习计划</p></div>`;
+        return;
+    }
+
+    const totalPages = Math.ceil(total / REVIEW_PAGE_SIZE);
+    reviewPage = Math.max(0, Math.min(reviewPage, totalPages-1));
+    const start = reviewPage * REVIEW_PAGE_SIZE;
+    const pageData = sourceList.slice(start, start + REVIEW_PAGE_SIZE);
+
+   let html = topBarDom;
+
+    pageData.forEach(w=>{
+         const remain = Math.max(0, w.nextReview - now);
+         const remainText = formatMs(remain);
+         const isNotDue = (now < w.nextReview) && w.level <8;
+         const isErr = errorWordSet.has(w.en);
+         const phoneticHtml = w.phon ? `<span class="rev-phonetic">${w.phon}</span>` : "";
+         html += `
+         <div class="review-card ${isNotDue?"not-due":""} ${isErr?"error-word":""}">
+             <div class="rev-row">
+                 <span class="rev-word" data-word="${w.en}">${w.en}</span>
+                 ${phoneticHtml}
+                 <span class="rev-zh">${w.zh}</span>
+                 <div class="rev-buttons">
+                     <button class="btn btn-success" onclick="handleRight('${w.en}')">✅记得</button>
+                     <button class="btn btn-danger" onclick="handleWrong('${w.en}')">❌忘记</button>
+                 </div>
+             </div>
+             <div class="rev-meta">📖等级：${LEVEL_TEXT[w.level]}${isErr?"｜🔴错题":""}｜⏱${isNotDue?"未到期":"到期可复习"}：${remainText}</div>
+         </div>`;
+     });
+
+          html += `<div class="nav-row">
+          <button class="btn btn-success" ${reviewPage<=0?"disabled":""} onclick="reviewPage--;renderReview()">⬅上一页</button>
+          <span style="align-self:center">${reviewPage+1}/${totalPages}</span>
+          <button class="btn btn-success" ${reviewPage >= totalPages-1?"disabled":""} onclick="reviewPage++;renderReview()">下一页➡</button>
+      </div>`;
+      wrap.innerHTML = html;
+      wrap.querySelectorAll(".rev-word").forEach(dom=>{
+          bindLongPress(dom, dom.dataset.word);
+      })
+      bindSwipe(wrap, "review");
 }
 
 function renderBrowse(){
@@ -649,6 +666,16 @@ function shuffle(arr){
     return tmp;
 }
 
+//闯关英文卡片字号：基准20px；超过10字母逐步缩小，最小16px
+function calcEnFontSize(text){
+    const len = text.length;
+    if(len <=10){
+        return 20;
+    }
+    let fs = 20 - (len -10) * 0.45;
+    return Math.max(16, fs);
+}
+
 function buildGame(){
     updateUiVisible();
     const grid = document.getElementById("gameGrid");
@@ -672,11 +699,16 @@ function buildGame(){
         div.textContent=c.text;
         div.dataset.key=c.key;
         div.dataset.type=c.type;
-        div.onclick=()=>{
-            if(c.type==="en") speakWord(c.text);
-            flipCard(div,"word");
-        }
-        grid.appendChild(div);
+
+         if(c.type === "en"){
+             div.style.fontSize = calcEnFontSize(c.text)+"px";
+         }
+
+         div.onclick=()=>{
+             if(c.type==="en") speakWord(c.text);
+             flipCard(div,"word");
+         }
+         grid.appendChild(div);
     })
 }
 
