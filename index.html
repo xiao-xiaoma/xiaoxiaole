@@ -78,11 +78,10 @@ body{
     min-height:56px;
 }
 .word-grid .card[data-type="en"]{
-    /* JS动态控制字号，css只控制换行 */
     white-space:normal;
 }
 .word-grid .card[data-type="zh"]{
-    font-size:13px;
+    font-size:12px;
     line-height:1.45;
     white-space:normal;
 }
@@ -186,26 +185,21 @@ body{
             <button class="current-mode-btn" id="currentModeBtn">闯关</button>
         </div>
     </div>
-
-    <div class="action-bar-wrap">
+     <div class="action-bar-wrap">
         <div class="level-box">🎖关卡：<span id="levelCount">1</span> / <span id="totalLevelCount">1</span></div>
         <div class="action-bar">
             <button class="btn btn-success" id="restartBtn">🔄重开</button>
             <button class="btn btn-warning" id="manageBtn">📚词库</button>
         </div>
     </div>
-
-    <div id="gameGrid"></div>
-
-    <div id="reviewView" class="review-wrap" style="display:none;">
+     <div id="gameGrid"></div>
+     <div id="reviewView" class="review-wrap" style="display:none;">
         <div class="review-top-bar">
             <label><input type="checkbox" id="showAllWordToggle"> 强制显示全部单词(无视到期)</label>
         </div>
     </div>
-
-    <div id="browseView" class="browse-wrap" style="display:none;"></div>
-
-    <div class="panel" id="managePanel">
+     <div id="browseView" class="browse-wrap" style="display:none;"></div>
+     <div class="panel" id="managePanel">
         <h3 class="panel-title">📚词库管理</h3>
         <div class="hint">单词导入格式：英文；音标、中文1、中文2｜句子格式：英文句子+中文句子</div>
         <textarea id="wordInput" placeholder="pour；/pɔː(r)/；灌、倒、流出&#10;sore；/sɔː(r)/；疼痛的、痛处"></textarea>
@@ -215,7 +209,6 @@ body{
         </div>
         <div class="panel-actions">
             <button class="btn btn-warning" id="resetAllBtn">🔄重置全部</button>
-            <button class="btn btn-purple" id="resetReviewBtn">🔄重置记忆进度</button>
             <button class="btn btn-danger" id="resetLevelBtn">🎖重置关卡</button>
             <button class="btn btn-danger" id="delGroupAllBtn">🗑删除本组内容</button>
         </div>
@@ -584,8 +577,7 @@ function renderReview(){
     reviewPage = Math.max(0, Math.min(reviewPage, totalPages-1));
     const start = reviewPage * REVIEW_PAGE_SIZE;
     const pageData = sourceList.slice(start, start + REVIEW_PAGE_SIZE);
-
-   let html = topBarDom;
+    let html = topBarDom;
 
     pageData.forEach(w=>{
          const remain = Math.max(0, w.nextReview - now);
@@ -606,18 +598,18 @@ function renderReview(){
              </div>
              <div class="rev-meta">📖等级：${LEVEL_TEXT[w.level]}${isErr?"｜🔴错题":""}｜⏱${isNotDue?"未到期":"到期可复习"}：${remainText}</div>
          </div>`;
-     });
+    });
 
-          html += `<div class="nav-row">
-          <button class="btn btn-success" ${reviewPage<=0?"disabled":""} onclick="reviewPage--;renderReview()">⬅上一页</button>
-          <span style="align-self:center">${reviewPage+1}/${totalPages}</span>
-          <button class="btn btn-success" ${reviewPage >= totalPages-1?"disabled":""} onclick="reviewPage++;renderReview()">下一页➡</button>
-      </div>`;
-      wrap.innerHTML = html;
-      wrap.querySelectorAll(".rev-word").forEach(dom=>{
-          bindLongPress(dom, dom.dataset.word);
-      })
-      bindSwipe(wrap, "review");
+       html += `<div class="nav-row">
+           <button class="btn btn-success" ${reviewPage<=0?"disabled":""} onclick="reviewPage--;renderReview()">⬅上一页</button>
+           <span style="align-self:center">${reviewPage+1}/${totalPages}</span>
+           <button class="btn btn-success" ${reviewPage >= totalPages-1?"disabled":""} onclick="reviewPage++;renderReview()">下一页➡</button>
+       </div>`;
+       wrap.innerHTML = html;
+       wrap.querySelectorAll(".rev-word").forEach(dom=>{
+           bindLongPress(dom, dom.dataset.word);
+       })
+       bindSwipe(wrap, "review");
 }
 
 function renderBrowse(){
@@ -666,14 +658,14 @@ function shuffle(arr){
     return tmp;
 }
 
-//闯关英文卡片字号：基准20px；超过10字母逐步缩小，最小16px
+//闯关英文卡片，适配苹果13，最小14px
 function calcEnFontSize(text){
     const len = text.length;
     if(len <=10){
-        return 20;
+        return 18;
     }
-    let fs = 20 - (len -10) * 0.45;
-    return Math.max(16, fs);
+    let fs = 18 - (len -10) * 0.45;
+    return Math.max(14, fs);
 }
 
 function buildGame(){
@@ -699,16 +691,14 @@ function buildGame(){
         div.textContent=c.text;
         div.dataset.key=c.key;
         div.dataset.type=c.type;
-
-         if(c.type === "en"){
+          if(c.type === "en"){
              div.style.fontSize = calcEnFontSize(c.text)+"px";
-         }
-
-         div.onclick=()=>{
-             if(c.type==="en") speakWord(c.text);
-             flipCard(div,"word");
-         }
-         grid.appendChild(div);
+          }
+          div.onclick=()=>{
+              if(c.type==="en") speakWord(c.text);
+              flipCard(div,"word");
+          }
+          grid.appendChild(div);
     })
 }
 
@@ -852,17 +842,6 @@ document.getElementById("resetAllBtn").onclick=()=>{
         else if(appMode==="browse") renderBrowse();
         else if(appMode==="sentence") buildSentenceGame();
         else buildGame();
-    }
-};
-
-document.getElementById("resetReviewBtn").onclick = function(){
-    if(confirm("⚠️重置所有单词、句子记忆等级为【初次学习】，复习时间清零，错题本清空？")){
-        wordDb.forEach(w=>{w.level=0;w.nextReview=0;});
-        sentenceDb.forEach(s=>{s.level=0;s.nextReview=0;});
-        errorWordSet.clear();
-        saveErrorWords();
-        saveDb(); saveSentenceDb(); updateDueCount();
-        if(appMode === "review") renderReview();
     }
 };
 
