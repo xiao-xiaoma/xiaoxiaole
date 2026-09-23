@@ -41,33 +41,19 @@ select{padding:5px 8px;border:2px solid #fcd34d;border-radius:6px;font-size:13px
 .star{position:absolute;font-size:20px;pointer-events:none;animation:starFall .7s ease-out forwards;z-index:99}
 @keyframes starFall{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(.2)}}
 
-/* ============ 复习模式（精简版） ============ */
+/* ============ 复习模式（无 tab 版） ============ */
 .review-wrap{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:4px 2px}
-.review-tabs{display:flex;gap:6px;flex-shrink:0}
-.tab-btn{flex:1;padding:6px 8px;border:2px solid #e5e7eb;background:#fff;border-radius:8px;font-size:13px;font-weight:600;color:#6b7280;cursor:pointer}
-.tab-btn.active{background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;border-color:#8b5cf6}
-
-/* 复习卡：flex 左右布局 */
 .review-card{background:#fff;border-radius:8px;padding:8px 10px;border:1px solid #ddd;display:flex;align-items:center;gap:10px;min-height:52px}
 .review-card.error-word{border-left:5px solid #ef4444}
-
-/* 左侧内容区 */
 .rev-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-
-/* 单词行：英文 + 音标 同一行，中文下一行 */
 .rev-word-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px}
 .rev-word{font-weight:900;color:#c2185b;font-size:18px;line-height:1.2}
 .rev-phonetic{color:#3949ab;font-style:italic;font-size:12px}
 .rev-zh{color:#00796b;font-weight:600;font-size:14px;line-height:1.2}
-
-/* 句子 */
 .rev-sentence-en{font-weight:700;color:#c2185b;font-size:14px;line-height:1.3;word-break:break-word}
 .rev-sentence-zh{color:#00796b;font-size:13px;line-height:1.3;word-break:break-word}
-
-/* 右侧按钮竖排固定 */
 .rev-buttons{display:flex;flex-direction:column;gap:4px;flex-shrink:0}
 .rev-buttons .btn{padding:4px 8px;font-size:12px;min-height:auto;min-width:64px;justify-content:center;border-radius:6px}
-
 .nav-row{display:flex;gap:10px;margin-top:6px;justify-content:center}
 .panel{flex:1;background:#f9fafb;border-radius:10px;padding:10px 12px;display:none;overflow-y:auto;min-height:0}
 .panel.active{display:block}
@@ -225,6 +211,7 @@ function updateUiVisible(){
 }
 
 function switchMode(m){
+    /* 根据进入前的模式自动决定复习内容：闯关→单词，句闯→句子 */
     if(m==="review"){
         if(appMode==="sentence") reviewTab="sentence";
         else if(appMode==="normal") reviewTab="word";
@@ -279,26 +266,19 @@ function sentenceWrong(en){
     saveSentences(); saveErrors(); updateDueCount();
 }
 
-/* ============ 复习模式渲染（精简版） ============ */
+/* ============ 复习模式（无 tab） ============ */
 function renderReview(){
     var wrap=$("reviewView");
-    var showAllEl=$("showAllWordToggle");
-    var showAll=showAllEl?showAllEl.checked:false;
     var now=Date.now();
     var gw=getGroupWords(), gs=getGroupSentences();
 
+    /* 自动切换：如果当前种类没内容，另一种有，就切过去 */
     if(reviewTab==="word" && gw.length===0 && gs.length>0) reviewTab="sentence";
     else if(reviewTab==="sentence" && gs.length===0 && gw.length>0) reviewTab="word";
 
-    var tabHtml='<div class="review-tabs">'+
-        '<button class="tab-btn '+(reviewTab==="word"?"active":"")+'" data-tab="word">📝 单词 ('+gw.length+')</button>'+
-        '<button class="tab-btn '+(reviewTab==="sentence"?"active":"")+'" data-tab="sentence">💬 句子 ('+gs.length+')</button>'+
-        '</div>';
-
+    /* 不再渲染 tab 按钮，直接列出内容 */
     var sourceList = reviewTab==="word" ? gw : gs;
-    if(!showAll){
-        sourceList = sourceList.filter(function(x){return x.level<8 && now>=x.nextReview;});
-    }
+    sourceList = sourceList.filter(function(x){return x.level<8 && now>=x.nextReview;});
     sourceList.sort(function(a,b){
         var ae=errorWordSet[a.en]?1:0, be=errorWordSet[b.en]?1:0;
         return be-ae;
@@ -306,15 +286,14 @@ function renderReview(){
 
     var total=sourceList.length;
     var emptyText = reviewTab==="word"
-        ? (showAll?"本分组没有单词":"当前分组暂无到期复习单词")
-        : (showAll?"本分组没有句子":"当前分组暂无到期复习句子");
+        ? "当前分组暂无到期复习单词"
+        : "当前分组暂无到期复习句子";
     var emptyHint = reviewTab==="word"
         ? "可去闯关模式做配对，生成复习计划"
         : "可去句闯模式做配对，生成复习计划";
 
     if(total===0){
-        wrap.innerHTML = tabHtml + '<div class="empty-state"><div class="emoji">✅</div><p>'+emptyText+'</p><p style="font-size:12px;color:#888">'+emptyHint+'</p></div>';
-        bindReviewEvents();
+        wrap.innerHTML = '<div class="empty-state"><div class="emoji">✅</div><p>'+emptyText+'</p><p style="font-size:12px;color:#888">'+emptyHint+'</p></div>';
         return;
     }
 
@@ -323,7 +302,7 @@ function renderReview(){
     if(reviewPage<0)reviewPage=0;
     var pageData=sourceList.slice(reviewPage*REVIEW_PAGE_SIZE,(reviewPage+1)*REVIEW_PAGE_SIZE);
 
-    var html=tabHtml;
+    var html="";
     pageData.forEach(function(item){
         var isErr=errorWordSet[item.en]?true:false;
 
@@ -370,17 +349,7 @@ function renderReview(){
 function bindReviewEvents(){
     var wrap=$("reviewView");
     if(!wrap) return;
-    var cb=$("showAllWordToggle");
-    if(cb) cb.onchange=function(){ reviewPage=0; renderReview(); };
-
     wrap.onclick=function(e){
-        var tab=e.target.closest(".tab-btn");
-        if(tab){
-            reviewTab=tab.dataset.tab;
-            reviewPage=0;
-            renderReview();
-            return;
-        }
         var btn=e.target.closest("button[data-action]");
         if(btn){
             var act=btn.dataset.action;
