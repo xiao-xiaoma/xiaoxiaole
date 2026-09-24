@@ -5803,11 +5803,45 @@ function bindReviewEvents(){
             else if(act==="w-wrong"){wordWrong(btn.dataset.en);renderReview();}
             else if(act==="s-right"){sentenceRight(btn.dataset.en);renderReview();}
             else if(act==="s-wrong"){sentenceWrong(btn.dataset.en);renderReview();}
-            else if(act==="prev"){reviewPage--;renderReview();}
-            else if(act==="next"){reviewPage++;renderReview();}
+                       else if(act==="prev"){ if(reviewPage>0){ animatePageSwitch(-1, function(){ reviewPage--; renderReview(); }); } }
+            else if(act==="next"){ animatePageSwitch(1, function(){ reviewPage++; renderReview(); }); }
         }
     };
+}function animatePageSwitch(direction, callback){
+    var wrap = $("reviewView");
+    if(!wrap){ callback(); return; }
+    if(wrap.dataset.animating === "1") return;
+    wrap.dataset.animating = "1";
+
+    var OFFSET = 40;
+
+    wrap.style.transition = "opacity .16s ease, transform .16s ease";
+    wrap.style.opacity = "0";
+    wrap.style.transform = direction > 0
+        ? "translateX(-" + OFFSET + "px)"
+        : "translateX(" + OFFSET + "px)";
+
+    setTimeout(function(){
+        callback();
+
+        wrap.style.transition = "none";
+        wrap.style.transform = direction > 0
+            ? "translateX(" + OFFSET + "px)"
+            : "translateX(-" + OFFSET + "px)";
+        wrap.style.opacity = "0";
+
+        void wrap.offsetWidth;
+
+        wrap.style.transition = "opacity .22s ease, transform .22s ease";
+        wrap.style.opacity = "1";
+        wrap.style.transform = "translateX(0)";
+
+        setTimeout(function(){
+            wrap.dataset.animating = "0";
+        }, 240);
+    }, 160);
 }
+
 function bindReviewSwipe(){
     var wrap = $("reviewView");
     if(!wrap) return;
@@ -5834,10 +5868,11 @@ function bindReviewSwipe(){
         var pages = Math.ceil(sourceList.length / REVIEW_PAGE_SIZE);
         if(dx > 0){
             // 向右滑 → 上一页
-            if(reviewPage > 0){ reviewPage--; renderReview(); }
+                   if(dx > 0){
+            if(reviewPage > 0){ animatePageSwitch(-1, function(){ reviewPage--; renderReview(); }); }
         } else {
-            // 向左滑 → 下一页
-            if(reviewPage < pages - 1){ reviewPage++; renderReview(); }
+            if(reviewPage < pages - 1){ animatePageSwitch(1, function(){ reviewPage++; renderReview(); }); }
+        }
         }
     }, {passive:true});
 }
