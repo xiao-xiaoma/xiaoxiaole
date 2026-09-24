@@ -40,8 +40,30 @@ select{padding:5px 8px;border:2px solid #fcd34d;border-radius:6px;font-size:13px
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
 .star{position:absolute;font-size:20px;pointer-events:none;animation:starFall .7s ease-out forwards;z-index:99}
 @keyframes starFall{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(.2)}}
-.review-wrap{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:4px 2px}
-.review-card{background:#fff;border-radius:8px;padding:8px 10px;border:1px solid #ddd;display:flex;align-items:center;gap:10px;min-height:52px}
+
+/* ===== 复习视图（翻书页 + 底部固定导航） ===== */
+.review-wrap{flex:1;display:flex;flex-direction:column;padding:4px 2px 0 2px;overflow:hidden;min-height:0;perspective:1200px}
+.review-stage {
+  flex: 0 1 auto;          /* 高度由内容决定，空间不足时收缩 */
+  min-height: 0;
+  position: relative;
+  overflow-y: auto;        /* 内容多时在内部滚动 */
+  overflow-x: hidden;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  -webkit-overflow-scrolling: touch;
+}
+.review-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 2px;
+}.review-nav{flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 4px 6px 4px;border-top:1px solid #e5e7eb;background:#fff;box-shadow:0 -2px 8px rgba(0,0,0,.05)}
+.nav-btn{min-width:96px;padding:7px 12px;font-size:13px}
+.page-indicator{font-size:13px;font-weight:700;color:#374151;min-width:96px;text-align:center}
+
+.review-card{background:#fff;border-radius:8px;padding:8px 10px;border:1px solid #ddd;display:flex;align-items:center;gap:10px;min-height:52px;backface-visibility:hidden}
 .review-card.error-word{border-left:5px solid #ef4444}
 .rev-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .rev-word-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px}
@@ -89,10 +111,22 @@ select{padding:5px 8px;border:2px solid #fcd34d;border-radius:6px;font-size:13px
         </div>
     </div>
     <div id="gameGrid"></div>
-    <div id="reviewView" class="review-wrap" style="display:none;"></div>
+
+    <!-- ===== 复习视图 ===== -->
+    <div id="reviewView" class="review-wrap" style="display:none;">
+        <div class="review-stage" id="reviewStage">
+            <div id="reviewCards" class="review-cards"></div>
+        </div>
+        <div id="reviewNav" class="review-nav">
+            <button class="btn btn-success nav-btn" id="reviewPrevBtn" data-action="prev">⬅ 上一页</button>
+            <span class="page-indicator" id="reviewPageInfo">1 / 1</span>
+            <button class="btn btn-success nav-btn" id="reviewNextBtn" data-action="next">下一页 ➡</button>
+        </div>
+    </div>
+
     <div class="panel" id="managePanel">
         <h3 class="panel-title">📚词库管理</h3>
-        <div class="hint">单词格式：英文；音标；中文（中英文分号都行）｜句子格式：英文+中文</div>
+        <div class="hint">单词格式：英文；音标；中文（中英文分号都行）｜句子/词组格式：英文+中文</div>
         <textarea id="wordInput" placeholder="pour；/pɔː(r)/；灌、倒&#10;I am happy.+我很开心。"></textarea>
         <div class="input-group">
             <input id="groupNameInput" placeholder="分组名称（默认：默认）">
@@ -109,1054 +143,7 @@ select{padding:5px 8px;border:2px solid #fcd34d;border-radius:6px;font-size:13px
 
 <script>
 /* ============================================================
- * OPD 词库文本
- * ============================================================ */
-var OPD_WORDS_TEXT = `
-family；/ˈfæməli/；家庭
-mother；/ˈmʌðə(r)/；母亲
-father；/ˈfɑːðə(r)/；父亲
-parents；/ˈpeərənts/；父母
-brother；/ˈbrʌðə(r)/；兄弟
-sister；/ˈsɪstə(r)/；姐妹
-baby；/ˈbeɪbi/；婴儿
-grandma；/ˈɡrænmɑː/；奶奶/外婆
-grandpa；/ˈɡrænpɑː/；爷爷/外公
-aunt；/ɑːnt/；阿姨/姑姑
-uncle；/ˈʌŋkl/；叔叔/舅舅
-cousin；/ˈkʌzn/；表兄弟姐妹
-daughter；/ˈdɔːtə(r)/；女儿
-son；/sʌn/；儿子
-wife；/waɪf/；妻子
-husband；/ˈhʌzbənd/；丈夫
-friend；/frend/；朋友
-neighbor；/ˈneɪbə(r)/；邻居
-bread；/bred/；面包
-rice；/raɪs/；米饭
-noodles；/ˈnuːdlz/；面条
-pizza；/ˈpiːtsə/；比萨饼
-hamburger；/ˈhæmbɜːɡə(r)/；汉堡包
-sandwich；/ˈsænwɪtʃ/；三明治
-chicken；/ˈtʃɪkɪn/；鸡肉
-fish；/fɪʃ/；鱼
-egg；/eɡ/；鸡蛋
-milk；/mɪlk/；牛奶
-water；/ˈwɔːtə(r)/；水
-juice；/dʒuːs/；果汁
-coffee；/ˈkɒfi/；咖啡
-tea；/tiː/；茶
-soup；/suːp/；汤
-salad；/ˈsæləd/；沙拉
-cake；/keɪk/；蛋糕
-cookie；/ˈkʊki/；饼干
-icecream；/ˌaɪsˈkriːm/；冰淇淋
-breakfast；/ˈbrekfəst/；早餐
-lunch；/lʌntʃ/；午餐
-dinner；/ˈdɪnə(r)/；晚餐
-apple；/ˈæpl/；苹果
-banana；/bəˈnɑːnə/；香蕉
-orange；/ˈɒrɪndʒ/；橙子
-grape；/ɡreɪp/；葡萄
-strawberry；/ˈstrɔːbəri/；草莓
-watermelon；/ˈwɔːtəmelən/；西瓜
-peach；/piːtʃ/；桃子
-pear；/peə(r)/；梨
-lemon；/ˈlemən/；柠檬
-mango；/ˈmæŋɡəʊ/；芒果
-pineapple；/ˈpaɪnæpl/；菠萝
-kiwi；/ˈkiːwi/；猕猴桃
-cherry；/ˈtʃeri/；樱桃
-blueberry；/ˈbluːbəri/；蓝莓
-tomato；/təˈmɑːtəʊ/；西红柿
-potato；/pəˈteɪtəʊ/；土豆
-carrot；/ˈkærət/；胡萝卜
-onion；/ˈʌnjən/；洋葱
-cabbage；/ˈkæbɪdʒ/；卷心菜
-broccoli；/ˈbrɒkəli/；西兰花
-corn；/kɔːn/；玉米
-cucumber；/ˈkjuːkʌmbə(r)/；黄瓜
-lettuce；/ˈletɪs/；生菜
-pepper；/ˈpepə(r)/；辣椒
-mushroom；/ˈmʌʃrʊm/；蘑菇
-garlic；/ˈɡɑːlɪk/；大蒜
-ginger；/ˈdʒɪndʒə(r)/；姜
-shirt；/ʃɜːt/；衬衫
-pants；/pænts/；裤子
-dress；/dres/；连衣裙
-skirt；/skɜːt/；裙子
-shoes；/ʃuːz/；鞋子
-hat；/hæt/；帽子
-glasses；/ˈɡlɑːsɪz/；眼镜
-watch；/wɒtʃ/；手表
-jacket；/ˈdʒækɪt/；夹克
-coat；/kəʊt/；外套
-sweater；/ˈswetə(r)/；毛衣
-socks；/sɒks/；袜子
-gloves；/ɡlʌvz/；手套
-scarf；/skɑːf/；围巾
-belt；/belt/；腰带
-jeans；/dʒiːnz/；牛仔裤
-shorts；/ʃɔːts/；短裤
-tie；/taɪ/；领带
-uniform；/ˈjuːnɪfɔːm/；制服
-house；/haʊs/；房子
-room；/ruːm/；房间
-door；/dɔː(r)/；门
-window；/ˈwɪndəʊ/；窗户
-table；/ˈteɪbl/；桌子
-chair；/tʃeə(r)/；椅子
-bed；/bed/；床
-lamp；/læmp/；台灯
-sofa；/ˈsəʊfə/；沙发
-bookshelf；/ˈbʊkʃelf/；书架
-drawer；/drɔː(r)/；抽屉
-mirror；/ˈmɪrə(r)/；镜子
-clock；/klɒk/；时钟
-carpet；/ˈkɑːpɪt/；地毯
-kitchen；/ˈkɪtʃɪn/；厨房
-bathroom；/ˈbɑːθruːm/；浴室
-bedroom；/ˈbedruːm/；卧室
-livingroom；/ˈlɪvɪŋruːm/；客厅
-garden；/ˈɡɑːdn/；花园
-fence；/fens/；篱笆
-roof；/ruːf/；屋顶
-school；/skuːl/；学校
-teacher；/ˈtiːtʃə(r)/；老师
-student；/ˈstjuːdnt/；学生
-book；/bʊk/；书
-pen；/pen/；钢笔
-pencil；/ˈpensl/；铅笔
-desk；/desk/；书桌
-classroom；/ˈklɑːsruːm/；教室
-blackboard；/ˈblækbɔːd/；黑板
-chalk；/tʃɔːk/；粉笔
-eraser；/ɪˈreɪzə(r)/；橡皮擦
-ruler；/ˈruːlə(r)/；尺子
-backpack；/ˈbækpæk/；背包
-notebook；/ˈnəʊtbʊk/；笔记本
-dictionary；/ˈdɪkʃənri/；字典
-library；/ˈlaɪbrəri/；图书馆
-playground；/ˈpleɪɡraʊnd/；操场
-principal；/ˈprɪnsəpl/；校长
-cat；/kæt/；猫
-dog；/dɒɡ/；狗
-bird；/bɜːd/；鸟
-rabbit；/ˈræbɪt/；兔子
-tiger；/ˈtaɪɡə(r)/；老虎
-lion；/ˈlaɪən/；狮子
-monkey；/ˈmʌŋki/；猴子
-panda；/ˈpændə/；熊猫
-elephant；/ˈelɪfənt/；大象
-horse；/hɔːs/；马
-cow；/kaʊ/；奶牛
-pig；/pɪɡ/；猪
-sheep；/ʃiːp/；绵羊
-goat；/ɡəʊt/；山羊
-duck；/dʌk/；鸭子
-snake；/sneɪk/；蛇
-bear；/beə(r)/；熊
-wolf；/wʊlf/；狼
-deer；/dɪə(r)/；鹿
-fox；/fɒks/；狐狸
-mouse；/maʊs/；老鼠
-hamster；/ˈhæmstə(r)/；仓鼠
-parrot；/ˈpærət/；鹦鹉
-eagle；/ˈiːɡl/；鹰
-whale；/weɪl/；鲸鱼
-dolphin；/ˈdɒlfɪn/；海豚
-shark；/ʃɑːk/；鲨鱼
-red；/red/；红色
-blue；/bluː/；蓝色
-yellow；/ˈjeləʊ/；黄色
-green；/ɡriːn/；绿色
-white；/waɪt/；白色
-black；/blæk/；黑色
-pink；/pɪŋk/；粉色
-purple；/ˈpɜːpl/；紫色
-brown；/braʊn/；棕色
-gray；/ɡreɪ/；灰色
-gold；/ɡəʊld/；金色
-silver；/ˈsɪlvə(r)/；银色
-sun；/sʌn/；太阳
-moon；/muːn/；月亮
-star；/stɑː(r)/；星星
-rain；/reɪn/；雨
-snow；/snəʊ/；雪
-cloud；/klaʊd/；云
-wind；/wɪnd/；风
-tree；/triː/；树
-flower；/ˈflaʊə(r)/；花
-grass；/ɡrɑːs/；草
-mountain；/ˈmaʊntən/；山
-river；/ˈrɪvə(r)/；河流
-lake；/leɪk/；湖
-ocean；/ˈəʊʃn/；海洋
-sky；/skaɪ/；天空
-rainbow；/ˈreɪnbəʊ/；彩虹
-storm；/stɔːm/；暴风雨
-fog；/fɒɡ/；雾
-ice；/aɪs/；冰
-fire；/ˈfaɪə(r)/；火
-head；/hed/；头
-eye；/aɪ/；眼睛
-nose；/nəʊz/；鼻子
-mouth；/maʊθ/；嘴巴
-ear；/ɪə(r)/；耳朵
-hair；/heə(r)/；头发
-hand；/hænd/；手
-foot；/fʊt/；脚
-arm；/ɑːm/；手臂
-leg；/leɡ/；腿
-face；/feɪs/；脸
-tooth；/tuːθ/；牙齿
-tongue；/tʌŋ/；舌头
-finger；/ˈfɪŋɡə(r)/；手指
-shoulder；/ˈʃəʊldə(r)/；肩膀
-knee；/niː/；膝盖
-neck；/nek/；脖子
-back；/bæk/；背部
-stomach；/ˈstʌmək/；胃/肚子
-phone；/fəʊn/；电话
-key；/kiː/；钥匙
-umbrella；/ʌmˈbrelə/；雨伞
-bag；/bæɡ/；包
-gift；/ɡɪft/；礼物
-camera；/ˈkæmərə/；相机
-computer；/kəmˈpjuːtə(r)/；电脑
-radio；/ˈreɪdiəʊ/；收音机
-television；/ˈtelɪvɪʒn/；电视机
-remote；/rɪˈməʊt/；遥控器
-battery；/ˈbætəri/；电池
-lock；/lɒk/；锁
-comb；/kəʊm/；梳子
-toothbrush；/ˈtuːθbrʌʃ/；牙刷
-soap；/səʊp/；肥皂
-towel；/ˈtaʊəl/；毛巾
-scissors；/ˈsɪzəz/；剪刀
-tape；/teɪp/；胶带
-glue；/ɡluː/；胶水
-car；/kɑː(r)/；汽车
-bus；/bʌs/；公交车
-train；/treɪn/；火车
-bike；/baɪk/；自行车
-plane；/pleɪn/；飞机
-ship；/ʃɪp/；轮船
-boat；/bəʊt/；小船
-taxi；/ˈtæksi/；出租车
-subway；/ˈsʌbweɪ/；地铁
-truck；/trʌk/；卡车
-motorcycle；/ˈməʊtəsaɪkl/；摩托车
-helicopter；/ˈhelɪkɒptə(r)/；直升机
-rocket；/ˈrɒkɪt/；火箭
-doctor；/ˈdɒktə(r)/；医生
-nurse；/nɜːs/；护士
-police；/pəˈliːs/；警察
-firefighter；/ˈfaɪəfaɪtə(r)/；消防员
-pilot；/ˈpaɪlət/；飞行员
-driver；/ˈdraɪvə(r)/；司机
-cook；/kʊk/；厨师
-farmer；/ˈfɑːmə(r)/；农民
-artist；/ˈɑːtɪst/；艺术家
-musician；/mjuˈzɪʃn/；音乐家
-writer；/ˈraɪtə(r)/；作家
-scientist；/ˈsaɪəntɪst/；科学家
-engineer；/ˌendʒɪˈnɪə(r)/；工程师
-dentist；/ˈdentɪst/；牙医
-pharmacist；/ˈfɑːməsɪst/；药剂师
-lawyer；/ˈlɔːjə(r)/；律师
-judge；/dʒʌdʒ/；法官
-football；/ˈfʊtbɔːl/；足球
-basketball；/ˈbɑːskɪtbɔːl/；篮球
-tennis；/ˈtenɪs/；网球
-swimming；/ˈswɪmɪŋ/；游泳
-running；/ˈrʌnɪŋ/；跑步
-cycling；/ˈsaɪklɪŋ/；骑自行车
-skiing；/ˈskiːɪŋ/；滑雪
-dancing；/ˈdɑːnsɪŋ/；跳舞
-singing；/ˈsɪŋɪŋ/；唱歌
-painting；/ˈpeɪntɪŋ/；绘画
-reading；/ˈriːdɪŋ/；阅读
-cooking；/ˈkʊkɪŋ/；烹饪
-photography；/fəˈtɒɡrəfi/；摄影
-travel；/ˈtrævl/；旅行
-fishing；/ˈfɪʃɪŋ/；钓鱼
-hiking；/ˈhaɪkɪŋ/；徒步
-yoga；/ˈjəʊɡə/；瑜伽
-one；/wʌn/；一
-two；/tuː/；二
-three；/θriː/；三
-four；/fɔː(r)/；四
-five；/faɪv/；五
-six；/sɪks/；六
-seven；/ˈsevn/；七
-eight；/eɪt/；八
-nine；/naɪn/；九
-ten；/ten/；十
-today；/təˈdeɪ/；今天
-tomorrow；/təˈmɒrəʊ/；明天
-yesterday；/ˈjestədeɪ/；昨天
-morning；/ˈmɔːnɪŋ/；早上
-afternoon；/ˌɑːftəˈnuːn/；下午
-evening；/ˈiːvnɪŋ/；晚上
-night；/naɪt/；夜晚
-spring；/sprɪŋ/；春天
-summer；/ˈsʌmə(r)/；夏天
-autumn；/ˈɔːtəm/；秋天
-winter；/ˈwɪntə(r)/；冬天
-year；/jɪə(r)/；年
-month；/mʌnθ/；月
-week；/wiːk/；周
-day；/deɪ/；天
-hour；/ˈaʊə(r)/；小时
-minute；/ˈmɪnɪt/；分钟
-second；/ˈsekənd/；秒
-big；/bɪɡ/；大的
-small；/smɔːl/；小的
-long；/lɒŋ/；长的
-short；/ʃɔːt/；短的
-tall；/tɔːl/；高的
-happy；/ˈhæpi/；快乐的
-sad；/sæd/；悲伤的
-angry；/ˈæŋɡri/；生气的
-tired；/ˈtaɪəd/；累的
-hungry；/ˈhʌŋɡri/；饿的
-thirsty；/ˈθɜːsti/；渴的
-beautiful；/ˈbjuːtɪfl/；美丽的
-ugly；/ˈʌɡli/；丑陋的
-kind；/kaɪnd/；善良的
-clever；/ˈklevə(r)/；聪明的
-lazy；/ˈleɪzi/；懒惰的
-fast；/fɑːst/；快的
-slow；/sləʊ/；慢的
-hot；/hɒt/；热的
-cold；/kəʊld/；冷的
-warm；/wɔːm/；温暖的
-cool；/kuːl/；凉爽的
-new；/njuː/；新的
-old；/əʊld/；旧的
-young；/jʌŋ/；年轻的
-go；/ɡəʊ/；去
-come；/kʌm/；来
-eat；/iːt/；吃
-drink；/drɪŋk/；喝
-sleep；/sliːp/；睡觉
-walk；/wɔːk/；走路
-run；/rʌn/；跑
-swim；/swɪm/；游泳
-read；/riːd/；阅读
-write；/raɪt/；写
-speak；/spiːk/；说话
-listen；/ˈlɪsn/；听
-look；/lʊk/；看
-see；/siː/；看见
-hear；/hɪə(r)/；听到
-smell；/smel/；闻
-touch；/tʌtʃ/；触摸
-taste；/teɪst/；尝
-live；/lɪv/；生活/居住
-work；/wɜːk/；工作
-play；/pleɪ/；玩
-study；/ˈstʌdi/；学习
-teach；/tiːtʃ/；教
-learn；/lɜːn/；学习
-help；/help/；帮助
-want；/wɒnt/；想要
-like；/laɪk/；喜欢
-love；/lʌv/；爱
-hate；/heɪt/；恨
-give；/ɡɪv/；给
-take；/teɪk/；拿
-make；/meɪk/；制作
-do；/duː/；做
-have；/hæv/；有
-be；/biː/；是
-say；/seɪ/；说
-tell；/tel/；告诉
-ask；/ɑːsk/；问
-know；/nəʊ/；知道
-think；/θɪŋk/；想/认为
-feel；/fiːl/；感觉
-try；/traɪ/；尝试
-begin；/bɪˈɡɪn/；开始
-finish；/ˈfɪnɪʃ/；完成
-open；/ˈəʊpən/；打开
-close；/kləʊz/；关闭
-clean；/kliːn/；打扫
-cook；/kʊk/；烹饪
-drive；/draɪv/；驾驶
-fly；/flaɪ/；飞
-`;
-
-/* ============================================================
- * 高中例句文本
- * ============================================================ */
-var HIGH_SCHOOL_SENTENCES_TEXT = `
-His appearance on the platform was greeted with a burst of applause.+他在平台上的出现迎来了一阵掌声。
-As times alter, men's affections change.+时过境迁，人心易变。
-He was forced to dispose of his art treasures.+他被迫处理掉自己的艺术珍藏。
-A blast of hot air came from the furnace.+一股热风从火炉里吹出来。
-The village was blasted by enemy bombs.+村子被敌人的炸弹炸毁了。
-Arguing about details consumed many hours of the committee's valuable time.+争论细节耗费了委员会许多宝贵时间。
-The wood splits easily.+这木头容易劈开。
-It's bad to spit.+吐痰是不好的行为。
-The coffee is so full that it might spill over.+咖啡太满可能会溢出来。
-He slipped and fell down the stairs.+他滑倒了，从楼梯上摔了下来。
-One week slipped away, but he wrote out nothing.+一周悄然逝去，他连一个字也没写出来。
-We have a slide show every other week.+我们每隔一周观看一次幻灯片。
-All bacteria are larger than viruses.+所有细菌都比病菌大。
-He interviews many candidates for jobs.+他面试过很多求职者。
-The campus of Harvard University.+哈佛大学的校园。
-He has a liberal attitude to divorce and remarriage.+他对离婚和再婚看得很开。
-The sofa can transform for use as a bed.+这个沙发可改作床用。
-Glass transmits light but not sound.+玻璃传导光但不传导声音。
-Several of the patients had received kidney transplant.+病人中有几位已接受了肾移植手术。
-A bus transported us from the airport to the city.+一辆公共汽车把我们从机场送到城里。
-The day shift arrives at eight o'clock.+白班工人八点钟来换班。
-This pile of apples vary in size.+这堆苹果大小不一。
-With a wave of his hand, the magician made the rabbit vanish.+魔术师手一挥，兔子便不见了。
-I don't know how I managed to swallow my anger.+我不知道怎样才能抑制住我的愤怒。
-He is under suspicion of murder.+他涉嫌谋杀。
-The behaviour of the stranger aroused our suspicions.+那个陌生人的行为引起了我们的怀疑。
-I'm very suspicious about his motives.+我很怀疑他的动机。
-That coat is too heavy for such a mild day.+这样暖和的天气，穿那件大衣太厚了。
-Her skin is very tender, like a baby's.+她的皮肤像婴儿的一样柔嫩。
-The dog is a terrible nuisance.+这只狗真令人讨厌。
-The rate has fallen by an insignificant amount.+比率虽有下降，但微不足道。
-The car suddenly accelerated.+汽车突然加速。
-I look upon this as an absolute necessity.+我认为这是绝对必要的。
-The boundaries of that country were changed by a treaty.+那个国家的边界根据条约有所更动。
-His brakes failed on a steep hill.+他的刹车在陡峭的山路上失灵了。
-Through the mist I could just make out a vague figure.+透过雾霭，我只能看见一个模糊的人影。
-He made a vain attempt to reach the drowning child.+他试图接近那个快淹死的小孩，但没有成功。
-Dinosaurs have been extinct for millions of years.+恐龙绝种已有几百万年了。
-It's extraordinary that he managed to sleep through the party.+真想不到他竟从聚会开始睡到结束。
-His views are rather extreme.+他的观点相当极端。
-A commercial agent manages the business affairs of company.+商务代理负责代公司处理商业性事务。
-The law forbids shops to sell alcohol to minors.+法律禁止商店向未成年者出售酒精饮料。
-This job rather appeals to me.+这工作对我有吸引力。
-We made an appeal to the villagers for money to build the bridge.+我们呼吁村民为建桥捐款。
-I appreciate your help very much.+我非常感谢你的帮助。
-You can't appreciate English poetry unless you understand its rhythm.+你若不懂英文诗韵律，就无法欣赏英文诗。
-The firm's directors quickly approved the new idea.+公司的董事们很快赞同了这个想法。
-They stimulated me to make greater efforts.+他们鼓励我要做出更大的努力。
-I tried to acquire the information I needed.+我千方百计地搞到了我所需要的资料。
-This task is accomplished by great effort.+这项任务是经过巨大努力才完成的。
-The tide of the battle turned against us.+战况变得对我们不利。
-His bedroom was not very tidy.+他的卧室不太整齐。
-He knew they were tracing him.+他知道他们正在追踪他。
-She suffered tortures from a toothache.+她受着牙痛的折磨。
-You should put some wax on those boots.+你应该给那些靴子打上一些蜡。
-The old woman was weaving on her loom.+那位老太太正在织布机上织布。
-We must preserve our natural resources.+我们必须保护自然资源。
-With a reassuring pat on her arm, he left.+他鼓励地拍了拍她的手臂就离开了。
-The town was destroyed by the earthquake.+这座城镇被地震摧毁了。
-To keep ecology in balance is our duty.+保持生态平衡是我们的职责。
-He burst into a storm of abuse.+他破口大骂。
-The university is composed of five academic schools.+整个大学由五个学院组成。
-This is an academy of music.+这是一所音乐专科学校。
-Lack of confidence is the biggest barrier to investment in the region.+缺乏信心是该地区投资的最大障碍。
-This boat was cargoed with bananas and oranges.+这只船装载着香蕉和橘子。
-My uncle entered upon a diplomatic career at the age of thirty-five.+我伯父35岁时开始了外交官生涯。
-The doctor said I'd severed a vessel in my leg.+医生说我割断了腿上的一根血管。
-He climbed the vertical cliff.+他攀登陡峭的悬崖。
-Poverty obliged her to live a hard life.+贫困迫使她过艰苦的生活。
-Her poor English obscured her meaning.+她的英语差，难以表达自己的意思。
-The new race track is nearly six miles in extent.+这条新跑道将近六英里长。
-You mustn't judge people by their exteriors.+你不能以貌取人。
-The external features of the building are very attractive.+这座建筑物的外观是很吸引人的。
-Our car was useless for lack of petrol.+我们的汽车因缺汽油而无法使用。
-They refined crude oil into various petroleum products.+他们将原油提炼成各种石油产品。
-The driver delayed the drive until the weather cleared.+驾驶员延迟到天气转晴后才出车。
-Sugar can decay the teeth.+糖能腐蚀牙齿。
-I didn't have a decent dress for the dance.+我没有参加舞会的合适的衣服。
-The climbers tried to find a new route to the top of the mountain.+登山者试图找出一条通到山顶的新路。
-Many ruins of Roman date are to be seen in the south of France.+许多古罗马时期的遗迹可以在法国南部看到。
-He loves poetry for beauty's sake.+他因为爱美而喜欢诗歌。
-The moon is a satellite of the earth.+月球是地球的一颗卫星。
-For every year you've worked here you go up another step on the salary scale.+你在这儿每工作一年，工资就会长一级。
-Many temples were beautifully built.+许多寺庙建得很美。
-The arguments are tedious and complicated.+那些论点冗长而复杂。
-My grandmother tends to go to bed early every day.+我祖母每天通常比较早睡。
-He has a tendency to forget things.+他有忘事的倾向。
-What was his ultimate goal?+他的最终目标是什么？
-He underwent a lot of hardships in his childhood.+他在童年时代经历了许多坎坷。
-Rainfall is abundant in the region.+该地区降雨丰沛。
-The factories have adopted the newest modern technology.+那些工厂采用了现代的最新技术。
-She has not yet adapted to the climate.+她还没适应气候。
-He's a confirmed bachelor.+他抱定主意一辈子独身。
-The guests wore casual clothes.+客人们穿着便服。
-Thirty miners were trapped underground after the fire.+起火后有三十名矿工被困在地底下。
-There were many vacant seats in the theatre.+剧院里有许多空座位。
-His wife's death left a vacuum in his life.+他妻子的去世使他的生活变得空虚。
-He passed his French oral examination.+他通过了法语口试。
-Newton published his first work on optics.+牛顿发表了他的第一部光学著作。
-Gills are the organ through which fish breathe.+鳃是鱼类用来呼吸的器官。
-An excess of fat in one's diet can lead to heart disease.+饮食中脂肪过量能导致心脏病。
-They expelled a foreign spy from their country.+他们把一名外国间谍驱逐出境。
-Don't expend all your time on such a useless job.+不要把时间消耗在这种无用的工作上。
-This expenditure would include two railway lines.+这些支出将包括两条铁路线。
-Sending a child to college is quite an expense.+供孩子上大学是一笔颇大的花费。
-We hope to expand our business with you.+我们希望与贵公司扩大贸易往来。
-The company has the potential for expansion.+这家公司有扩展的潜力。
-A local private school lets them use a chemistry lab.+当地一家私立学校允许他们使用化学实验室。
-Each individual has his own personality.+每个人都有自己的个性。
-Personal appearance is important.+个人形象很重要。
-All personnel must have the valid certification.+所有相关人员必须持有效证件上岗。
-We cannot grant any further discount.+我们不能再给任何折扣了。
-My mother cooked a grand turkey dinner.+妈妈做了丰盛的火鸡晚餐。
-Learn to say no to people that invade your privacy.+学会对侵犯你隐私的人说不。
-We have to add more acid to it.+我们必须往里面多加些酸。
-He has to acknowledge the grim fact.+他不得不承认这无情的事实。
-Our balcony is exposed to the south.+我们的阳台朝南。
-We cannot calculate on his help.+我们不能指望他的帮助。
-This is the calendar we use today.+这就是我们今天使用的日历。
-The energy outlook is not optimistic.+能源前景并不乐观。
-Let's review another optional step.+让我们审查另一个可选步骤。
-In fact, he is a very outstanding youth.+事实上，他是个十分优秀的少年。
-Cocoa is Ghana's biggest export after gold.+可可是加纳仅次于黄金的第二大出口商品。
-We export rice but import wheat.+我们出口稻米，但进口小麦。
-You must not impose bad wine on customers.+你不应该拿劣酒卖给顾客。
-Science is in conflict with religion.+科学与宗教相抵触。
-It is hard for me to reject religious beliefs.+要我抛弃自己的宗教信仰是困难的。
-Now I felt the victim was my motherland.+现在我感到被害者是我的祖国。
-Reactions to the video have been mixed.+人们对这段视频的反应各不相同。
-Do you know about this videotape?+你知道这盘录像带吗？
-Sorry, I didn't mean to offend you.+对不起，我不是有意冒犯你。
-Promise never to bother me again.+答应我绝不再麻烦我。
-My parents never interfere with my plans too much.+我父母从不太多干涉我想干的事情。
-Happiness is intrinsic, it's an internal thing.+幸福是固有的，是一种内在的东西。
-Somebody should warn me beforehand.+应该有人事先警告我。
-The racial discrimination issue is a political hot potato.+种族歧视问题是政治上的棘手问题。
-He also had radical views on politics.+他对政治也有相当激进的观点。
-It gave me a good idea of your product range.+这次参观使我对你们的产品范围有了很好的了解。
-The townspeople wonder what happened to him.+镇上的人都想知道他到底出了什么事。
-From now on, nobody can isolate us again!+从此以后，将没有人能够再把我们分开。
-Another issue is the language barrier.+另一个问题是语言障碍。
-These chocolate eggs are all hollow.+这些巧克力蛋都是空心的。
-His wages were adequate to support three people.+他的薪水足够维持三人的生活。
-Everyone should strictly adhere to this rule.+每个人都要严格遵守这个规定。
-Do you think the government should lift the ban on guns?+你认为政府应该解除枪支的禁令吗？
-We want to capture or kill them.+我们想抓住或杀死他们。
-Equal pay for equal work is valid.+同工同酬是正当的。
-The valley echoed as he sang.+他唱歌时，山谷发出回声。
-Door-to-door service is the consistent style of our shop.+服务上门，是本店一贯的工作作风。
-Before us was a continuous stretch of wheat fields.+我们前面是一片连绵不断的麦田。
-Continual failure drove her to despair.+不断的失败使她绝望。
-A dormant volcano may explode at any time.+一座休眠的火山可能在任何时间爆发。
-And humans tend to exploit their power.+人往往会滥用权力。
-From his room, he can explore the world.+在他的房间里，他可以探索整个世界。
-If only the explosion had not happened!+爆炸要是没有发生就好了！
-It's an explosive situation.+形势一触即发。
-Such an outcome is surely a very remote possibility.+当然这样的结果还十分遥远。
-Most important was removal of the immediate threat.+最紧要的是先摆脱眼前的威胁。
-My father taught me to render good for evil.+我父亲教导我要以德报怨。
-I will keep the letter as a precaution.+我要保存这封信，以防万一。
-An idle person will never find or understand real happiness.+一个懒汉永远找不到也永远不懂得真正的幸福。
-Surely you can't identify money with happiness!+你肯定不能把金钱和幸福等同起来！
-He had to make his identity public.+他不得不公开自己的身份。
-Poverty is the root of all evils.+贫穷是一切罪恶的根源。
-Take the effective slip-resistant measures.+采取有效的防滑措施。
-I resolve to achieve more in the new year.+我决心在新的一年里取得更大的成绩。
-The price of oil has reached $30 a barrel.+石油的价格已涨到每桶30美元。
-Women especially love a bargain.+女人特别爱便宜货。
-Don't use such coarse language.+不要用这种粗俗的语言。
-Coach and cagers make a team.+一个球队由教练和队员组成。
-What is the technique for writing less code?+那么尽量少写代码的方法是什么？
-A snake can coil itself around a branch.+蛇能使自身盘绕在树枝上。
-A child's growth into an adult is gradual.+儿童到成人的成长过程是逐渐的。
-We decided to advertise our new product.+我们决定为新产品做广告。
-There is less work out there for agency clients.+经纪公司客户的工作减少了。
-The second method is to focus on economic growth.+第二个办法是将重点放到经济增长上。
-Her father forbade her to go out alone.+她父亲不许她单独外出。
-Please discuss, debate and argue, if you like.+请讨论、辩论和争论，如果你喜欢的话。
-Government debt will come off worse.+国债状况也将越来越糟。
-This lifestyle has been more than a decade.+这种生活方式已经持续了十多年。
-With this letter I enclose a photograph.+随信附上一张照片。
-They fell in love at the first encounter.+一次偶然的相遇后，他俩坠入了爱河。
-For the last fifty years, the globe has been warming up.+在过去五十年间，地球一直在转暖。
-So from the global perspective, it is very important.+所以从全局的角度来看，这是很重要的。
-I advise you to have a brain scan.+我建议你做个脑部扫描检查。
-The scandal finished his political career.+这件丑闻断送了他的政治生涯。
-Money at this period held no significance for him.+在这段时间里金钱对他来说毫无意义。
-His illness was subsequent to his wife's death.+他在妻子死后就病倒了。
-His father is a man of virtue.+他父亲是一个有品德的人。
-We are moving to a more virtual world.+我们正在向更虚拟的世界转移。
-It took him a long time to orient himself.+他花了很长时间熟悉环境。
-May I portion this fish for you?+我替您把鱼分一分吧？
-He says it is time to set an even more ambitious target.+他说现在是时候设定一个更雄心勃勃的目标了。
-I have a portable typewriter.+我有一个便携式打字机。
-The boy declined to answer a question.+那男孩拒绝回答问题。
-Illusion is the first of all pleasures.+幻想是所有乐趣的第一步。
-There is every likelihood that we can do better if we work hard.+只要我们努力就完全可能做得更好。
-Mine is the car with the red stripe.+我的车是有红色条纹的那辆。
-Which word should I emphasize?+我应该重读哪个词？
-Emotion is the enemy when trading.+情绪是交易的敌人。
-Emotional matters were of no account to them during the war.+战争期间感情问题对他们并不重要。
-It's spring, but the weather was awful.+是春天，但天气太糟了。
-I find myself in an awkward situation.+我觉得自己处境尴尬。
-We have no clue as to why he shot them.+至于为什么他要射击他们我们没有任何线索。
-His car had a collision with a bus.+他的车与公交车相撞了。
-I remember having seen such a device before.+我记得以前看到过这样一种装置。
-You should devise a study plan.+你们应制定学习计划。
-This is an inevitable result.+这是必然的结果。
-He is a retired naval officer.+他是一位退役的海军军官。
-Provide ample navigation information.+提供充足的航行资料。
-Independent thinking is an absolute necessity.+独立思考是绝对必要的。
-Many use poor-quality seed kept from previous harvests.+很多农民使用上个收获季节保留下来的劣质种子。
-Education is the best provision for the journey to old age.+教育是人们通向年老过程中的最好保障。
-What do you pursue in your life?+你生活中追求什么？
-Running water never grows stale.+流水不腐，户枢不蠹。
-Water, unlike oil, has no substitute.+水不同于石油，没有替代品。
-Actually, you deserve the credit.+实际上，荣誉该归你。
-Discrimination against women is not allowed.+不允许歧视女性。
-I feel secure about my new job.+我对新工作感到安心。
-For a start, against threats to national security.+首先要警惕国家安全受到威胁。
-Scratch yourself if you itch.+如果你觉得发痒，你就搔吧。
-A man of talent is one thing, and a pedant another.+有才能的人和卖弄学问的人是不一样的。
-I have insurance - here's my card.+我有保险，这是我的保险卡。
-Their support will insure me success.+他们的支持会保证我成功。
-He has faults; nevertheless, we love him.+他有缺点，可是我们喜欢他。
-We'll take a neutral stance on this issue.+我们在这一事件上将保持中立。
-The problem is solved on the spot.+困难当场解决了。
-We'll spray air freshener to get rid of it. Is that OK?+我们给你喷点儿空气清新剂，好吗？
-It's a medium-sized city famous for its environment.+这是个以优美环境闻名的中等城市。
-Even the media occasionally try to trick the public with a clever April Fool story.+大众媒体偶尔也会以巧妙的愚人节故事来愚弄公众。
-How to use auxiliary verb better?+怎样更好地运用助动词？
-The automatic function can be very dangerous.+自动功能可能是非常危险的。
-We cannot hope to compete with so experienced a team.+我们没希望与如此经验丰富的队竞争。
-He is a highly competent teacher.+他是一个十分称职的教师。
-There is much competition to make such a claim.+要做出这样的宣示势必经过一番竞争。
-How do you distribute the time? And what is the reason?+你是如何分配时间的？依据是什么？
-We do not want to disturb what we have got.+我们不想打乱现有的东西。
-Some good suggestions will be able to integrate the plan.+一些好的建议将能使这一计划更为完整。
-The seeds need rich moist soil.+种子需要肥沃、潮湿的土壤。
-Plants suck up moisture from the soil.+植物从土壤中吸收水分。
-Good food, good diet and good exercise promote health.+良好的食物、饮食和运动能够促进健康。
-The region has lost some of its competitiveness.+该区域已经丧失了一些竞争力。
-Should we go and register now?+我们现在就去注册登记吗？
-Officials say conditions are stable today.+官员表示情况现在很稳定。
-This process ought to be highly sophisticated.+这个过程应该是非常复杂的。
-China has a splendid ancient civilization.+中国有着古老辉煌的文化。
-Can you cancel your appointment?+你可以把约会取消吗？
-A table friend is a variable friend.+酒桌上的朋友是不可靠的朋友。
-What is the prospect of getting a job abroad?+在国外找工作的前景如何？
-It was the land of freedom and prosperity.+这是一块自由繁荣的土地。
-From color aspect, we prefer this automobile.+就颜色而言，我们更喜欢这辆汽车。
-Perhaps it is useful to cope with an exam.+或许，突击记单词可以应付考试。
-What are my core values?+我的核心价值观是什么？
-Students are required to maintain silence in the library.+学生在图书馆中要求保持安静。
-The bridge connects the island with the mainland.+这座桥将这个岛屿与大陆连接起来。
-Have ideal, have morality, literate, have discipline.+有理想，有道德，有文化，有纪律。
-Do you want domestic or imported beer?+你是要国产的还是进口的啤酒？
-His constant complaints made me mad.+他不断的抱怨让我抓狂。
-The tree grew on the brink of the cliff.+那棵树长在悬崖边缘。
-We recognize him as a leading authority on linguistics.+我们尊他为语言学的权威。
-I would like to borrow an audio tape.+我想借两盘录音带。
-What is your attitude towards this question?+你对这个问题的态度如何？
-We sometimes do social studies in the community.+我们有时在社区做一些社会实践。
-Not to commit mistake is impossible.+不犯错误是不可能的。
-We often comment on current events.+我们经常对时事发表评论。
-We should distinguish between right and wrong.+我们应辨别是非。
-I pray that you will have pity on my distress.+我请求你可怜可怜我的不幸遭遇。
-Conduct daily inspection tour of the facility.+监督管理公司设备正常运行。
-He has a great faculty for mathematics.+他具有很强的数学才能。
-The ball is filled with gaseous mixture.+那个球被充满了气体混合物。
-A woman's mood is like the weather.+女人的心情就像天气。
-I have no evidence but moral evidence to bring forward.+我没有真凭实据，只有提出道义上的证据。
-He is prominent in the literary world.+他在文学界是杰出的。
-This black substance is carbon.+这种黑色物质是碳。
-I want a life that is full and substantial.+我要的是丰富充实的生命。
-It can prompt you into action.+它能促使你采取行动。
-All these figures are quite vivid.+这些人物形象相当生动。
-I want to increase my vocabulary.+我想增加我的词汇量。
-Does the idea of working for a venture company appeal to you?+你有没有兴趣到合资企业工作？
-In truth, neither version is right.+事实上，以上两种说法都不对。
-What is your waist measurement?+你的腰围是多少？
-It often takes trouble from outside to weld a family together.+要使一个家庭重归于好，往往需要求助于外力。
-He got up with a stretch and a yawn.+他起来后伸伸懒腰，打个呵欠。
-Last year they doubled their yield.+去年他们的产量翻了一番。
-Welcome to the Pudong Economic Development Zone in Shanghai.+欢迎到上海浦东经济开发区。
-This strategy is not without danger.+这种战略并非没有危险。
-The title of my speech today is "Viewing China in a strategic angle".+今天，我演讲的题目是：用发展的眼光看中国。
-So things are now a little tense.+目前，我们之间的关系有些紧张。
-This can help ease the tension.+这样能帮助缓和紧张局面。
-You can find my house along the avenue.+沿着林阴道你能找到我的家。
-My bicycle is not available, and it is being repaired.+我的自行车现在不能用，因为正在修理。
-A fire is comparable with the sun; both give light and heat.+火可以和太阳相比，两者都可以发光发热。
-Let's make a comparative study of the two languages.+让我们将这两种语言作一下比较研究。
-Don't dash stones! It's dangerous.+不要扔石头，那样做危险。
-The data is all ready for examination.+资料都已准备好以便检查。
-They dived from the bridge and rescued the drowning woman.+他们从桥上跳下去救起了那个溺水的女人。
-Their opinions are widely diverse.+他们的意见迥然不同。
-He entitled us to enter his office at any time.+他授权我们可以随时进入他的办公室。
-The policeman regulated traffic at the intersection.+警察在十字街口管理交通。
-They released the prisoners.+他们释放了俘虏。
-She always exaggerates when she tells something she's done.+每当她谈及自己所做的事时，她总是言过其实。
-He is an evil man with evil ideas, and leads an evil life.+他是一个心存恶念的邪恶之人，过着邪恶的生活。
-The number of students of this school has shrunk.+这所学校的学生人数在减少。
-In their first year at school, most children learn to add and subtract.+入学第一年，多数孩子都学加减法。
-They decided to move out to the suburbs.+他们决定搬到郊区去住。
-The new subway is now being laid.+新的地铁正在铺设中。
-They are surveying the land before it is divided into house lots.+他们要在土地被分割为住宅用地前先勘察这块土地。
-He grew up in a wealthy family.+他在一个富有的家庭里长大。
-The man adjusted very precisely.+那个人调得很准。
-He attached a cheque to the order form.+他在订购表上贴了一张支票。
-What's the profit of doing that?+做那件事有什么好处呢？
-That business became profitable last year.+那项生意去年变得很赚钱。
-On both slopes of the roof there are broken tiles.+屋顶的两面斜面都有破瓦片。
-We reinforce a troop again.+我们又增援一支军队。
-They rejected his application for membership.+他们拒绝考虑他的成员资格申请。
-Her children's death is a fatal blow on her.+孩子们的死对她是致命的打击。
-I don't believe in fate.+我不相信命运。
-In my humble opinion, he will win the election.+依我拙见，他将在选举中获胜。
-It was an illegal act and will lead to your arrest.+这是非法行为，足以将你送入监狱。
-The court awarded damages of 5000 dollars to him.+法庭判给他5000美元损害赔偿金。
-He doesn't seem to be aware of the problems.+他好像没有意识到这个问题。
-There are two columns on each page of this dictionary.+这本词典每一页有两栏。
-Do you prefer comedy or tragedy?+你喜欢喜剧还是悲剧？
-She is very kind to the dumb children.+她对哑童非常好。
-Deaf people can't hear.+聋人听不见。
-The great hall was decorated with flowers.+大厅里装饰着花朵。
-Drinking is a principal cause of traffic accidents.+酗酒是交通事故的主要原因。
-Each side declared that it would never abandon its principle.+各方都说绝不放弃自己的原则。
-He feels a prior obligation to his job as a journalist.+他觉得要优先为他的新闻记者的工作尽职。
-Safety has high priority in factories.+工厂里安全至关重要。
-Smoking is prohibited in the office building.+办公楼内禁止抽烟。
-He is a remarkable linguist.+他是一位杰出的语言学家。
-I don't suppose there'll ever be a remedy for that.+我想那件事不会有任何补救办法。
-Casual conversation tends to be filled with repetition.+随意的交谈中常常有许多重复的话。
-They made vain attempts to reach the mountaintop.+他们徒劳地试图到达山顶。
-The work was undertaken by members of the committee.+此项工作由委员会成员承担。
-The custom is unique to the region.+这种风俗是这一地区特有的。
-Her parents' opposition is an obstacle to her marriage.+她父母的反对是她结婚的障碍。
-He's an odd old man.+他是个古怪的老头儿。
-This part of the book may be omitted.+书的这一部分可以省略。
-He easily defeated his opponent in the election.+选举中他轻易地击败了对手。
-There may be an opportunity for you to see the chairman of the board tomorrow.+明天你也许有机会见到董事长。
-The orchestra played a Mozart symphony.+乐队演奏了一首莫扎特的交响曲。
-A student will probably attend four or five courses during each semester.+每个学生一学期可能要修四五门课程。
-This is a semiconductor integrated circuit.+这是一个半导体集成电路。
-We will have a seminar on environmental protection.+我们将召开一个关于环境保护问题的讨论会。
-We got off at the terminal station.+我们在终站下车。
-They recaptured the lost territory.+他们收复了失地。
-The approximate time of their arrival will be five o'clock.+他们约于五点到达。
-This is an arbitrary decision.+这是个武断的决定。
-Tom is the architect of this building.+汤姆是这座建筑的设计师。
-He likes Greek architecture.+他喜欢希腊建筑式样。
-He is a biology professor.+他是生物教授。
-He made a careful study of the geography of the province.+他仔细研究了该省的地形。
-He majors in geology.+他主修地质学。
-She is fond of geometry.+她喜欢几何。
-He is good at arithmetic.+他擅长算术。
-He was not good at algebra in middle school.+他中学时不擅长代数。
-We are delighted in entertainment of our friends.+我们喜欢款待朋友。
-The proposal was greeted with great enthusiasm.+这个建议受到热情的响应。
-He supported that country's entry into the European Common Market.+他支持那国家加入欧洲共同体。
-Children need a happy home environment.+孩子们需要愉快的家庭环境。
-The next episode of this television movie will be shown on Friday.+这部电视剧下一集将于周五播映。
-The two countries have been trying to maintain their military equation.+这两个国家一直尽力维持他们在军事上的平衡。
-We restrained the children from playing by the railroad.+我们阻止孩子们在铁路旁边玩耍。
-Her anger was beyond restraint.+她怒不可遏。
-They won the battle and resumed lost territory.+他们打胜了这一仗并收复了失地。
-My uncle became severe when I was late.+当我迟到时，我的叔父变得严厉起来。
-The advantage of the idea was its simplicity.+这个主意的优点就在于它简单明了。
-The subject is immensely complex, and hard to simplify.+这个题目非常复杂，并且很难简化。
-The many sorrows turned her hair white.+这许许多多不幸的事使她的头发变白了。
-He has a bad cold and his nose is stuffed up.+他患重感冒，鼻子塞住了。
-Ellen has got a temporary job.+艾伦找到一份临时工作。
-Don't give in to temptation.+要经得住诱惑。
-My elder sister has a terror of fire.+我姐姐怕火。
-He thrust the tickets into my hand.+他把票塞进我手里。
-The government has signed a treaty with Washington.+政府已与华盛顿签约。
-Unexpected difficulties arose in the course of their experiment.+在他们进行实验的过程中出现了意想不到的困难。
-You aroused my curiosity.+你引起了我的好奇心。
-The government burdened the nation with heavy taxes.+政府使国民负担重税。
-The weather bureau made daily reports on weather conditions.+气象局每天报告天气状况。
-He had had the most marvelous experience.+他有过极其奇特的经历。
-We have seen massive changes in recent years.+这几年我们经历了巨大的变化。
-The new ambassador is more mature than his predecessor.+新大使比他的前任更成熟。
-Our goal is to achieve the maximum efficiency.+我们的目标是取得最高的效率。
-You must practice each day for a minimum of 30 minutes.+你每天必须最少练习三十分钟。
-I won't put up with any more of your nonsense -- now get down to work.+不容许你再胡闹了——快工作吧。
-He's very interested in nuclear physics.+他对核物理学非常感兴趣。
-These young people formed the nucleus of the club.+这些年轻人成了俱乐部的核心。
-In this shop they retail tobacco and sweets.+这家铺子零售香烟和糖果。
-This village still retains its old world character.+这个村庄仍然保持着古色古香的特色。
-He feels this new law will restrict his freedom.+他觉得这一新法律会限制他的自由。
-The company sponsored several TV programs.+这家公司赞助了几个电视节目。
-Such stories serve as a spur to children's imagination.+这类故事能激发儿童的想像力。
-The victorious army returned in triumph.+获胜的部队凯旋而归。
-Her yearly tuition is $2,000.+她一年的学费是两千美元。
-He twisted the three ropes to make a very strong rope.+他把三根绳子搓在一起做成了一根结实的绳子。
-This is a course for undergraduates.+这是为本科生开的一门课。
-It's a universal truth.+这是一个普遍真理。
-Our world is but a small part of the universe.+我们的地球只是宇宙的一小部分。
-The news reached me via my aunt.+那消息是通过我婶婶转告我的。
-The bridge vibrated when a heavy truck passed.+当重型卡车经过时，这座桥就会震动。
-This is a new kind of virus in the computer.+这是一种新的电脑病毒。
-He made a voluntary statement to the police.+他自动向警方供出一切。
-He volunteered to water our plants.+他自告奋勇给我们的树木浇水。
-They vote to choose a president.+他们投票选举总统。
-He was appointed secretary.+他被任命为秘书。
-Christmas was approaching.+圣诞节快到了。
-Her bright clothes were not appropriate for a funeral.+她那身鲜艳的衣服不适合参加葬礼。
-I received a bunch of flowers yesterday.+昨天我收到了一束鲜花。
-We collected a bundle of old clothes to be given to poor people.+我们收集了一包旧衣服给穷人。
-When does the ceremony take place?+典礼何时举行？
-There was chaos in the town after the hurricane had struck.+飓风过后，城里一片混乱。
-We give a special discount of 10 percent for cash.+如用现金购买，我们给予九折优待。
-The cakes were displayed in the window.+糕点陈列在橱窗中。
-His reply is equivalent to a refusal.+他的回答等于是拒绝。
-Soldiers are trained to stand erect.+士兵们训练站得笔直。
-Please fax us the file.+请把这些文件传真给我们。
-The land is so fertile that three crops a year can grow.+这片土地很肥沃，一年可种三季庄稼。
-Get some more fertilizer for the garden.+给花园再多施些肥料。
-I am grateful to have you help repair the house.+承你帮忙修房子，我十分感激。
-Her eyes were immediately filled with gratitude.+她的眼里立刻充满了感激之情。
-To his horror, the bus caught fire.+使他惊恐的是，公共汽车着了火。
-It is a horrible thing to see one person make another suffer.+看到人折磨人的景象是件可怕的事。
-You can find it on the Internet.+你可以在因特网上找到它。
-He interpreted a difficult passage in a book.+他解释了书中一段难懂的文字。
-This rule does not allow of more than one interpretation.+这条规则只能有一种解释。
-Advance in the jungle was very slow.+在丛林中行进很慢。
-He tied the two ropes together with a knot.+他打个结把两根绳子系在一起。
-The rain dripped down from a leak in the roof.+雨水从屋顶的裂缝中滴漏下来。
-The postbox leans a little bit.+这个邮筒有点倾斜。
-The fish leaped out of water and landed on the shore.+鱼跃出水面落到岸上。
-We have to modify our plan a little bit.+我们得对我们的计划稍加修改。
-He dresses a nylon shirt.+他穿着一件尼龙衬衫。
-We grow onions in the garden.+我们在园子里种洋葱。
-He crushed a piece of chalk to powder.+他将一支粉笔压成粉末。
-The new law is applicable from next Monday.+新法令下个星期一开始实施。
-There were five applicants for the position.+有五人申请那个职务。
-It was a small river, six feet in breadth.+那是一条六英尺宽的小河。
-Conservation is one way to make sure we have enough energy in the future.+对自然资源的保护是保证我们将来有足够的能源的一种办法。
-His conservative views made him unpopular.+他保守的观点使他不受欢迎。
-These two lines are parallel.+这两条线平行。
-They sang with great passion.+他们满怀激情地歌唱。
-His response was passive.+他的反应是被动的。
-We saw a herd of elephants yesterday.+昨天我们见到了一群大象。
-The mountain peak was covered with snow.+山顶被雪覆盖着。
-The employment problem tends to be a city phenomenon.+就业问题常常是一个城市现象。
-She was reluctant to give her money away.+她不愿意把钱送给别人。
-The villagers here rely on wells for their water.+这儿的村民用水全靠井。
-His nationality isn't relevant to whether he is a good lawyer.+他的国籍跟他是不是一个好律师不相关。
-I found this to be a reliable brand of washing machines.+我觉得这是一种牌子可靠的洗衣机。
-The pills gave her some relief.+药片减轻她一些痛苦。
-The store has an excellent reputation for fair dealing.+该店买卖公平，声誉极佳。
-He rescued three children from the burning building.+他从着火的大楼里救出了三个孩子。
-He drew a right triangle.+他画了一个直角三角形。
-He described the events of that day in sequence.+他按先后次序描述了那一天发生的种种事件。
-The lake is quite shallow.+这个湖泊很浅。
-As the temperature dropped abruptly, the campers were shivering all over with cold.+由于气温骤降，野营者冷得浑身发抖。
-Don't just shrug your shoulders. Say something.+不要光耸肩，你讲讲话呀。
-Petitions bearing nearly a half-million signatures were sent to the White House.+有将近五十万人签名的请愿书被送到白宫。
-Henry was sincere about reconciling with his brother.+亨利真心愿意与兄弟言归于好。
-The store deals in objects of domestic utility.+那家商店出售家庭用品。
-Scientists are trying to find more efficient ways of utilizing solar energy.+科学家正在寻找能更有效地利用太阳能的方法。
-We didn't utter a word during the test.+我们在测验时没有说过一句话。
-Prices are subject to variation.+价格可以变动。
-The launch vehicle lifts the satellite into orbit.+运载火箭将人造卫星送入运行轨道。
-His every sentence was followed by a burst of applause.+他的每一句话都赢得一阵掌声。
-The kitchen is equipped with modern appliances.+这间厨房里安装了各种现代化设备。
-They would not consent to my leaving school.+他们不同意我辍学。
-The city was conquered overnight.+那座城市在夜里被攻克。
-We must correct our defects as soon as possible.+我们必须尽快纠正我们的缺点。
-Take care with these delicate flowers.+当心这些娇嫩的鲜花。
-Language is constantly and gradually evolving.+语言在不断地缓慢发展。
-In the course of evolution, some birds have lost the power of flight.+在进化的过程中，一些鸟丧失了飞行能力。
-The father frowned on his son's behavior.+父亲对他儿子的行为表示不满。
-He was frustrated by repeated failures.+他因一再失败而灰心丧气。
-You have my guarantee that I'll finish the job on time.+我向你保证我会按时完成工作。
-Bob felt guilty that he had not made an attempt to save her.+鲍勃为未曾设法救她而感到内疚。
-He was jealous of his friend's reputation.+他妒忌朋友的声誉。
-A woman in blue jeans walked into the store.+一个穿蓝色牛仔裤的女人走进了商店。
-Are brandy and other liquors available here?+这里能买到白兰地和其他酒吗？
-A liter is equal to 1,000 c.c.+一公升等于一千毫升。
-He is a very modest person.+他是位非常谦逊的人。
-The structure of molecules can be seen under an electron microscope.+分子的结构可在电子显微镜下观察到。
-The satellite was launched into orbit around the moon.+卫星被发射进入绕月球运行的轨道。
-There are particles of dust in the air.+空气中有尘粒。
-He isn't particularly clever.+他并不特别聪明。
-All you know is how they respond.+你所知道的只是他们的反应。
-Effectively, their response was a refusal.+实际上，他们的答复是拒绝。
-He is a sensible person.+他是一个明白人。
-The tooth is sensitive to cold.+这颗牙对冷的东西很敏感。
-Now, the world will tremble once again.+世界将再次颤栗。
-It was a tremendous experience.+这是很棒的经历。
-This trend is continuing.+目前，这个趋势仍然持续。
-Will opponents get a fair trial?+反对者们会得到公平的审判吗？
-The trend has been apparent in oil.+这一趋势在石油领域也很明显。
-The baby has a good appetite.+这个宝宝有很好的胃口。
-Don't forget my deposit and your laptop.+别忘了我的定金和你的手提电脑。
-I must find someone to act as a deputy for me during my absence.+我必须找一个人在我离开期间代理我的职务。
-We shall derive much benefit from reading good novels.+我们将从优秀小说中获得很大好处。
-It is easier to descend than to ascend.+下降容易上升难。
-In January 2007 China launched a missile.+2007年1月中国发射了一枚导弹。
-But this was his mission.+但是，这就是他的使命。
-Mist rose from the waterfall.+云雾从瀑布中升腾起来。
-The class has made noticeable improvement.+这个班取得了显著的进步。
-Please notify us if the above is not correct.+如果上述内容有误，请通知我们。
-Not for him, then, was the notion of "efficient markets".+因此，“有效市场”的概念对他来说是不成立的。
-They resemble each other in shape but not in color.+它们的形状相似，可是颜色不同。
-Your list will reveal your true feelings.+你的列表将要揭露你真实的感受。
-Tax revenues increased last year.+去年税收增加了。
-Voters expect national leaders to shelter them from the storms.+选民期望国家领导人能保护自己免受冲击。
-Yes, of course. My shield is the strongest. It can stop any spear in the world.+当然是了。我的盾是最结实的，它能抵挡住世界上任何矛。
-Let me start off by saying that sleep is vital to our well-being and health.+让我以这句话开头吧，睡眠对于我们的身心健康是非常重要的。
-urban areas.+市区。
-I urge these people to look to Africa for inspiration.+我很希望这些朋友看一看非洲带来的启示。
-American usage differs from English usage in certain ways.+美式用法在某些方面与英式用法不同。
-There's too much violence on TV nowadays.+现在电视上暴力内容太多了。
-It is a violent place.+这是一个暴力的地方。
-A rainbow is red on one edge, violet on the other.+彩虹一边是红色，另一边是紫色。
-A weed is only a misplaced plant.+杂草只不过是长错地方罢了。
-There are other measures of human welfare.+其它指标也可衡量人类福利。
-None whatsoever. It's just a book.+什么都没有，只是一本书而已。
-Blue is calming whereas red is exciting.+蓝色让人安静，而红色则令人兴奋。
-Grammar is essential to language.+语法对语言至关重要。
-What is your estimate of the market?+你对市场的估计是什么？
-How do you evaluate success?+你是如何评价成功的？
-They exceed us in number.+他们在人数上超过我们。
-This task was exceedingly well done.+这项任务做得非常出色。
-When people exclaim, "the world's gone mad!"+当人们惊呼“这世界疯了！”
-I think, we can exclude that right away.+我想，我们能马上排除这种可能性。
-Pure and exclusive competition leads to failures.+纯粹排他的竞争会导致一事无成。
-The whole excursion took ten hours.+整个远足花了十个小时。
-The stars flashed in the night sky.+夜空中群星闪烁。
-He was trying to flee the country? Why?+他想逃离这个国家？为什么？
-Our economy is flexible.+我们的经济是灵活的。
-The flock produced many lambs.+羊群产了好些羔羊。
-Father deals in hardware.+我父亲做五金生意。
-They help us live in harmony.+它们帮我们和谐地生活。
-Haste does not bring success.+匆忙行事不会成功。
-Her hatred for them grew more.+她对他们越来越憎恨。
-The ugly incident outraged many onlookers.+这件不堪的丑事让许多旁观者义愤填膺。
-The card catalog is the index to the books.+卡片目录是书籍的索引。
-My sister's infant is very lovely.+我姐姐的小婴儿很是可爱。
-A virus wants to infect your body.+病毒要传播到你的身体。
-Nobody is superior, nobody is inferior.+没有人高人一等，也没有人低人一等。
-We must never lose infinite hope.+我们绝不可失去无限的希望。
-The key ingredient is garlic.+主要成分是大蒜。
-The inhabitant of the island is friendly.+岛上的居民很友善。
-A bad jail wastes a body quickly.+监狱的恶劣环境让身体消瘦得特别快。
-What a terrible traffic jam!+交通堵塞好严重！
-Give him one of my jewel eyes.+摘下我眼中的一颗宝石送给他吧。
-John is one of the junior lawyers in the company.+约翰是公司里一名年轻的律师。
-We keep a laser record.+我们保存激光唱片。
-They can launch rockets to push the rock off its course.+他们可以发射火箭将石头推离轨道。
-It is luxury to be understood.+被理解是一种奢侈。
-The earth acts like a big magnet.+地球的作用像一块大磁铁。
-A male was set free in 2006.+2006年一只雄性大熊猫回归大自然。
-Is your assistant male or female?+你的助理是男的还是女的？
-He is a manual worker.+他是一位体力劳动者。
-The workers in that factory manufacture furniture.+那家工厂的工人做家具。
-Look, here is a small marine world.+看，这里是一个小小的海洋世界。
-Focus on mutual goals.+将重点放在共同的利益上。
-Some savages always go naked.+有些野蛮人总是赤身裸体。
-I think the film has some negative effects.+我认为这电影有一些消极影响。
-We ought not to neglect ourselves.+我们不应该忽视自己的健康。
-Origin of the Sugar is Brazil.+白砂糖的原产是巴西。
-Our table is oval in shape.+我们的桌子是椭圆形的。
-At the outset, it looked like a nice day.+开始的时候，天看上去很晴朗。
-Presumably you've read this notice.+大概你已经看到这个通知了。
-Truth is great and will prevail.+真理是至高无上的，且必将获胜。
-Why did you quit your last job?+你为什么辞掉了以前那份工作？
-Our quotation is subject to 5% commission.+我们的报价享受5%的佣金。
-Exercise is very good recreation.+运动是很好的休闲活动。
-The first step is to recruit new trainees.+第一步就是要招收新学员。
-A great man cannot brook a rival.+伟人不能容忍竞争者。
-We all like to see the space shuttle arrive.+我们都很喜欢看到航天飞机的到来。
-Just skim the first chapter.+只要把第一章浏览一下就行了。
-She is still working on her sketch.+她还在画她的素描。
-Fanny was a pretty and slender girl.+范妮是个漂亮苗条的女孩。
-The Expo's theme is "Better City, Better Life".+本届世博会的主题是“城市，让生活更美好”。
-Perhaps I'd better explain. I represent a very large textile group.+也许我最好解释一下，我代表一个很大的纺织集团。
-We want to swim and eat tropical fruit.+我们想去游泳，吃热带水果。
-At church people kneel when they pray.+在教堂人们祈祷时要下跪。
-They labelled him as dishonest.+他们认为他不诚实。
-The merchants of Arabia are doing their things all of the world.+阿拉伯商人在世界各地做买卖。
-A mere 2% of their budget has been spent on publicity.+他们的预算开支只有2%用于宣传。
-There are numerous people in the square.+有许多人在广场上。
-The Olympic Games began with a parade of all the competing nations.+奥运会以所有参赛国列队进场开始。
-He rushed out in pants.+他穿着短裤就冲出来。
-A good teacher should not be partial to anyone of the students.+好的老师不应偏袒任何一个学生。
-Your passports expire.+你们的护照满期了。
-The doctor prepared to prescribe a receipt.+医生准备开一张处方。
-Primitive man made himself primitive tools from stones and bones.+原始人用石头和骨头制作原始工具。
-We walked along the mountain ridge.+我们顺着山脊行走。
-It's the most ridiculous thing I've ever heard in my life.+这是我一生中听到的最可笑的事。
-She was rigid with fear.+她害怕得全身僵住了。
-The bridge withstands the flood.+那座桥经得起洪水。
-No one could witness that he was present.+没有人能证明他在现场。
-The general decided to withdraw his soldiers.+那位将军决定撤军。
-We found it very slippery underfoot.+我们感到地上很滑。
-The cup fell and smashed.+杯子落下来摔碎了。
-The branch suddenly snapped.+树枝突然折断了。
-Computer software.+计算机软件。
-This is a solar calendar.+这是阳历。
-May 5th of the Chinese lunar calendar is the Dragon Boat Festival.+中国农历五月初五是端午节。
-The developers submitted building plans to the council for approval.+开发商把施工方案提交议会以求批准。
-The timber has started to decay.+木材已开始腐烂。
-Give some face tissues to me.+给我些面巾纸。
-I prefer the title of reporter.+我更喜欢报告者的标题。
-His tone is rather unfriendly.+他的口气很不友好。
-The snow drifted everywhere.+雪飘至各处。
-Water is dripping from the roof.+水正从屋顶滴下来。
-I want something durable.+我想要耐用的东西。
-Earthquake damage and duration increased.+地震破坏和持续时间增加了。
-The street lights come on at dusk and go off at dawn.+街灯在黄昏时亮起，黎明时熄灭。
-He has a pair of leather shoes.+他有一双皮鞋。
-They began to draft legislation.+他们开始起草法规。
-He reads books at his leisure.+他在空闲时读一些书。
-She is wearing a loose dress.+她穿着一件宽松的连衣裙。
-The medicine may loosen your cough.+这种药能减轻你的咳嗽。
-I like earnest pupils.+我喜欢认真的学生。
-It's handmade and hence expensive.+这是手工做的，因此很贵。
-I could hear the echoes in this temple.+我在这座庙里能听到回声。
-You understand the situation; I needn't elaborate any further.+你了解情况，我就不再赘述了。
-Our plans are fairly elastic.+我们的计划有相当的灵活性。
-Don't lay your elbows on the desk.+不要将两肘放在书桌上。
-An electron tube or a vacuum tube.+电子管或真空管。
-The eruption of a volcano is spontaneous.+火山的爆发是自发的。
-For that article he has worked over some 30 volumes of Chinese history.+为了那篇文章，他查阅了约三十卷中国历史。
-The old lady can't bear the fatigue of a long journey.+这位老妇人无法忍受长途旅行的疲劳。
-We traced the trouble to a faulty transformer.+我们查出故障出在一个有毛病的变压器上。
-They are favorable to the proposal.+他们赞同这项提议。
-Football is my favorite.+足球是我最喜欢的。
-The art galleries of Florence are very famous.+佛罗伦萨的美术馆非常著名。
-I'd like five gallons of wine.+我要五加仑葡萄酒。
-How can we bridge the gap between rich and poor?+怎样才能缩小贫富之间的差距？
-The sanitation department is in charge of garbage disposal.+环境卫生部门负责处理垃圾。
-Please don't only gaze at the coffee in your cup.+请不要只凝视着你杯中的咖啡。
-You have to change gear manually in this car; it's not automatic.+这辆车需要手动换挡，不是自动的。
-In this case, an advantageous gene transfer might be preserved.+这样的话，优势基因转移将会得以保留。
-I shall ring you up lest you forget to come.+我会打电话给你，以免你忘了来。
-Every man is liable to error.+人总是要犯错误。
-They have also tended to be more liberal economically than their French counterparts.+在经济上，他们趋向于比他们的法国同行更加强调自由主义。
-You may extinguish a nation, but not the love of liberty.+你可以消灭一个国家，但不能消灭对自由的热爱。
-Can I see your driver's license?+我能看看你的驾照吗？
-Plants suck moisture from the earth.+植物从土壤中吸收水分。
-Teachers should motivate students to be creative.+老师应该激励学生发挥创造力。
-So far investigators have not offered any motive for the attack.+到目前为止，调查人员还没有任何可能的袭击动机。
-The new car factory will generate a lot of jobs in the area.+新汽车厂将为该地区创造大量就业机会。
-The hostess' warm and genuine welcome made us feel at home at once.+女主人热情真诚的欢迎使我们立刻有了宾至如归的感觉。
-His old car consumed much gasoline.+他的旧车耗油很多。
-Keep yourself and the bathrooms clean and germ-free.+讲究卫生，保持洗手间清洁无病菌。
-Handshake is a gesture of friendship.+握手是一种友好的表示。
-The whale is the giant of the sea.+鲸鱼是海洋中的庞然大物。
-I caught a glimpse of the waterfall when our train passed by.+火车经过时我瞥见了那个瀑布。
-They fought for glory and won a glorious victory. People glorified them.+他们为荣誉而战，取得了辉煌的胜利，人们颂扬他们。
-Pardon is the most glorious revenge.+宽恕是最伟大的报复。
-Hydrogen is the lightest element.+氢是最轻的元素。
-At worst, they sound hostile to democracy.+从最坏方面看，他们似乎对民主有敌意。
-Household expenses.+家庭开支。
-The holy ceremony he has just heard has moved him.+他刚刚听到的庄严仪式令他感动。
-The calm sea gives no hint of the coming storm.+平静的大海没有暴风雨将至的迹象。
-The highlight of the trip was the visit to the Eiffel Tower.+这次旅行最精彩的部分就是参观埃菲尔铁塔。
-`;
-
-/* ============================================================
- * 核心词汇文本
+ * 词库区
  * ============================================================ */
 var CORE_WORDS_TEXT = `
 abandon；/əˈbændən/；抛弃、放弃
@@ -3121,10 +2108,6 @@ youth；/ju:θ/；青年时期、青年
 zero；/ˈzɪərəʊ/；零
 zone；/zəʊn/；区域
 `;
-
-/* ============================================================
- * 一般词汇文本
- * ============================================================ */
 var GENERAL_WORDS_TEXT = `
 abide；/əˈbaɪd/；遵守、忍受
 abnormal；/æbˈnɔːml/；反常的
@@ -5297,6 +4280,2157 @@ zone；/zəʊn/；区域
 zoo；/zuː/；动物园
 zoom；/zuːm/；快速移动
 `;
+var OPD_WORDS_TEXT = `
+family；/ˈfæməli/；家庭
+mother；/ˈmʌðə(r)/；母亲
+father；/ˈfɑːðə(r)/；父亲
+parents；/ˈpeərənts/；父母
+brother；/ˈbrʌðə(r)/；兄弟
+sister；/ˈsɪstə(r)/；姐妹
+baby；/ˈbeɪbi/；婴儿
+grandma；/ˈɡrænmɑː/；奶奶/外婆
+grandpa；/ˈɡrænpɑː/；爷爷/外公
+aunt；/ɑːnt/；阿姨/姑姑
+uncle；/ˈʌŋkl/；叔叔/舅舅
+cousin；/ˈkʌzn/；表兄弟姐妹
+daughter；/ˈdɔːtə(r)/；女儿
+son；/sʌn/；儿子
+wife；/waɪf/；妻子
+husband；/ˈhʌzbənd/；丈夫
+friend；/frend/；朋友
+neighbor；/ˈneɪbə(r)/；邻居
+bread；/bred/；面包
+rice；/raɪs/；米饭
+noodles；/ˈnuːdlz/；面条
+pizza；/ˈpiːtsə/；比萨饼
+hamburger；/ˈhæmbɜːɡə(r)/；汉堡包
+sandwich；/ˈsænwɪtʃ/；三明治
+chicken；/ˈtʃɪkɪn/；鸡肉
+fish；/fɪʃ/；鱼
+egg；/eɡ/；鸡蛋
+milk；/mɪlk/；牛奶
+water；/ˈwɔːtə(r)/；水
+juice；/dʒuːs/；果汁
+coffee；/ˈkɒfi/；咖啡
+tea；/tiː/；茶
+soup；/suːp/；汤
+salad；/ˈsæləd/；沙拉
+cake；/keɪk/；蛋糕
+cookie；/ˈkʊki/；饼干
+icecream；/ˌaɪsˈkriːm/；冰淇淋
+breakfast；/ˈbrekfəst/；早餐
+lunch；/lʌntʃ/；午餐
+dinner；/ˈdɪnə(r)/；晚餐
+apple；/ˈæpl/；苹果
+banana；/bəˈnɑːnə/；香蕉
+orange；/ˈɒrɪndʒ/；橙子
+grape；/ɡreɪp/；葡萄
+strawberry；/ˈstrɔːbəri/；草莓
+watermelon；/ˈwɔːtəmelən/；西瓜
+peach；/piːtʃ/；桃子
+pear；/peə(r)/；梨
+lemon；/ˈlemən/；柠檬
+mango；/ˈmæŋɡəʊ/；芒果
+pineapple；/ˈpaɪnæpl/；菠萝
+kiwi；/ˈkiːwi/；猕猴桃
+cherry；/ˈtʃeri/；樱桃
+blueberry；/ˈbluːbəri/；蓝莓
+tomato；/təˈmɑːtəʊ/；西红柿
+potato；/pəˈteɪtəʊ/；土豆
+carrot；/ˈkærət/；胡萝卜
+onion；/ˈʌnjən/；洋葱
+cabbage；/ˈkæbɪdʒ/；卷心菜
+broccoli；/ˈbrɒkəli/；西兰花
+corn；/kɔːn/；玉米
+cucumber；/ˈkjuːkʌmbə(r)/；黄瓜
+lettuce；/ˈletɪs/；生菜
+pepper；/ˈpepə(r)/；辣椒
+mushroom；/ˈmʌʃrʊm/；蘑菇
+garlic；/ˈɡɑːlɪk/；大蒜
+ginger；/ˈdʒɪndʒə(r)/；姜
+shirt；/ʃɜːt/；衬衫
+pants；/pænts/；裤子
+dress；/dres/；连衣裙
+skirt；/skɜːt/；裙子
+shoes；/ʃuːz/；鞋子
+hat；/hæt/；帽子
+glasses；/ˈɡlɑːsɪz/；眼镜
+watch；/wɒtʃ/；手表
+jacket；/ˈdʒækɪt/；夹克
+coat；/kəʊt/；外套
+sweater；/ˈswetə(r)/；毛衣
+socks；/sɒks/；袜子
+gloves；/ɡlʌvz/；手套
+scarf；/skɑːf/；围巾
+belt；/belt/；腰带
+jeans；/dʒiːnz/；牛仔裤
+shorts；/ʃɔːts/；短裤
+tie；/taɪ/；领带
+uniform；/ˈjuːnɪfɔːm/；制服
+house；/haʊs/；房子
+room；/ruːm/；房间
+door；/dɔː(r)/；门
+window；/ˈwɪndəʊ/；窗户
+table；/ˈteɪbl/；桌子
+chair；/tʃeə(r)/；椅子
+bed；/bed/；床
+lamp；/læmp/；台灯
+sofa；/ˈsəʊfə/；沙发
+bookshelf；/ˈbʊkʃelf/；书架
+drawer；/drɔː(r)/；抽屉
+mirror；/ˈmɪrə(r)/；镜子
+clock；/klɒk/；时钟
+carpet；/ˈkɑːpɪt/；地毯
+kitchen；/ˈkɪtʃɪn/；厨房
+bathroom；/ˈbɑːθruːm/；浴室
+bedroom；/ˈbedruːm/；卧室
+livingroom；/ˈlɪvɪŋruːm/；客厅
+garden；/ˈɡɑːdn/；花园
+fence；/fens/；篱笆
+roof；/ruːf/；屋顶
+school；/skuːl/；学校
+teacher；/ˈtiːtʃə(r)/；老师
+student；/ˈstjuːdnt/；学生
+book；/bʊk/；书
+pen；/pen/；钢笔
+pencil；/ˈpensl/；铅笔
+desk；/desk/；书桌
+classroom；/ˈklɑːsruːm/；教室
+blackboard；/ˈblækbɔːd/；黑板
+chalk；/tʃɔːk/；粉笔
+eraser；/ɪˈreɪzə(r)/；橡皮擦
+ruler；/ˈruːlə(r)/；尺子
+backpack；/ˈbækpæk/；背包
+notebook；/ˈnəʊtbʊk/；笔记本
+dictionary；/ˈdɪkʃənri/；字典
+library；/ˈlaɪbrəri/；图书馆
+playground；/ˈpleɪɡraʊnd/；操场
+principal；/ˈprɪnsəpl/；校长
+cat；/kæt/；猫
+dog；/dɒɡ/；狗
+bird；/bɜːd/；鸟
+rabbit；/ˈræbɪt/；兔子
+tiger；/ˈtaɪɡə(r)/；老虎
+lion；/ˈlaɪən/；狮子
+monkey；/ˈmʌŋki/；猴子
+panda；/ˈpændə/；熊猫
+elephant；/ˈelɪfənt/；大象
+horse；/hɔːs/；马
+cow；/kaʊ/；奶牛
+pig；/pɪɡ/；猪
+sheep；/ʃiːp/；绵羊
+goat；/ɡəʊt/；山羊
+duck；/dʌk/；鸭子
+snake；/sneɪk/；蛇
+bear；/beə(r)/；熊
+wolf；/wʊlf/；狼
+deer；/dɪə(r)/；鹿
+fox；/fɒks/；狐狸
+mouse；/maʊs/；老鼠
+hamster；/ˈhæmstə(r)/；仓鼠
+parrot；/ˈpærət/；鹦鹉
+eagle；/ˈiːɡl/；鹰
+whale；/weɪl/；鲸鱼
+dolphin；/ˈdɒlfɪn/；海豚
+shark；/ʃɑːk/；鲨鱼
+red；/red/；红色
+blue；/bluː/；蓝色
+yellow；/ˈjeləʊ/；黄色
+green；/ɡriːn/；绿色
+white；/waɪt/；白色
+black；/blæk/；黑色
+pink；/pɪŋk/；粉色
+purple；/ˈpɜːpl/；紫色
+brown；/braʊn/；棕色
+gray；/ɡreɪ/；灰色
+gold；/ɡəʊld/；金色
+silver；/ˈsɪlvə(r)/；银色
+sun；/sʌn/；太阳
+moon；/muːn/；月亮
+star；/stɑː(r)/；星星
+rain；/reɪn/；雨
+snow；/snəʊ/；雪
+cloud；/klaʊd/；云
+wind；/wɪnd/；风
+tree；/triː/；树
+flower；/ˈflaʊə(r)/；花
+grass；/ɡrɑːs/；草
+mountain；/ˈmaʊntən/；山
+river；/ˈrɪvə(r)/；河流
+lake；/leɪk/；湖
+ocean；/ˈəʊʃn/；海洋
+sky；/skaɪ/；天空
+rainbow；/ˈreɪnbəʊ/；彩虹
+storm；/stɔːm/；暴风雨
+fog；/fɒɡ/；雾
+ice；/aɪs/；冰
+fire；/ˈfaɪə(r)/；火
+head；/hed/；头
+eye；/aɪ/；眼睛
+nose；/nəʊz/；鼻子
+mouth；/maʊθ/；嘴巴
+ear；/ɪə(r)/；耳朵
+hair；/heə(r)/；头发
+hand；/hænd/；手
+foot；/fʊt/；脚
+arm；/ɑːm/；手臂
+leg；/leɡ/；腿
+face；/feɪs/；脸
+tooth；/tuːθ/；牙齿
+tongue；/tʌŋ/；舌头
+finger；/ˈfɪŋɡə(r)/；手指
+shoulder；/ˈʃəʊldə(r)/；肩膀
+knee；/niː/；膝盖
+neck；/nek/；脖子
+back；/bæk/；背部
+stomach；/ˈstʌmək/；胃/肚子
+phone；/fəʊn/；电话
+key；/kiː/；钥匙
+umbrella；/ʌmˈbrelə/；雨伞
+bag；/bæɡ/；包
+gift；/ɡɪft/；礼物
+camera；/ˈkæmərə/；相机
+computer；/kəmˈpjuːtə(r)/；电脑
+radio；/ˈreɪdiəʊ/；收音机
+television；/ˈtelɪvɪʒn/；电视机
+remote；/rɪˈməʊt/；遥控器
+battery；/ˈbætəri/；电池
+lock；/lɒk/；锁
+comb；/kəʊm/；梳子
+toothbrush；/ˈtuːθbrʌʃ/；牙刷
+soap；/səʊp/；肥皂
+towel；/ˈtaʊəl/；毛巾
+scissors；/ˈsɪzəz/；剪刀
+tape；/teɪp/；胶带
+glue；/ɡluː/；胶水
+car；/kɑː(r)/；汽车
+bus；/bʌs/；公交车
+train；/treɪn/；火车
+bike；/baɪk/；自行车
+plane；/pleɪn/；飞机
+ship；/ʃɪp/；轮船
+boat；/bəʊt/；小船
+taxi；/ˈtæksi/；出租车
+subway；/ˈsʌbweɪ/；地铁
+truck；/trʌk/；卡车
+motorcycle；/ˈməʊtəsaɪkl/；摩托车
+helicopter；/ˈhelɪkɒptə(r)/；直升机
+rocket；/ˈrɒkɪt/；火箭
+doctor；/ˈdɒktə(r)/；医生
+nurse；/nɜːs/；护士
+police；/pəˈliːs/；警察
+firefighter；/ˈfaɪəfaɪtə(r)/；消防员
+pilot；/ˈpaɪlət/；飞行员
+driver；/ˈdraɪvə(r)/；司机
+cook；/kʊk/；厨师
+farmer；/ˈfɑːmə(r)/；农民
+artist；/ˈɑːtɪst/；艺术家
+musician；/mjuˈzɪʃn/；音乐家
+writer；/ˈraɪtə(r)/；作家
+scientist；/ˈsaɪəntɪst/；科学家
+engineer；/ˌendʒɪˈnɪə(r)/；工程师
+dentist；/ˈdentɪst/；牙医
+pharmacist；/ˈfɑːməsɪst/；药剂师
+lawyer；/ˈlɔːjə(r)/；律师
+judge；/dʒʌdʒ/；法官
+football；/ˈfʊtbɔːl/；足球
+basketball；/ˈbɑːskɪtbɔːl/；篮球
+tennis；/ˈtenɪs/；网球
+swimming；/ˈswɪmɪŋ/；游泳
+running；/ˈrʌnɪŋ/；跑步
+cycling；/ˈsaɪklɪŋ/；骑自行车
+skiing；/ˈskiːɪŋ/；滑雪
+dancing；/ˈdɑːnsɪŋ/；跳舞
+singing；/ˈsɪŋɪŋ/；唱歌
+painting；/ˈpeɪntɪŋ/；绘画
+reading；/ˈriːdɪŋ/；阅读
+cooking；/ˈkʊkɪŋ/；烹饪
+photography；/fəˈtɒɡrəfi/；摄影
+travel；/ˈtrævl/；旅行
+fishing；/ˈfɪʃɪŋ/；钓鱼
+hiking；/ˈhaɪkɪŋ/；徒步
+yoga；/ˈjəʊɡə/；瑜伽
+one；/wʌn/；一
+two；/tuː/；二
+three；/θriː/；三
+four；/fɔː(r)/；四
+five；/faɪv/；五
+six；/sɪks/；六
+seven；/ˈsevn/；七
+eight；/eɪt/；八
+nine；/naɪn/；九
+ten；/ten/；十
+today；/təˈdeɪ/；今天
+tomorrow；/təˈmɒrəʊ/；明天
+yesterday；/ˈjestədeɪ/；昨天
+morning；/ˈmɔːnɪŋ/；早上
+afternoon；/ˌɑːftəˈnuːn/；下午
+evening；/ˈiːvnɪŋ/；晚上
+night；/naɪt/；夜晚
+spring；/sprɪŋ/；春天
+summer；/ˈsʌmə(r)/；夏天
+autumn；/ˈɔːtəm/；秋天
+winter；/ˈwɪntə(r)/；冬天
+year；/jɪə(r)/；年
+month；/mʌnθ/；月
+week；/wiːk/；周
+day；/deɪ/；天
+hour；/ˈaʊə(r)/；小时
+minute；/ˈmɪnɪt/；分钟
+second；/ˈsekənd/；秒
+big；/bɪɡ/；大的
+small；/smɔːl/；小的
+long；/lɒŋ/；长的
+short；/ʃɔːt/；短的
+tall；/tɔːl/；高的
+happy；/ˈhæpi/；快乐的
+sad；/sæd/；悲伤的
+angry；/ˈæŋɡri/；生气的
+tired；/ˈtaɪəd/；累的
+hungry；/ˈhʌŋɡri/；饿的
+thirsty；/ˈθɜːsti/；渴的
+beautiful；/ˈbjuːtɪfl/；美丽的
+ugly；/ˈʌɡli/；丑陋的
+kind；/kaɪnd/；善良的
+clever；/ˈklevə(r)/；聪明的
+lazy；/ˈleɪzi/；懒惰的
+fast；/fɑːst/；快的
+slow；/sləʊ/；慢的
+hot；/hɒt/；热的
+cold；/kəʊld/；冷的
+warm；/wɔːm/；温暖的
+cool；/kuːl/；凉爽的
+new；/njuː/；新的
+old；/əʊld/；旧的
+young；/jʌŋ/；年轻的
+go；/ɡəʊ/；去
+come；/kʌm/；来
+eat；/iːt/；吃
+drink；/drɪŋk/；喝
+sleep；/sliːp/；睡觉
+walk；/wɔːk/；走路
+run；/rʌn/；跑
+swim；/swɪm/；游泳
+read；/riːd/；阅读
+write；/raɪt/；写
+speak；/spiːk/；说话
+listen；/ˈlɪsn/；听
+look；/lʊk/；看
+see；/siː/；看见
+hear；/hɪə(r)/；听到
+smell；/smel/；闻
+touch；/tʌtʃ/；触摸
+taste；/teɪst/；尝
+live；/lɪv/；生活/居住
+work；/wɜːk/；工作
+play；/pleɪ/；玩
+study；/ˈstʌdi/；学习
+teach；/tiːtʃ/；教
+learn；/lɜːn/；学习
+help；/help/；帮助
+want；/wɒnt/；想要
+like；/laɪk/；喜欢
+love；/lʌv/；爱
+hate；/heɪt/；恨
+give；/ɡɪv/；给
+take；/teɪk/；拿
+make；/meɪk/；制作
+do；/duː/；做
+have；/hæv/；有
+be；/biː/；是
+say；/seɪ/；说
+tell；/tel/；告诉
+ask；/ɑːsk/；问
+know；/nəʊ/；知道
+think；/θɪŋk/；想/认为
+feel；/fiːl/；感觉
+try；/traɪ/；尝试
+begin；/bɪˈɡɪn/；开始
+finish；/ˈfɪnɪʃ/；完成
+open；/ˈəʊpən/；打开
+close；/kləʊz/；关闭
+clean；/kliːn/；打扫
+cook；/kʊk/；烹饪
+drive；/draɪv/；驾驶
+fly；/flaɪ/；飞
+`;
+var PHRASES_TEXT = `
+a bit+一点、少许
+a body of+大量、一片
+a case in point+恰当的例子
+a change of heart+改变主意、变心
+a good many+许多、大量
+a great deal+大量、许多
+a great many+许多、大量
+a lot of+许多、大量
+a matter of+关于…的问题
+a number of+若干、许多
+a series of+一系列、一连串
+a variety of+各种各样的
+abide by+遵守、恪守
+above all+首先、最重要的是
+according to+根据、按照
+account for+解释、说明、占比
+accuse sb. of sth.+控告某人某事
+adapt to+适应
+add up to+总计为、结果是
+adhere to+坚持、遵守、粘附
+adjust to+调整以适应
+admit to+承认
+adopt a policy+采取政策
+afford to do+负担得起做某事
+after all+毕竟、终究
+agree on+就……达成一致
+agree with+同意、适合
+ahead of+在…前面、早于
+ahead of time+提前
+aim at+旨在、瞄准
+alive with+充满、洋溢
+all at once+突然、同时
+all but+几乎、除…之外都
+all in all+总而言之
+all manner of+各种各样的
+all of a sudden+突然
+all over+遍及、到处
+all right+尚可、没问题
+all the more+更加、愈发
+all the same+仍然、尽管如此
+all the time+一直、始终
+allow for+考虑到、顾及
+along with+连同、与……一起
+amount to+总计、相当于、意味着
+and so on+等等
+answer for+对……负责
+anything but+根本不、绝不是
+apart from+除……之外
+appeal to+呼吁、吸引
+apply for+申请
+apply to+适用于、应用于
+appoint sb. to do+任命某人做某事
+approve of+赞成、认可
+arise from+由……引起/产生
+arrange for+安排
+arrive at+到达、得出（结论）
+as a consequence+因此、结果
+as a matter of fact+事实上
+as a result+结果、因此
+as a result of+由于、作为…的结果
+as a rule+通常、一般说来
+as a whole+总体上、整体而言
+as far as+就……而言、至于
+as follows+如下
+as for+至于、关于
+as if+好像、似乎
+as long as+只要、长达
+as regards+关于、至于
+as soon as+一……就
+as to+关于、至于
+as usual+像往常一样
+as well+也、同样
+as well as+和、以及、不但……而且
+ask after+问候、询问健康
+ask for+请求、索要
+assess sth. as+将某物评估为
+assign sb. to sth.+指派某人做某事
+associate with+与……相关联
+assume responsibility+承担责任
+assure sb. of sth.+向某人保证某事
+at a disadvantage+处于不利地位
+at a loss+困惑、不知所措
+at a time+一次、每次
+at all+根本、全然
+at all costs+不惜一切代价
+at all events+无论如何
+at all times+始终、随时
+at any rate+无论如何、至少
+at best+充其量、至多
+at fault+有过错、有责任
+at first+起初、最先
+at first glance+乍一看
+at first sight+乍一看、初见
+at hand+在手边、即将到来
+at intervals+不时、每隔一段时间
+at large+整体上、逍遥法外
+at last+最终、终于
+at least+至少
+at length+详细地、长时间地
+at most+至多
+at no time+绝不、从不
+at odds with+与……不一致/争执
+at once+立刻、马上
+at one time+曾经、一度
+at present+目前、现在
+at random+随机地
+at stake+处于危险中、利害攸关
+at the cost of+以……为代价
+at the expense of+以……为代价
+at the mercy of+任由……摆布
+at the moment+此刻、目前
+at the outset+起初、一开始
+at the risk of+冒着……的风险
+at the same time+同时、然而
+at times+有时、偶尔
+attain to+达到、获得
+attend to+照料、处理、专注于
+attribute to+归因于、归咎于
+avail oneself of+利用
+average out+平均为
+back and forth+来回、反复
+back up+支持、备份、倒退
+base on+基于、以……为依据
+be able to+能够
+be about to do+即将做
+be accustomed to+习惯于
+be acquainted with+熟悉、了解
+be adequate for+足够胜任、适合
+be applicable to+适用于
+be aware of+意识到、知晓
+be based upon+基于
+be bound to+注定、一定
+be capable of+能够、有能力
+be careful of+小心、留意
+be cautious about+对……谨慎
+be certain of+确信
+be characteristic of+是……的特征
+be compatible with+与……兼容/协调
+be composed of+由……组成
+be concerned about+关心、担忧
+be concerned with+涉及、与…有关
+be confronted with+面临、面对
+be conscious of+意识到
+be consistent with+与……一致
+be content with+满足于
+be contrary to+与……相反
+be convenient for+对……方便
+be convinced of+确信、深信
+be critical of+批判、挑剔
+be dedicated to+致力于、奉献于
+be deficient in+缺乏、不足
+be dependent on+依赖、取决于
+be determined to+决心做某事
+be different from+与……不同
+be distinct from+与……截然不同
+be eager for+渴望
+be eligible for+有资格获得
+be engaged in+从事、忙于
+be entitled to+有权、有资格
+be equivalent to+等同于
+be essential to+对……至关重要
+be exposed to+暴露于、接触到
+be faithful to+忠于
+be familiar to+为…所熟悉
+be familiar with+熟悉
+be feasible for+对……可行
+be fond of+喜欢
+be free from+免于、不受…影响
+be good at+擅长
+be good for+对…有益
+be identical to+与…相同
+be indifferent to+对…漠不关心
+be inferior to+次于、低于
+be liable for+对……负有责任
+be liable to+易于、可能
+be limited to+局限于
+be likely to+可能
+be loyal to+忠于
+be obsessed with+痴迷于
+be obliged to+不得不、感激
+be opposed to+反对
+be preferable to+比…更好
+be prone to+易于、倾向于
+be proud of+为…自豪
+be ready for+准备好
+be regarded as+被看作
+be related to+与…相关
+be relevant to+与……相关
+be reluctant to+不情愿做某事
+be responsible for+对……负责
+be satisfied with+对…满意
+be saturated with+充满、饱和
+be sensitive to+对……敏感
+be similar to+与…相似
+be subject to+受制于、易遭受
+be superior to+优于、高于
+be supposed to+应该、被期望
+be sure of+确信
+be susceptible to+易受……影响
+be tired of+厌烦
+be typical of+是……的典型特征
+be used to+习惯于
+be valid for+对……有效
+bear in mind+牢记在心
+because of+因为、由于
+before long+不久以后
+begin with+以……开始
+believe in+信任、信奉
+belong to+属于
+benefit from+从……受益
+blame sb. for sth.+因某事责备某人
+block off+封锁、阻隔
+boost efficiency+提升效率
+border on+毗邻、近乎
+break away+挣脱、脱离
+break away from+脱离、摆脱
+break down+分解、故障、崩溃
+break in+闯入、打断
+break into+强行进入
+break off+中断、中止
+break out+爆发、突发
+break through+突破、冲破
+break up+分裂、解散、打碎
+bring about+导致、引起
+bring down+打倒、降低
+bring forth+产生、提出
+bring forward+提出、提前
+bring in+引进、收获
+bring into play+发挥、调动
+bring out+使显现、出版
+bring up+抚养、提出
+build up+积累、建立、增强
+bulk of+大部分、主体
+burn out+烧尽、疲惫不堪
+burn up+烧光、发怒
+burst into+突然闯入、突然爆发
+burst out+突然开始
+but for+要不是、如果没有
+by accident+偶然、意外
+by all means+务必、一定
+by and by+不久以后
+by chance+偶然
+by contrast+相比之下
+by default+默认、缺席
+by far+迄今为止、大大地
+by means of+借助于、通过
+by no means+绝不、一点也不
+by oneself+独自
+by virtue of+凭借、由于
+by way of+经由、作为
+call for+需要、要求、呼吁
+call off+取消
+call on+拜访、号召
+call up+打电话、回忆起
+calm down+冷静、平息
+campaign for+为……奔走/竞选
+cancel out+抵消、抵消影响
+candidate for+……的候选人
+capable of+有能力、能够
+capitalize on+利用、从……获利
+care about+关心、在意
+care for+照顾、喜欢
+carry out+执行、实施、完成
+carry through+坚持完成、贯彻
+cast doubt on+质疑、对……产生怀疑
+cast light on+阐明、使明白
+catch fire+着火
+catch on+流行、理解
+catch one's breath+喘息、屏息
+catch sight of+瞥见、看见
+catch up with+赶上
+cater to+迎合、满足需求
+cause concern+引发担忧
+cautious of+谨慎、提防
+cease to do+停止做某事
+center on+集中于、以……为中心
+certain of+确信
+chances are+很可能
+change for the better+好转、改善
+change for the worse+恶化、变坏
+characterize as+被描述为……
+charge sb. with+指控某人、赋予职责
+chase after+追逐、追求
+check in+登记入住、签到
+check on+核查、核实
+check out+结账离开、核实
+cheer up+振作、振奋
+chill out+冷静、放松
+chip in+捐助、共同参与
+chop down+砍倒、削减
+cite as+引用为、举例为
+civil servant+公务员
+claim responsibility+声称负责
+clarify matters+澄清问题
+classify into+分类为
+clear away+清除、收拾
+clear up+清理、澄清、放晴
+cling to+坚持、依附、紧抓
+close down+关闭、停业
+coincide with+与……一致/重合
+collaborate with+与……合作
+combine with+结合、联合
+come about+发生、产生
+come across+偶遇、偶然发现
+come after+跟随、追赶
+come along+进展、一起来
+come apart+破碎、裂开
+come down+下降、下跌
+come in+进来、流行
+come into being+形成、产生
+come into effect+生效
+come into force+生效、实施
+come into sight+进入视野
+come into use+开始使用
+come off+脱落、成功、举行
+come on+快点、进展
+come out+出版、出现、结果是
+come round+苏醒、来访
+come through+经历、传出
+come to+总计、苏醒、达到
+come to a conclusion+得出结论
+come to an end+结束
+come true+实现
+come up+被提出、走近
+come up with+提出、想出
+comment on+评论、评价
+commit oneself to+致力于、承诺
+commit to+投身于、承诺
+compare...to...+把…比作
+compare...with...+把…和…对比
+compensate for+补偿、弥补
+compete for+为……竞争
+compete with+与……竞争
+complain about+抱怨、投诉
+comply with+遵守、服从
+compromise on+在……上妥协
+concentrate on+专注于、集中于
+concern oneself with+关心、关注
+concern with+涉及、忙于
+confer on+授予、商议
+confine to+限制于
+confirm sb. in+使某人确信
+conflict with+与……冲突
+conform to+符合、遵守
+confront with+使面对
+confuse A with B+混淆A和B
+congratulate on+祝贺
+consent to+同意、准许
+conserve energy+节约能源
+consist in+在于、存在于
+consist of+由……组成
+consistent in+在……方面一致
+consult with+咨询、商议
+consume resources+消耗资源
+contact with+与……接触
+contain within+包含于
+contribute to+促成、有助于、贡献
+control over+对……的控制
+convene a meeting+召集会议
+converse with+与……交谈
+convert into+转换为、转化为
+convey information+传递信息
+convince sb. of+使某人信服
+cope with+应对、处理
+correspond to+对应、符合
+correspond with+与……通信/一致
+cost efficiency+成本效益
+count on+依靠、指望
+counteract the effect+抵消影响
+cover up+掩盖、掩饰
+crack down on+严厉打击、镇压
+craft policy+制定政策
+create incentive+创造激励机制
+criticize for+因……批评
+cross out+删除、划掉
+cultivate awareness+培养意识
+curb inflation+抑制通货膨胀
+cure sb. of+治愈、矫正
+curl up+蜷缩、卷曲
+cut down+削减、砍倒
+cut in+插嘴、超车
+cut off+切断、中断、隔绝
+cut out+删除、停止、戒掉
+cut short+缩短、打断
+dampen enthusiasm+打击积极性
+dash off+匆忙完成、疾驰而去
+date back to+追溯至
+dawn on+使醒悟、逐渐明白
+deal with+处理、应对、论述
+debate on+就……辩论
+decide on+选定、决定
+declare against+声明反对
+dedicate to+致力于、奉献
+deduce from+从……推断
+default on+违约、未履行
+defend against+防御、抵御
+define as+定义为
+delay doing+推迟做某事
+delegate to+授权、委派
+delete from+从……删除
+deliver a speech+发表演讲
+deliver results+取得成效
+demand for+对……的需求
+demonstrate ability+展示能力
+deny access+拒绝准入/访问
+depend on+依靠、取决于
+depict as+描绘为
+deprive of+剥夺、使丧失
+derive from+源自、取自
+descend from+起源于、源自
+deserve attention+值得关注
+design for+为……设计
+designate as+指定为、指派为
+desire for+渴望
+destined to+注定
+detect error+发现错误
+determine on+决心、决定
+develop into+发展成为
+deviate from+偏离、背离
+devote to+致力于、投身于
+diagnose as+诊断为
+differ from+不同于
+differ in+在……方面不同
+dig into+深入研究、挖掘
+dignify with+以……使体面
+dilemma over+对……的困境
+dilute influence+削弱影响力
+dim view of+对……看法悲观
+diminish risk+降低风险
+direct toward+指向、针对
+disagree with+不同意、不适合
+disapprove of+不赞成
+discard as+当作……丢弃
+discern between+区分、辨别
+discharge duty+履行职责
+discipline oneself+自律
+disclose to+向……披露
+discourage from+阻止、使气馁
+discover evidence+发现证据
+discredit claim+质疑主张
+dispose of+处理、处置、清除
+dispute over+就……争论
+disrupt order+扰乱秩序
+dissipate doubt+消除疑虑
+distinguish A from B+区分A与B
+distribute to+分发、分配
+divert attention+转移注意力
+divide into+划分为
+do away with+废除、消除
+do credit to+为……增光
+do good to+对…有益
+do harm to+损害、伤害
+do justice to+公正对待
+do one's best+尽力
+do one's utmost+竭尽全力
+do without+将就、没有……也行
+dominate market+主导市场
+donate to+捐赠给
+doubt the validity+质疑有效性
+downplay importance+低估重要性
+draft proposal+起草提案
+drain resources+消耗资源
+dramatically improve+大幅改善
+draw a conclusion+得出结论
+draw attention to+吸引注意力
+draw in+（车）到站、天黑
+draw on+利用、凭借
+draw up+起草、拟定
+dress up+盛装打扮
+drive away+赶走、驱散
+drop in+顺便拜访
+drop out+退出、辍学
+dwell on+详述、纠结于
+dynamic change+动态变化
+earn one's living+谋生
+ease pressure+缓解压力
+echo the view+呼应观点
+economic boom+经济繁荣
+edit out+删去
+educate public+教育公众
+effect change+促成变革
+elaborate on+详细阐述
+elect to do+选择做某事
+eliminate poverty+消除贫困
+embed in+嵌入、根植于
+emerge from+从……浮现/出现
+emphasize+强调、着重
+employ strategy+采用策略
+enable sb. to do+使某人能够做某事
+encounter difficulty+遭遇困难
+encourage innovation+鼓励创新
+end up+最终成为、以……告终
+endure hardship+忍受苦难
+enforce regulation+执行规定
+engage in+从事、参与
+engage with+参与、互动、处理
+enhance efficiency+提升效率
+enjoy popularity+受欢迎、流行
+enlarge scope+扩大范围
+enlighten sb. on+启发某人某事
+enrich experience+丰富经验
+ensure safety+确保安全
+enter for+报名参加
+enter into+进入、缔结
+entail risk+带来风险
+equip with+配备、装备
+equivalent to+等同于
+eradicate disease+根除疾病
+erase from+从……抹去
+escalate conflict+升级冲突
+escape from+逃离、摆脱
+espouse an idea+拥护观点
+essence of+……的本质
+establish system+建立体系
+estimate at+估计为
+evaluate performance+评估表现
+evolve from+从……演变
+evolve into+演变为
+exceed expectation+超出预期
+excel in+擅长、优于
+except for+除……之外
+exchange for+交换、兑换
+excite interest+激发兴趣
+exclude from+排除、不包括
+exert influence+施加影响
+exhibit trait+展现特质
+expand on+详述、拓展
+expect of+对……的期望
+expend effort+耗费精力
+experiment with+用……做实验
+expert in+……的专家
+explain away+搪塞、辩解
+explore possibility+探索可能性
+export to+出口至
+expose to+暴露于、接触
+express concern+表达担忧
+extend to+延伸至、波及
+external factor+外部因素
+extinguish fire+灭火、消除
+extract from+提取、摘录
+face challenge+面对挑战
+face to face+面对面
+facilitate communication+促进沟通
+fade away+逐渐消失、褪去
+fail to do+未能做某事
+fair play+公平竞争
+fall apart+崩溃、瓦解
+fall behind+落后、拖欠
+fall in love with+爱上
+fall in with+偶遇、同意
+fall into+陷入、分为
+fall off+跌落、减少
+fall out+争吵、脱落
+fall short of+未能达到、短缺
+fall through+落空、失败
+false impression+错误印象
+fame and fortune+名利
+fancy doing+喜欢做某事
+far from+远非、完全不
+fascinate by+被……吸引
+fashion trend+时尚潮流
+fasten on+聚焦、盯住
+fatal flaw+致命缺陷
+fault in+……的过错/缺陷
+favor sb. with+赐予、优待
+fear for+为……担忧
+feasible solution+可行方案
+feature prominently+占据显著地位
+federal government+联邦政府
+feed on+以……为食、依赖
+feedback on+关于……的反馈
+feel like doing+想要做某事
+fertile soil+沃土、有利条件
+fight against+对抗、反抗
+figure out+弄清楚、算出
+file for+申请、提交
+fill in+填写、填补
+fill out+填写、长胖
+filter out+过滤、筛选出
+final decision+最终决定
+finance project+资助项目
+find fault with+挑剔、找茬
+find favor with+获得青睐
+find out+查明、弄清
+fine distinction+细微差别
+firm belief+坚定信念
+fit in+适应、融入
+fix on+专注于、确定
+fix up+修理、整理
+flaw in design+设计缺陷
+flexible schedule+灵活日程
+flourish in+在……蓬勃发展
+flow into+流入、汇入
+fluctuate between+在……之间波动
+focus on+聚焦于、专注于
+fold up+折叠、倒闭
+folk wisdom+民间智慧
+for certain+肯定、确定
+for free+免费
+for good+永久、永远
+for instance+例如
+for lack of+因缺乏
+for sale+待售
+for the sake of+为了……起见
+forbid sb. to do+禁止某人做某事
+foresee risk+预见风险
+forge ahead+稳步前进
+formal education+正规教育
+format layout+格式布局
+formulate policy+制定政策
+forthcoming result+即将到来的结果
+fortunate enough+足够幸运
+foundation of+……的基础
+fraction of+一小部分
+fragment of information+碎片化信息
+frankly speaking+坦白说
+fraudulent behavior+欺诈行为
+free from+免于、无……的
+freight transport+货运
+frequency of occurrence+发生频率
+friction between+……之间的摩擦
+from scratch+从零开始
+from time to time+时不时、偶尔
+fulfill obligation+履行义务
+full scale+全面的、大规模的
+function as+充当、起……作用
+fund raising+筹款
+fundamental principle+基本原则
+furnish with+配备、提供
+gain access to+获得准入/使用权
+gain advantage+获得优势
+gain insight into+深入了解
+gather data+收集数据
+gauge progress+评估进展
+gear to+适应、调整以适合
+general public+普通大众
+generate profit+创造利润
+generous donation+慷慨捐赠
+genuine interest+真心兴趣
+gesture of goodwill+善意姿态
+giant leap+巨大飞跃
+give rise to+引起、导致
+give way to+让步、被……取代
+glance at+扫视、一瞥
+glimpse of future+未来一瞥
+global economy+全球经济
+gloomy prospect+黯淡前景
+go after+追求、追赶
+go ahead+继续、着手
+go along with+赞同、配合
+go around+四处走动、传播
+go back on+违背（承诺）
+go beyond+超越、超出
+go by+经过、遵循
+go down+下降、下沉
+go for+喜爱、争取
+go in for+参加、爱好
+go into+进入、调查
+go off+爆炸、断电
+go on+继续、进行
+go out+外出、熄灭
+go over+复习、检查
+go through+经历、通过、查阅
+go up+上升、上涨
+go without+没有…也能应付
+govern behavior+约束行为
+grace period+宽限期
+gradual change+渐变
+grant permission+授予许可
+graph data+图表数据
+grasp opportunity+抓住机会
+gravitate toward+倾向于
+gross income+总收入
+grounded in+基于、根植于
+grow up+长大、成长
+guarantee quality+保证质量
+guard against+防范、警惕
+guidance on+关于……的指导
+guilty of+有罪、有过失
+half way+半途、中途
+halt progress+阻碍进展
+hand in+上交
+hand in hand+携手、密切相关
+hand out+分发
+hand over+移交
+handle problem+处理问题
+hang on+坚持、稍等
+hang up+挂断电话
+harmonious relationship+和谐关系
+harsh reality+残酷现实
+hasten the process+加快进程
+hazard warning+危险预警
+have access to+可以使用、接触到
+have an advantage over+胜过、优于
+have in mind+考虑、想到
+have nothing to do with+与…无关
+have something to do with+与…有关
+have to do with+和…相关
+head for+前往、朝向
+heap praise on+大加赞赏
+hear of+听说
+heavy burden+沉重负担
+help out+帮忙、接济
+hesitate to do+犹豫做某事
+hide from+隐瞒、躲避
+highlight importance+强调重要性
+hint at+暗示、示意
+hire out+出租、雇佣
+historical context+历史背景
+hit the target+达成目标
+hold back+抑制、阻碍、隐瞒
+hold on+坚持、等一等
+hold on to+坚持、守住
+hold out+伸出、坚持
+hold true+适用、成立
+hold up+举起、耽搁
+hollow promise+空洞承诺
+honor one's commitment+信守承诺
+hook up+连接、对接
+horizon of knowledge+知识视野
+hostile attitude+敌对态度
+human resource+人力资源
+humble origin+卑微出身
+hurry up+快点
+hypothetical situation+假设情境
+identify with+认同、视为一体
+idle away+虚度、荒废
+if only+要是…就好了
+ignorant of+无知、不了解
+illuminate the problem+阐明问题
+image building+形象塑造
+immediate response+即时响应
+immense pressure+巨大压力
+immigrate into+迁入、移民入境
+impact on+对……的影响
+impair function+损害功能
+implement a policy+落实政策
+imply a consequence+暗示后果
+import from+从……进口
+impose on+强加于、征收
+improve efficiency+提升效率
+in a broad sense+从广义上讲
+in a dilemma+处于困境
+in a hurry+匆忙
+in a position to+能够、有条件
+in a sense+在某种意义上
+in a way+在某种程度上
+in accordance with+依照、根据
+in addition+此外、另外
+in addition to+除…之外
+in advance+提前、预先
+in all+总共
+in any case+无论如何
+in brief+简言之
+in case+以防、万一
+in case of+倘若、万一
+in charge of+负责、主管
+in common+共同、共有
+in comparison with+与…相比
+in conclusion+总之、最后
+in consequence+因此
+in consequence of+由于
+in contrast to+与…对比
+in detail+详细地
+in effect+实际上、生效
+in favor of+支持、有利于
+in general+总的来说、大体上
+in half+分成两半
+in hand+在掌握中
+in honor of+为纪念、致敬
+in line with+与……一致、符合
+in no case+绝不
+in no time+立刻、马上
+in no way+绝不
+in order+有序、妥当
+in order to+为了
+in other words+换句话说
+in particular+尤其、特别
+in place+在适当位置
+in place of+代替
+in proportion to+与……成比例
+in public+当众、公开
+in pursuit of+追求
+in question+讨论中的、有问题的
+in reference to+关于、参照
+in regard to+关于、至于
+in relation to+关于、与…相比
+in response to+响应、应对
+in return+作为回报
+in return for+作为对…的回报
+in short+简而言之
+in spite of+尽管、不管
+in step+同步、合拍
+in stock+有现货
+in terms of+就……而言、在……方面
+in the absence of+缺乏、没有
+in the course of+在……过程中
+in the end+最后、终于
+in the event of+万一、倘若
+in the face of+面对、不顾
+in the first place+首先
+in the light of+根据、按照
+in the long run+长远来看
+in the meantime+与此同时
+in the short term+短期内
+in the way+挡路、妨碍
+in time+及时、最终
+in turn+依次、反过来
+in vain+徒劳、白费
+in view of+鉴于、考虑到
+incline to+倾向于
+incorporate into+并入、纳入
+independent of+独立于、不依赖
+induce a change+引发变革
+industrial upgrade+产业升级
+infect with+感染、沾染
+infer from+从……推断
+inform of+通知、告知
+inherit from+继承、承袭
+inhibit development+抑制发展
+initial stage+初始阶段
+insist on+坚持
+instead of+代替、而不是
+interfere in+干涉
+interfere with+干扰、妨碍
+keep an eye on+照看、留意
+keep away from+远离
+keep back+阻止、隐瞒
+keep down+控制、压低
+keep in mind+记住
+keep off+避开、不接近
+keep on+继续
+keep to+遵守、坚持
+keep up+保持、维持
+keep up with+跟上
+knock down+撞倒、拆毁
+knock out+击倒、使昏迷
+laugh at+嘲笑、因…发笑
+lay aside+搁置、储蓄
+lay down+放下、制定
+lay out+布置、规划
+lead to+导致、通向
+learn by heart+熟记、背诵
+leave alone+不打扰、别管
+leave behind+遗留、忘记携带
+leave out+省略、遗漏
+lend itself to+适合于
+let alone+更不用说、不打扰
+let down+使失望、放下
+let go+放开、松手
+let off+排放、宽恕
+let out+放出、泄露
+lie in+在于
+line up+排队、排列
+live on+靠…生活
+live through+经历、度过
+live up to+不辜负、符合
+look after+照顾、照料
+look at+看、考虑
+look back+回顾
+look down on+轻视、看不起
+look for+寻找
+look forward to+期待
+look into+调查、观察
+look on+旁观、看待
+look out+小心、当心
+look over+检查、浏览
+look through+浏览、看穿
+look up+查阅、向上看
+look up to+尊敬、敬仰
+lose heart+灰心
+lose sight of+看不见、忽略
+lose weight+减肥
+make a difference+有影响、起作用
+make a face+做鬼脸
+make a fool of+愚弄
+make for+走向、促成
+make friends+交朋友
+make fun of+取笑
+make out+辨认出、理解
+make progress+取得进步
+make sense+有意义、讲得通
+make sure+确保、查明
+make the best of+充分利用
+make up+编造、组成、化妆
+make up for+弥补
+make up one's mind+下定决心
+make use of+利用
+many a+许多
+mark out+划出、规划
+may as well+不妨、倒不如
+meet with+遇见、遭遇
+mix up+混淆、弄乱
+more or less+或多或少
+most of all+尤其、最
+neither...nor...+既不…也不
+never mind+不要紧、别担心
+no doubt+毫无疑问
+no longer+不再
+no matter+无论
+no more+不再
+no sooner...than+一…就
+not only...but also+不仅…而且
+nothing but+仅仅、只不过
+now and then+偶尔、有时
+now that+既然、由于
+of course+当然
+off and on+断断续续、偶尔
+on a large scale+大规模
+on account of+因为、由于
+on average+平均
+on behalf of+代表
+on board+在船/飞机上
+on business+出差
+on condition that+条件是
+on duty+值班
+on earth+究竟、到底
+on fire+着火
+on hand+在手边、现有
+on no account+绝不
+on occasion+偶尔
+on one's own+独自、独立
+on purpose+故意
+on sale+出售、打折
+on schedule+按时
+on the contrary+相反
+on the ground of+基于、因为
+on the point of+正要
+on the whole+总的来说
+on time+准时
+once again+再一次
+once in a while+偶尔
+once more+再次
+once upon a time+从前
+one after another+一个接一个
+or else+否则、要不然
+or so+大约、左右
+other than+除了、不同于
+out of+从…里面、缺乏
+out of breath+上气不接下气
+out of control+失控
+out of date+过时
+out of order+出故障、无序
+out of place+不合适、不在原位
+out of practice+荒疏、久不练习
+out of sight+看不见
+out of the question+不可能
+out of touch+失去联系
+over and over+反复、再三
+owing to+由于、因为
+pass away+去世
+pass on+传递、继续
+pass out+昏倒、分发
+pay attention to+注意
+pay back+偿还、报复
+pay off+还清、取得回报
+pick out+挑选、辨认
+pick up+捡起、学会、接入
+play a part in+在…起作用
+point out+指出
+prior to+在…之前
+pull down+拆毁、拉下
+pull in+（车）进站
+pull out+驶出、拔出
+pull up+停下、拔起
+put aside+搁置、储蓄
+put away+收好、存放
+put down+放下、写下、镇压
+put forward+提出、提前
+put in+插入、提交
+put off+推迟
+put on+穿上、上演
+put out+熄灭、出版
+put up+举起、张贴、留宿
+put up with+忍受、容忍
+quite a few+不少、相当多
+rather than+而不是
+refer to+参考、提及、涉及
+regardless of+不管、不顾
+rely on+依靠、信赖
+remind sb. of sth.+使某人想起
+rest on+依靠、停留在
+result from+由…引起
+result in+导致
+ring up+打电话
+rise to+应对、上升到
+run across+偶然碰到
+run away+逃跑
+run down+撞倒、贬低
+run into+偶遇、撞上
+run out+用完、到期
+run out of+耗尽
+run over+碾过、浏览
+run through+快速浏览、排练
+see about+安排、着手处理
+see off+送行
+see through+看穿、完成
+see to+照料、负责
+send for+派人去请
+send out+发送、发出
+set about+着手做
+set aside+留出、搁置
+set back+推迟、阻碍
+set down+写下、记下
+set forth+阐明、陈述
+set free+释放
+set off+出发、引爆
+set out+出发、着手
+set up+建立、设立
+settle down+安定下来、定居
+show off+炫耀
+show up+露面、出现
+shut down+关闭、停工
+side by side+并肩、一起
+slow down+减速
+so as to+以便、为了
+so far+到目前为止
+so long as+只要
+sooner or later+迟早
+sort out+整理、解决
+speak of+谈及、说起
+speed up+加速
+stand by+支持、待命
+stand for+代表、象征
+stand out+突出、显眼
+stand up for+支持、维护
+step up+提升、加快
+stick to+坚持、遵守
+stop...from+阻止…做
+subject to+服从、易受
+succeed in+成功做
+suffer from+遭受、患病
+sum up+总结、概括
+switch off+关掉
+switch on+打开
+take account of+考虑
+take advantage of+利用
+take after+与…相像
+take apart+拆开
+take care+小心
+take care of+照顾、照料
+take charge of+掌管、负责
+take delight in+乐于
+take down+记下、拆卸
+take effect+生效
+take for granted+认为理所当然
+take in+吸收、欺骗、收留
+take into account+考虑
+take off+起飞、脱掉
+take on+承担、雇佣
+take over+接管、接任
+take pains+努力、费心
+take part in+参加
+take place+发生
+take the place of+代替
+take to+开始喜欢、养成习惯
+take turns+轮流
+take up+占据、开始从事
+talk over+讨论、商议
+tell apart+区分、辨别
+thanks to+多亏、由于
+that is+也就是、即
+the moment+一…就
+think of+想到、想起
+think over+仔细考虑
+throw away+扔掉、浪费
+touch on+提及、谈到
+try on+试穿
+try out+试验、试用
+turn down+调小、拒绝
+turn in+上交、就寝
+turn into+变成
+turn off+关闭
+turn on+打开
+turn out+结果是、生产
+turn over+翻转、仔细考虑
+turn to+求助于、转向
+turn up+调大、出现
+under control+处于控制之下
+under discussion+在讨论中
+under no circumstances+绝不
+under way+进行中
+up to+直到、多达、胜任
+use up+用完、耗尽
+wait for+等待
+wake up+醒来、唤醒
+warm up+热身、变暖
+wash up+洗碗、洗手洗脸
+watch out+提防、当心
+wear out+磨损、耗尽
+well off+富裕
+what if+倘若…怎么办
+whether...or+是…还是
+wipe out+消灭、擦净
+with regard to+关于
+with respect to+关于、至于
+with the exception of+除…之外
+word for word+逐字地
+work out+算出、制定、锻炼
+work up+激起、逐步建立
+wrap up+包好、结束
+write off+注销、认定失败
+`;
+var HIGH_SCHOOL_SENTENCES_TEXT = `
+His appearance on the platform was greeted with a burst of applause.+他在平台上的出现迎来了一阵掌声。
+As times alter, men's affections change.+时过境迁，人心易变。
+He was forced to dispose of his art treasures.+他被迫处理掉自己的艺术珍藏。
+A blast of hot air came from the furnace.+一股热风从火炉里吹出来。
+The village was blasted by enemy bombs.+村子被敌人的炸弹炸毁了。
+Arguing about details consumed many hours of the committee's valuable time.+争论细节耗费了委员会许多宝贵时间。
+The wood splits easily.+这木头容易劈开。
+It's bad to spit.+吐痰是不好的行为。
+The coffee is so full that it might spill over.+咖啡太满可能会溢出来。
+He slipped and fell down the stairs.+他滑倒了，从楼梯上摔了下来。
+One week slipped away, but he wrote out nothing.+一周悄然逝去，他连一个字也没写出来。
+We have a slide show every other week.+我们每隔一周观看一次幻灯片。
+All bacteria are larger than viruses.+所有细菌都比病菌大。
+He interviews many candidates for jobs.+他面试过很多求职者。
+The campus of Harvard University.+哈佛大学的校园。
+He has a liberal attitude to divorce and remarriage.+他对离婚和再婚看得很开。
+The sofa can transform for use as a bed.+这个沙发可改作床用。
+Glass transmits light but not sound.+玻璃传导光但不传导声音。
+Several of the patients had received kidney transplant.+病人中有几位已接受了肾移植手术。
+A bus transported us from the airport to the city.+一辆公共汽车把我们从机场送到城里。
+The day shift arrives at eight o'clock.+白班工人八点钟来换班。
+This pile of apples vary in size.+这堆苹果大小不一。
+With a wave of his hand, the magician made the rabbit vanish.+魔术师手一挥，兔子便不见了。
+I don't know how I managed to swallow my anger.+我不知道怎样才能抑制住我的愤怒。
+He is under suspicion of murder.+他涉嫌谋杀。
+The behaviour of the stranger aroused our suspicions.+那个陌生人的行为引起了我们的怀疑。
+I'm very suspicious about his motives.+我很怀疑他的动机。
+That coat is too heavy for such a mild day.+这样暖和的天气，穿那件大衣太厚了。
+Her skin is very tender, like a baby's.+她的皮肤像婴儿的一样柔嫩。
+The dog is a terrible nuisance.+这只狗真令人讨厌。
+The rate has fallen by an insignificant amount.+比率虽有下降，但微不足道。
+The car suddenly accelerated.+汽车突然加速。
+I look upon this as an absolute necessity.+我认为这是绝对必要的。
+The boundaries of that country were changed by a treaty.+那个国家的边界根据条约有所更动。
+His brakes failed on a steep hill.+他的刹车在陡峭的山路上失灵了。
+Through the mist I could just make out a vague figure.+透过雾霭，我只能看见一个模糊的人影。
+He made a vain attempt to reach the drowning child.+他试图接近那个快淹死的小孩，但没有成功。
+Dinosaurs have been extinct for millions of years.+恐龙绝种已有几百万年了。
+It's extraordinary that he managed to sleep through the party.+真想不到他竟从聚会开始睡到结束。
+His views are rather extreme.+他的观点相当极端。
+A commercial agent manages the business affairs of company.+商务代理负责代公司处理商业性事务。
+The law forbids shops to sell alcohol to minors.+法律禁止商店向未成年者出售酒精饮料。
+This job rather appeals to me.+这工作对我有吸引力。
+We made an appeal to the villagers for money to build the bridge.+我们呼吁村民为建桥捐款。
+I appreciate your help very much.+我非常感谢你的帮助。
+You can't appreciate English poetry unless you understand its rhythm.+你若不懂英文诗韵律，就无法欣赏英文诗。
+The firm's directors quickly approved the new idea.+公司的董事们很快赞同了这个想法。
+They stimulated me to make greater efforts.+他们鼓励我要做出更大的努力。
+I tried to acquire the information I needed.+我千方百计地搞到了我所需要的资料。
+This task is accomplished by great effort.+这项任务是经过巨大努力才完成的。
+The tide of the battle turned against us.+战况变得对我们不利。
+His bedroom was not very tidy.+他的卧室不太整齐。
+He knew they were tracing him.+他知道他们正在追踪他。
+She suffered tortures from a toothache.+她受着牙痛的折磨。
+You should put some wax on those boots.+你应该给那些靴子打上一些蜡。
+The old woman was weaving on her loom.+那位老太太正在织布机上织布。
+We must preserve our natural resources.+我们必须保护自然资源。
+With a reassuring pat on her arm, he left.+他鼓励地拍了拍她的手臂就离开了。
+The town was destroyed by the earthquake.+这座城镇被地震摧毁了。
+To keep ecology in balance is our duty.+保持生态平衡是我们的职责。
+He burst into a storm of abuse.+他破口大骂。
+The university is composed of five academic schools.+整个大学由五个学院组成。
+This is an academy of music.+这是一所音乐专科学校。
+Lack of confidence is the biggest barrier to investment in the region.+缺乏信心是该地区投资的最大障碍。
+This boat was cargoed with bananas and oranges.+这只船装载着香蕉和橘子。
+My uncle entered upon a diplomatic career at the age of thirty-five.+我伯父35岁时开始了外交官生涯。
+The doctor said I'd severed a vessel in my leg.+医生说我割断了腿上的一根血管。
+He climbed the vertical cliff.+他攀登陡峭的悬崖。
+Poverty obliged her to live a hard life.+贫困迫使她过艰苦的生活。
+Her poor English obscured her meaning.+她的英语差，难以表达自己的意思。
+The new race track is nearly six miles in extent.+这条新跑道将近六英里长。
+You mustn't judge people by their exteriors.+你不能以貌取人。
+The external features of the building are very attractive.+这座建筑物的外观是很吸引人的。
+Our car was useless for lack of petrol.+我们的汽车因缺汽油而无法使用。
+They refined crude oil into various petroleum products.+他们将原油提炼成各种石油产品。
+The driver delayed the drive until the weather cleared.+驾驶员延迟到天气转晴后才出车。
+Sugar can decay the teeth.+糖能腐蚀牙齿。
+I didn't have a decent dress for the dance.+我没有参加舞会的合适的衣服。
+The climbers tried to find a new route to the top of the mountain.+登山者试图找出一条通到山顶的新路。
+Many ruins of Roman date are to be seen in the south of France.+许多古罗马时期的遗迹可以在法国南部看到。
+He loves poetry for beauty's sake.+他因为爱美而喜欢诗歌。
+The moon is a satellite of the earth.+月球是地球的一颗卫星。
+For every year you've worked here you go up another step on the salary scale.+你在这儿每工作一年，工资就会长一级。
+Many temples were beautifully built.+许多寺庙建得很美。
+The arguments are tedious and complicated.+那些论点冗长而复杂。
+My grandmother tends to go to bed early every day.+我祖母每天通常比较早睡。
+He has a tendency to forget things.+他有忘事的倾向。
+What was his ultimate goal?+他的最终目标是什么？
+He underwent a lot of hardships in his childhood.+他在童年时代经历了许多坎坷。
+Rainfall is abundant in the region.+该地区降雨丰沛。
+The factories have adopted the newest modern technology.+那些工厂采用了现代的最新技术。
+She has not yet adapted to the climate.+她还没适应气候。
+He's a confirmed bachelor.+他抱定主意一辈子独身。
+The guests wore casual clothes.+客人们穿着便服。
+Thirty miners were trapped underground after the fire.+起火后有三十名矿工被困在地底下。
+There were many vacant seats in the theatre.+剧院里有许多空座位。
+His wife's death left a vacuum in his life.+他妻子的去世使他的生活变得空虚。
+He passed his French oral examination.+他通过了法语口试。
+Newton published his first work on optics.+牛顿发表了他的第一部光学著作。
+Gills are the organ through which fish breathe.+鳃是鱼类用来呼吸的器官。
+An excess of fat in one's diet can lead to heart disease.+饮食中脂肪过量能导致心脏病。
+They expelled a foreign spy from their country.+他们把一名外国间谍驱逐出境。
+Don't expend all your time on such a useless job.+不要把时间消耗在这种无用的工作上。
+This expenditure would include two railway lines.+这些支出将包括两条铁路线。
+Sending a child to college is quite an expense.+供孩子上大学是一笔颇大的花费。
+We hope to expand our business with you.+我们希望与贵公司扩大贸易往来。
+The company has the potential for expansion.+这家公司有扩展的潜力。
+A local private school lets them use a chemistry lab.+当地一家私立学校允许他们使用化学实验室。
+Each individual has his own personality.+每个人都有自己的个性。
+Personal appearance is important.+个人形象很重要。
+All personnel must have the valid certification.+所有相关人员必须持有效证件上岗。
+We cannot grant any further discount.+我们不能再给任何折扣了。
+My mother cooked a grand turkey dinner.+妈妈做了丰盛的火鸡晚餐。
+Learn to say no to people that invade your privacy.+学会对侵犯你隐私的人说不。
+We have to add more acid to it.+我们必须往里面多加些酸。
+He has to acknowledge the grim fact.+他不得不承认这无情的事实。
+Our balcony is exposed to the south.+我们的阳台朝南。
+We cannot calculate on his help.+我们不能指望他的帮助。
+This is the calendar we use today.+这就是我们今天使用的日历。
+The energy outlook is not optimistic.+能源前景并不乐观。
+Let's review another optional step.+让我们审查另一个可选步骤。
+In fact, he is a very outstanding youth.+事实上，他是个十分优秀的少年。
+Cocoa is Ghana's biggest export after gold.+可可是加纳仅次于黄金的第二大出口商品。
+We export rice but import wheat.+我们出口稻米，但进口小麦。
+You must not impose bad wine on customers.+你不应该拿劣酒卖给顾客。
+Science is in conflict with religion.+科学与宗教相抵触。
+It is hard for me to reject religious beliefs.+要我抛弃自己的宗教信仰是困难的。
+Now I felt the victim was my motherland.+现在我感到被害者是我的祖国。
+Reactions to the video have been mixed.+人们对这段视频的反应各不相同。
+Do you know about this videotape?+你知道这盘录像带吗？
+Sorry, I didn't mean to offend you.+对不起，我不是有意冒犯你。
+Promise never to bother me again.+答应我绝不再麻烦我。
+My parents never interfere with my plans too much.+我父母从不太多干涉我想干的事情。
+Happiness is intrinsic, it's an internal thing.+幸福是固有的，是一种内在的东西。
+Somebody should warn me beforehand.+应该有人事先警告我。
+The racial discrimination issue is a political hot potato.+种族歧视问题是政治上的棘手问题。
+He also had radical views on politics.+他对政治也有相当激进的观点。
+It gave me a good idea of your product range.+这次参观使我对你们的产品范围有了很好的了解。
+The townspeople wonder what happened to him.+镇上的人都想知道他到底出了什么事。
+From now on, nobody can isolate us again!+从此以后，将没有人能够再把我们分开。
+Another issue is the language barrier.+另一个问题是语言障碍。
+These chocolate eggs are all hollow.+这些巧克力蛋都是空心的。
+His wages were adequate to support three people.+他的薪水足够维持三人的生活。
+Everyone should strictly adhere to this rule.+每个人都要严格遵守这个规定。
+Do you think the government should lift the ban on guns?+你认为政府应该解除枪支的禁令吗？
+We want to capture or kill them.+我们想抓住或杀死他们。
+Equal pay for equal work is valid.+同工同酬是正当的。
+The valley echoed as he sang.+他唱歌时，山谷发出回声。
+Door-to-door service is the consistent style of our shop.+服务上门，是本店一贯的工作作风。
+Before us was a continuous stretch of wheat fields.+我们前面是一片连绵不断的麦田。
+Continual failure drove her to despair.+不断的失败使她绝望。
+A dormant volcano may explode at any time.+一座休眠的火山可能在任何时间爆发。
+And humans tend to exploit their power.+人往往会滥用权力。
+From his room, he can explore the world.+在他的房间里，他可以探索整个世界。
+If only the explosion had not happened!+爆炸要是没有发生就好了！
+It's an explosive situation.+形势一触即发。
+Such an outcome is surely a very remote possibility.+当然这样的结果还十分遥远。
+Most important was removal of the immediate threat.+最紧要的是先摆脱眼前的威胁。
+My father taught me to render good for evil.+我父亲教导我要以德报怨。
+I will keep the letter as a precaution.+我要保存这封信，以防万一。
+An idle person will never find or understand real happiness.+一个懒汉永远找不到也永远不懂得真正的幸福。
+Surely you can't identify money with happiness!+你肯定不能把金钱和幸福等同起来！
+He had to make his identity public.+他不得不公开自己的身份。
+Poverty is the root of all evils.+贫穷是一切罪恶的根源。
+Take the effective slip-resistant measures.+采取有效的防滑措施。
+I resolve to achieve more in the new year.+我决心在新的一年里取得更大的成绩。
+The price of oil has reached $30 a barrel.+石油的价格已涨到每桶30美元。
+Women especially love a bargain.+女人特别爱便宜货。
+Don't use such coarse language.+不要用这种粗俗的语言。
+Coach and cagers make a team.+一个球队由教练和队员组成。
+What is the technique for writing less code?+那么尽量少写代码的方法是什么？
+A snake can coil itself around a branch.+蛇能使自身盘绕在树枝上。
+A child's growth into an adult is gradual.+儿童到成人的成长过程是逐渐的。
+We decided to advertise our new product.+我们决定为新产品做广告。
+There is less work out there for agency clients.+经纪公司客户的工作减少了。
+The second method is to focus on economic growth.+第二个办法是将重点放到经济增长上。
+Her father forbade her to go out alone.+她父亲不许她单独外出。
+Please discuss, debate and argue, if you like.+请讨论、辩论和争论，如果你喜欢的话。
+Government debt will come off worse.+国债状况也将越来越糟。
+This lifestyle has been more than a decade.+这种生活方式已经持续了十多年。
+With this letter I enclose a photograph.+随信附上一张照片。
+They fell in love at the first encounter.+一次偶然的相遇后，他俩坠入了爱河。
+For the last fifty years, the globe has been warming up.+在过去五十年间，地球一直在转暖。
+So from the global perspective, it is very important.+所以从全局的角度来看，这是很重要的。
+I advise you to have a brain scan.+我建议你做个脑部扫描检查。
+The scandal finished his political career.+这件丑闻断送了他的政治生涯。
+Money at this period held no significance for him.+在这段时间里金钱对他来说毫无意义。
+His illness was subsequent to his wife's death.+他在妻子死后就病倒了。
+His father is a man of virtue.+他父亲是一个有品德的人。
+We are moving to a more virtual world.+我们正在向更虚拟的世界转移。
+It took him a long time to orient himself.+他花了很长时间熟悉环境。
+May I portion this fish for you?+我替您把鱼分一分吧？
+He says it is time to set an even more ambitious target.+他说现在是时候设定一个更雄心勃勃的目标了。
+I have a portable typewriter.+我有一个便携式打字机。
+The boy declined to answer a question.+那男孩拒绝回答问题。
+Illusion is the first of all pleasures.+幻想是所有乐趣的第一步。
+There is every likelihood that we can do better if we work hard.+只要我们努力就完全可能做得更好。
+Mine is the car with the red stripe.+我的车是有红色条纹的那辆。
+Which word should I emphasize?+我应该重读哪个词？
+Emotion is the enemy when trading.+情绪是交易的敌人。
+Emotional matters were of no account to them during the war.+战争期间感情问题对他们并不重要。
+It's spring, but the weather was awful.+是春天，但天气太糟了。
+I find myself in an awkward situation.+我觉得自己处境尴尬。
+We have no clue as to why he shot them.+至于为什么他要射击他们我们没有任何线索。
+His car had a collision with a bus.+他的车与公交车相撞了。
+I remember having seen such a device before.+我记得以前看到过这样一种装置。
+You should devise a study plan.+你们应制定学习计划。
+This is an inevitable result.+这是必然的结果。
+He is a retired naval officer.+他是一位退役的海军军官。
+Provide ample navigation information.+提供充足的航行资料。
+Independent thinking is an absolute necessity.+独立思考是绝对必要的。
+Many use poor-quality seed kept from previous harvests.+很多农民使用上个收获季节保留下来的劣质种子。
+Education is the best provision for the journey to old age.+教育是人们通向年老过程中的最好保障。
+What do you pursue in your life?+你生活中追求什么？
+Running water never grows stale.+流水不腐，户枢不蠹。
+Water, unlike oil, has no substitute.+水不同于石油，没有替代品。
+Actually, you deserve the credit.+实际上，荣誉该归你。
+Discrimination against women is not allowed.+不允许歧视女性。
+I feel secure about my new job.+我对新工作感到安心。
+For a start, against threats to national security.+首先要警惕国家安全受到威胁。
+Scratch yourself if you itch.+如果你觉得发痒，你就搔吧。
+A man of talent is one thing, and a pedant another.+有才能的人和卖弄学问的人是不一样的。
+I have insurance - here's my card.+我有保险，这是我的保险卡。
+Their support will insure me success.+他们的支持会保证我成功。
+He has faults; nevertheless, we love him.+他有缺点，可是我们喜欢他。
+We'll take a neutral stance on this issue.+我们在这一事件上将保持中立。
+The problem is solved on the spot.+困难当场解决了。
+We'll spray air freshener to get rid of it. Is that OK?+我们给你喷点儿空气清新剂，好吗？
+It's a medium-sized city famous for its environment.+这是个以优美环境闻名的中等城市。
+Even the media occasionally try to trick the public with a clever April Fool story.+大众媒体偶尔也会以巧妙的愚人节故事来愚弄公众。
+How to use auxiliary verb better?+怎样更好地运用助动词？
+The automatic function can be very dangerous.+自动功能可能是非常危险的。
+We cannot hope to compete with so experienced a team.+我们没希望与如此经验丰富的队竞争。
+He is a highly competent teacher.+他是一个十分称职的教师。
+There is much competition to make such a claim.+要做出这样的宣示势必经过一番竞争。
+How do you distribute the time? And what is the reason?+你是如何分配时间的？依据是什么？
+We do not want to disturb what we have got.+我们不想打乱现有的东西。
+Some good suggestions will be able to integrate the plan.+一些好的建议将能使这一计划更为完整。
+The seeds need rich moist soil.+种子需要肥沃、潮湿的土壤。
+Plants suck up moisture from the soil.+植物从土壤中吸收水分。
+Good food, good diet and good exercise promote health.+良好的食物、饮食和运动能够促进健康。
+The region has lost some of its competitiveness.+该区域已经丧失了一些竞争力。
+Should we go and register now?+我们现在就去注册登记吗？
+Officials say conditions are stable today.+官员表示情况现在很稳定。
+This process ought to be highly sophisticated.+这个过程应该是非常复杂的。
+China has a splendid ancient civilization.+中国有着古老辉煌的文化。
+Can you cancel your appointment?+你可以把约会取消吗？
+A table friend is a variable friend.+酒桌上的朋友是不可靠的朋友。
+What is the prospect of getting a job abroad?+在国外找工作的前景如何？
+It was the land of freedom and prosperity.+这是一块自由繁荣的土地。
+From color aspect, we prefer this automobile.+就颜色而言，我们更喜欢这辆汽车。
+Perhaps it is useful to cope with an exam.+或许，突击记单词可以应付考试。
+What are my core values?+我的核心价值观是什么？
+Students are required to maintain silence in the library.+学生在图书馆中要求保持安静。
+The bridge connects the island with the mainland.+这座桥将这个岛屿与大陆连接起来。
+Have ideal, have morality, literate, have discipline.+有理想，有道德，有文化，有纪律。
+Do you want domestic or imported beer?+你是要国产的还是进口的啤酒？
+His constant complaints made me mad.+他不断的抱怨让我抓狂。
+The tree grew on the brink of the cliff.+那棵树长在悬崖边缘。
+We recognize him as a leading authority on linguistics.+我们尊他为语言学的权威。
+I would like to borrow an audio tape.+我想借两盘录音带。
+What is your attitude towards this question?+你对这个问题的态度如何？
+We sometimes do social studies in the community.+我们有时在社区做一些社会实践。
+Not to commit mistake is impossible.+不犯错误是不可能的。
+We often comment on current events.+我们经常对时事发表评论。
+We should distinguish between right and wrong.+我们应辨别是非。
+I pray that you will have pity on my distress.+我请求你可怜可怜我的不幸遭遇。
+Conduct daily inspection tour of the facility.+监督管理公司设备正常运行。
+He has a great faculty for mathematics.+他具有很强的数学才能。
+The ball is filled with gaseous mixture.+那个球被充满了气体混合物。
+A woman's mood is like the weather.+女人的心情就像天气。
+I have no evidence but moral evidence to bring forward.+我没有真凭实据，只有提出道义上的证据。
+He is prominent in the literary world.+他在文学界是杰出的。
+This black substance is carbon.+这种黑色物质是碳。
+I want a life that is full and substantial.+我要的是丰富充实的生命。
+It can prompt you into action.+它能促使你采取行动。
+All these figures are quite vivid.+这些人物形象相当生动。
+I want to increase my vocabulary.+我想增加我的词汇量。
+Does the idea of working for a venture company appeal to you?+你有没有兴趣到合资企业工作？
+In truth, neither version is right.+事实上，以上两种说法都不对。
+What is your waist measurement?+你的腰围是多少？
+It often takes trouble from outside to weld a family together.+要使一个家庭重归于好，往往需要求助于外力。
+He got up with a stretch and a yawn.+他起来后伸伸懒腰，打个呵欠。
+Last year they doubled their yield.+去年他们的产量翻了一番。
+Welcome to the Pudong Economic Development Zone in Shanghai.+欢迎到上海浦东经济开发区。
+This strategy is not without danger.+这种战略并非没有危险。
+The title of my speech today is "Viewing China in a strategic angle".+今天，我演讲的题目是：用发展的眼光看中国。
+So things are now a little tense.+目前，我们之间的关系有些紧张。
+This can help ease the tension.+这样能帮助缓和紧张局面。
+You can find my house along the avenue.+沿着林阴道你能找到我的家。
+My bicycle is not available, and it is being repaired.+我的自行车现在不能用，因为正在修理。
+A fire is comparable with the sun; both give light and heat.+火可以和太阳相比，两者都可以发光发热。
+Let's make a comparative study of the two languages.+让我们将这两种语言作一下比较研究。
+Don't dash stones! It's dangerous.+不要扔石头，那样做危险。
+The data is all ready for examination.+资料都已准备好以便检查。
+They dived from the bridge and rescued the drowning woman.+他们从桥上跳下去救起了那个溺水的女人。
+Their opinions are widely diverse.+他们的意见迥然不同。
+He entitled us to enter his office at any time.+他授权我们可以随时进入他的办公室。
+The policeman regulated traffic at the intersection.+警察在十字街口管理交通。
+They released the prisoners.+他们释放了俘虏。
+She always exaggerates when she tells something she's done.+每当她谈及自己所做的事时，她总是言过其实。
+He is an evil man with evil ideas, and leads an evil life.+他是一个心存恶念的邪恶之人，过着邪恶的生活。
+The number of students of this school has shrunk.+这所学校的学生人数在减少。
+In their first year at school, most children learn to add and subtract.+入学第一年，多数孩子都学加减法。
+They decided to move out to the suburbs.+他们决定搬到郊区去住。
+The new subway is now being laid.+新的地铁正在铺设中。
+They are surveying the land before it is divided into house lots.+他们要在土地被分割为住宅用地前先勘察这块土地。
+He grew up in a wealthy family.+他在一个富有的家庭里长大。
+The man adjusted very precisely.+那个人调得很准。
+He attached a cheque to the order form.+他在订购表上贴了一张支票。
+What's the profit of doing that?+做那件事有什么好处呢？
+That business became profitable last year.+那项生意去年变得很赚钱。
+On both slopes of the roof there are broken tiles.+屋顶的两面斜面都有破瓦片。
+We reinforce a troop again.+我们又增援一支军队。
+They rejected his application for membership.+他们拒绝考虑他的成员资格申请。
+Her children's death is a fatal blow on her.+孩子们的死对她是致命的打击。
+I don't believe in fate.+我不相信命运。
+In my humble opinion, he will win the election.+依我拙见，他将在选举中获胜。
+It was an illegal act and will lead to your arrest.+这是非法行为，足以将你送入监狱。
+The court awarded damages of 5000 dollars to him.+法庭判给他5000美元损害赔偿金。
+He doesn't seem to be aware of the problems.+他好像没有意识到这个问题。
+There are two columns on each page of this dictionary.+这本词典每一页有两栏。
+Do you prefer comedy or tragedy?+你喜欢喜剧还是悲剧？
+She is very kind to the dumb children.+她对哑童非常好。
+Deaf people can't hear.+聋人听不见。
+The great hall was decorated with flowers.+大厅里装饰着花朵。
+Drinking is a principal cause of traffic accidents.+酗酒是交通事故的主要原因。
+Each side declared that it would never abandon its principle.+各方都说绝不放弃自己的原则。
+He feels a prior obligation to his job as a journalist.+他觉得要优先为他的新闻记者的工作尽职。
+Safety has high priority in factories.+工厂里安全至关重要。
+Smoking is prohibited in the office building.+办公楼内禁止抽烟。
+He is a remarkable linguist.+他是一位杰出的语言学家。
+I don't suppose there'll ever be a remedy for that.+我想那件事不会有任何补救办法。
+Casual conversation tends to be filled with repetition.+随意的交谈中常常有许多重复的话。
+They made vain attempts to reach the mountaintop.+他们徒劳地试图到达山顶。
+The work was undertaken by members of the committee.+此项工作由委员会成员承担。
+The custom is unique to the region.+这种风俗是这一地区特有的。
+Her parents' opposition is an obstacle to her marriage.+她父母的反对是她结婚的障碍。
+He's an odd old man.+他是个古怪的老头儿。
+This part of the book may be omitted.+书的这一部分可以省略。
+He easily defeated his opponent in the election.+选举中他轻易地击败了对手。
+There may be an opportunity for you to see the chairman of the board tomorrow.+明天你也许有机会见到董事长。
+The orchestra played a Mozart symphony.+乐队演奏了一首莫扎特的交响曲。
+A student will probably attend four or five courses during each semester.+每个学生一学期可能要修四五门课程。
+This is a semiconductor integrated circuit.+这是一个半导体集成电路。
+We will have a seminar on environmental protection.+我们将召开一个关于环境保护问题的讨论会。
+We got off at the terminal station.+我们在终站下车。
+They recaptured the lost territory.+他们收复了失地。
+The approximate time of their arrival will be five o'clock.+他们约于五点到达。
+This is an arbitrary decision.+这是个武断的决定。
+Tom is the architect of this building.+汤姆是这座建筑的设计师。
+He likes Greek architecture.+他喜欢希腊建筑式样。
+He is a biology professor.+他是生物教授。
+He made a careful study of the geography of the province.+他仔细研究了该省的地形。
+He majors in geology.+他主修地质学。
+She is fond of geometry.+她喜欢几何。
+He is good at arithmetic.+他擅长算术。
+He was not good at algebra in middle school.+他中学时不擅长代数。
+We are delighted in entertainment of our friends.+我们喜欢款待朋友。
+The proposal was greeted with great enthusiasm.+这个建议受到热情的响应。
+He supported that country's entry into the European Common Market.+他支持那国家加入欧洲共同体。
+Children need a happy home environment.+孩子们需要愉快的家庭环境。
+The next episode of this television movie will be shown on Friday.+这部电视剧下一集将于周五播映。
+The two countries have been trying to maintain their military equation.+这两个国家一直尽力维持他们在军事上的平衡。
+We restrained the children from playing by the railroad.+我们阻止孩子们在铁路旁边玩耍。
+Her anger was beyond restraint.+她怒不可遏。
+They won the battle and resumed lost territory.+他们打胜了这一仗并收复了失地。
+My uncle became severe when I was late.+当我迟到时，我的叔父变得严厉起来。
+The advantage of the idea was its simplicity.+这个主意的优点就在于它简单明了。
+The subject is immensely complex, and hard to simplify.+这个题目非常复杂，并且很难简化。
+The many sorrows turned her hair white.+这许许多多不幸的事使她的头发变白了。
+He has a bad cold and his nose is stuffed up.+他患重感冒，鼻子塞住了。
+Ellen has got a temporary job.+艾伦找到一份临时工作。
+Don't give in to temptation.+要经得住诱惑。
+My elder sister has a terror of fire.+我姐姐怕火。
+He thrust the tickets into my hand.+他把票塞进我手里。
+The government has signed a treaty with Washington.+政府已与华盛顿签约。
+Unexpected difficulties arose in the course of their experiment.+在他们进行实验的过程中出现了意想不到的困难。
+You aroused my curiosity.+你引起了我的好奇心。
+The government burdened the nation with heavy taxes.+政府使国民负担重税。
+The weather bureau made daily reports on weather conditions.+气象局每天报告天气状况。
+He had had the most marvelous experience.+他有过极其奇特的经历。
+We have seen massive changes in recent years.+这几年我们经历了巨大的变化。
+The new ambassador is more mature than his predecessor.+新大使比他的前任更成熟。
+Our goal is to achieve the maximum efficiency.+我们的目标是取得最高的效率。
+You must practice each day for a minimum of 30 minutes.+你每天必须最少练习三十分钟。
+I won't put up with any more of your nonsense -- now get down to work.+不容许你再胡闹了——快工作吧。
+He's very interested in nuclear physics.+他对核物理学非常感兴趣。
+These young people formed the nucleus of the club.+这些年轻人成了俱乐部的核心。
+In this shop they retail tobacco and sweets.+这家铺子零售香烟和糖果。
+This village still retains its old world character.+这个村庄仍然保持着古色古香的特色。
+He feels this new law will restrict his freedom.+他觉得这一新法律会限制他的自由。
+The company sponsored several TV programs.+这家公司赞助了几个电视节目。
+Such stories serve as a spur to children's imagination.+这类故事能激发儿童的想像力。
+The victorious army returned in triumph.+获胜的部队凯旋而归。
+Her yearly tuition is $2,000.+她一年的学费是两千美元。
+He twisted the three ropes to make a very strong rope.+他把三根绳子搓在一起做成了一根结实的绳子。
+This is a course for undergraduates.+这是为本科生开的一门课。
+It's a universal truth.+这是一个普遍真理。
+Our world is but a small part of the universe.+我们的地球只是宇宙的一小部分。
+The news reached me via my aunt.+那消息是通过我婶婶转告我的。
+The bridge vibrated when a heavy truck passed.+当重型卡车经过时，这座桥就会震动。
+This is a new kind of virus in the computer.+这是一种新的电脑病毒。
+He made a voluntary statement to the police.+他自动向警方供出一切。
+He volunteered to water our plants.+他自告奋勇给我们的树木浇水。
+They vote to choose a president.+他们投票选举总统。
+He was appointed secretary.+他被任命为秘书。
+Christmas was approaching.+圣诞节快到了。
+Her bright clothes were not appropriate for a funeral.+她那身鲜艳的衣服不适合参加葬礼。
+I received a bunch of flowers yesterday.+昨天我收到了一束鲜花。
+We collected a bundle of old clothes to be given to poor people.+我们收集了一包旧衣服给穷人。
+When does the ceremony take place?+典礼何时举行？
+There was chaos in the town after the hurricane had struck.+飓风过后，城里一片混乱。
+We give a special discount of 10 percent for cash.+如用现金购买，我们给予九折优待。
+The cakes were displayed in the window.+糕点陈列在橱窗中。
+His reply is equivalent to a refusal.+他的回答等于是拒绝。
+Soldiers are trained to stand erect.+士兵们训练站得笔直。
+Please fax us the file.+请把这些文件传真给我们。
+The land is so fertile that three crops a year can grow.+这片土地很肥沃，一年可种三季庄稼。
+Get some more fertilizer for the garden.+给花园再多施些肥料。
+I am grateful to have you help repair the house.+承你帮忙修房子，我十分感激。
+Her eyes were immediately filled with gratitude.+她的眼里立刻充满了感激之情。
+To his horror, the bus caught fire.+使他惊恐的是，公共汽车着了火。
+It is a horrible thing to see one person make another suffer.+看到人折磨人的景象是件可怕的事。
+You can find it on the Internet.+你可以在因特网上找到它。
+He interpreted a difficult passage in a book.+他解释了书中一段难懂的文字。
+This rule does not allow of more than one interpretation.+这条规则只能有一种解释。
+Advance in the jungle was very slow.+在丛林中行进很慢。
+He tied the two ropes together with a knot.+他打个结把两根绳子系在一起。
+The rain dripped down from a leak in the roof.+雨水从屋顶的裂缝中滴漏下来。
+The postbox leans a little bit.+这个邮筒有点倾斜。
+The fish leaped out of water and landed on the shore.+鱼跃出水面落到岸上。
+We have to modify our plan a little bit.+我们得对我们的计划稍加修改。
+He dresses a nylon shirt.+他穿着一件尼龙衬衫。
+We grow onions in the garden.+我们在园子里种洋葱。
+He crushed a piece of chalk to powder.+他将一支粉笔压成粉末。
+The new law is applicable from next Monday.+新法令下个星期一开始实施。
+There were five applicants for the position.+有五人申请那个职务。
+It was a small river, six feet in breadth.+那是一条六英尺宽的小河。
+Conservation is one way to make sure we have enough energy in the future.+对自然资源的保护是保证我们将来有足够的能源的一种办法。
+His conservative views made him unpopular.+他保守的观点使他不受欢迎。
+These two lines are parallel.+这两条线平行。
+They sang with great passion.+他们满怀激情地歌唱。
+His response was passive.+他的反应是被动的。
+We saw a herd of elephants yesterday.+昨天我们见到了一群大象。
+The mountain peak was covered with snow.+山顶被雪覆盖着。
+The employment problem tends to be a city phenomenon.+就业问题常常是一个城市现象。
+She was reluctant to give her money away.+她不愿意把钱送给别人。
+The villagers here rely on wells for their water.+这儿的村民用水全靠井。
+His nationality isn't relevant to whether he is a good lawyer.+他的国籍跟他是不是一个好律师不相关。
+I found this to be a reliable brand of washing machines.+我觉得这是一种牌子可靠的洗衣机。
+The pills gave her some relief.+药片减轻她一些痛苦。
+The store has an excellent reputation for fair dealing.+该店买卖公平，声誉极佳。
+He rescued three children from the burning building.+他从着火的大楼里救出了三个孩子。
+He drew a right triangle.+他画了一个直角三角形。
+He described the events of that day in sequence.+他按先后次序描述了那一天发生的种种事件。
+The lake is quite shallow.+这个湖泊很浅。
+As the temperature dropped abruptly, the campers were shivering all over with cold.+由于气温骤降，野营者冷得浑身发抖。
+Don't just shrug your shoulders. Say something.+不要光耸肩，你讲讲话呀。
+Petitions bearing nearly a half-million signatures were sent to the White House.+有将近五十万人签名的请愿书被送到白宫。
+Henry was sincere about reconciling with his brother.+亨利真心愿意与兄弟言归于好。
+The store deals in objects of domestic utility.+那家商店出售家庭用品。
+Scientists are trying to find more efficient ways of utilizing solar energy.+科学家正在寻找能更有效地利用太阳能的方法。
+We didn't utter a word during the test.+我们在测验时没有说过一句话。
+Prices are subject to variation.+价格可以变动。
+The launch vehicle lifts the satellite into orbit.+运载火箭将人造卫星送入运行轨道。
+His every sentence was followed by a burst of applause.+他的每一句话都赢得一阵掌声。
+The kitchen is equipped with modern appliances.+这间厨房里安装了各种现代化设备。
+They would not consent to my leaving school.+他们不同意我辍学。
+The city was conquered overnight.+那座城市在夜里被攻克。
+We must correct our defects as soon as possible.+我们必须尽快纠正我们的缺点。
+Take care with these delicate flowers.+当心这些娇嫩的鲜花。
+Language is constantly and gradually evolving.+语言在不断地缓慢发展。
+In the course of evolution, some birds have lost the power of flight.+在进化的过程中，一些鸟丧失了飞行能力。
+The father frowned on his son's behavior.+父亲对他儿子的行为表示不满。
+He was frustrated by repeated failures.+他因一再失败而灰心丧气。
+You have my guarantee that I'll finish the job on time.+我向你保证我会按时完成工作。
+Bob felt guilty that he had not made an attempt to save her.+鲍勃为未曾设法救她而感到内疚。
+He was jealous of his friend's reputation.+他妒忌朋友的声誉。
+A woman in blue jeans walked into the store.+一个穿蓝色牛仔裤的女人走进了商店。
+Are brandy and other liquors available here?+这里能买到白兰地和其他酒吗？
+A liter is equal to 1,000 c.c.+一公升等于一千毫升。
+He is a very modest person.+他是位非常谦逊的人。
+The structure of molecules can be seen under an electron microscope.+分子的结构可在电子显微镜下观察到。
+The satellite was launched into orbit around the moon.+卫星被发射进入绕月球运行的轨道。
+There are particles of dust in the air.+空气中有尘粒。
+He isn't particularly clever.+他并不特别聪明。
+All you know is how they respond.+你所知道的只是他们的反应。
+Effectively, their response was a refusal.+实际上，他们的答复是拒绝。
+He is a sensible person.+他是一个明白人。
+The tooth is sensitive to cold.+这颗牙对冷的东西很敏感。
+Now, the world will tremble once again.+世界将再次颤栗。
+It was a tremendous experience.+这是很棒的经历。
+This trend is continuing.+目前，这个趋势仍然持续。
+Will opponents get a fair trial?+反对者们会得到公平的审判吗？
+The trend has been apparent in oil.+这一趋势在石油领域也很明显。
+The baby has a good appetite.+这个宝宝有很好的胃口。
+Don't forget my deposit and your laptop.+别忘了我的定金和你的手提电脑。
+I must find someone to act as a deputy for me during my absence.+我必须找一个人在我离开期间代理我的职务。
+We shall derive much benefit from reading good novels.+我们将从优秀小说中获得很大好处。
+It is easier to descend than to ascend.+下降容易上升难。
+In January 2007 China launched a missile.+2007年1月中国发射了一枚导弹。
+But this was his mission.+但是，这就是他的使命。
+Mist rose from the waterfall.+云雾从瀑布中升腾起来。
+The class has made noticeable improvement.+这个班取得了显著的进步。
+Please notify us if the above is not correct.+如果上述内容有误，请通知我们。
+Not for him, then, was the notion of "efficient markets".+因此，“有效市场”的概念对他来说是不成立的。
+They resemble each other in shape but not in color.+它们的形状相似，可是颜色不同。
+Your list will reveal your true feelings.+你的列表将要揭露你真实的感受。
+Tax revenues increased last year.+去年税收增加了。
+Voters expect national leaders to shelter them from the storms.+选民期望国家领导人能保护自己免受冲击。
+Yes, of course. My shield is the strongest. It can stop any spear in the world.+当然是了。我的盾是最结实的，它能抵挡住世界上任何矛。
+Let me start off by saying that sleep is vital to our well-being and health.+让我以这句话开头吧，睡眠对于我们的身心健康是非常重要的。
+urban areas.+市区。
+I urge these people to look to Africa for inspiration.+我很希望这些朋友看一看非洲带来的启示。
+American usage differs from English usage in certain ways.+美式用法在某些方面与英式用法不同。
+There's too much violence on TV nowadays.+现在电视上暴力内容太多了。
+It is a violent place.+这是一个暴力的地方。
+A rainbow is red on one edge, violet on the other.+彩虹一边是红色，另一边是紫色。
+A weed is only a misplaced plant.+杂草只不过是长错地方罢了。
+There are other measures of human welfare.+其它指标也可衡量人类福利。
+None whatsoever. It's just a book.+什么都没有，只是一本书而已。
+Blue is calming whereas red is exciting.+蓝色让人安静，而红色则令人兴奋。
+Grammar is essential to language.+语法对语言至关重要。
+What is your estimate of the market?+你对市场的估计是什么？
+How do you evaluate success?+你是如何评价成功的？
+They exceed us in number.+他们在人数上超过我们。
+This task was exceedingly well done.+这项任务做得非常出色。
+When people exclaim, "the world's gone mad!"+当人们惊呼“这世界疯了！”
+I think, we can exclude that right away.+我想，我们能马上排除这种可能性。
+Pure and exclusive competition leads to failures.+纯粹排他的竞争会导致一事无成。
+The whole excursion took ten hours.+整个远足花了十个多小时。
+The stars flashed in the night sky.+夜空中群星闪烁。
+He was trying to flee the country? Why?+他想逃离这个国家？为什么？
+Our economy is flexible.+我们的经济是灵活的。
+The flock produced many lambs.+羊群产了好些羔羊。
+Father deals in hardware.+我父亲做五金生意。
+They help us live in harmony.+它们帮我们和谐地生活。
+Haste does not bring success.+匆忙行事不会成功。
+Her hatred for them grew more.+她对他们越来越憎恨。
+The ugly incident outraged many onlookers.+这件不堪的丑事让许多旁观者义愤填膺。
+The card catalog is the index to the books.+卡片目录是书籍的索引。
+My sister's infant is very lovely.+我姐姐的小婴儿很是可爱。
+A virus wants to infect your body.+病毒要传播到你的身体。
+Nobody is superior, nobody is inferior.+没有人高人一等，也没有人低人一等。
+We must never lose infinite hope.+我们绝不可失去无限的希望。
+The key ingredient is garlic.+主要成分是大蒜。
+The inhabitant of the island is friendly.+岛上的居民很友善。
+A bad jail wastes a body quickly.+监狱的恶劣环境让身体消瘦得特别快。
+What a terrible traffic jam!+交通堵塞好严重！
+Give him one of my jewel eyes.+摘下我眼中的一颗宝石送给他吧。
+John is one of the junior lawyers in the company.+约翰是公司里一名年轻的律师。
+We keep a laser record.+我们保存激光唱片。
+They can launch rockets to push the rock off its course.+他们可以发射火箭将石头推离轨道。
+It is luxury to be understood.+被理解是一种奢侈。
+The earth acts like a big magnet.+地球的作用像一块大磁铁。
+A male was set free in 2006.+2006年一只雄性大熊猫回归大自然。
+Is your assistant male or female?+你的助理是男的还是女的？
+He is a manual worker.+他是一位体力劳动者。
+The workers in that factory manufacture furniture.+那家工厂的工人做家具。
+Look, here is a small marine world.+看，这里是一个小小的海洋世界。
+Focus on mutual goals.+将重点放在共同的利益上。
+Some savages always go naked.+有些野蛮人总是赤身裸体。
+I think the film has some negative effects.+我认为这电影有一些消极影响。
+We ought not to neglect ourselves.+我们不应该忽视自己的健康。
+Origin of the Sugar is Brazil.+白砂糖的原产是巴西。
+Our table is oval in shape.+我们的桌子是椭圆形的。
+At the outset, it looked like a nice day.+开始的时候，天看上去很晴朗。
+Presumably you've read this notice.+大概你已经看到这个通知了。
+Truth is great and will prevail.+真理是至高无上的，且必将获胜。
+Why did you quit your last job?+你为什么辞掉了以前那份工作？
+Our quotation is subject to 5% commission.+我们的报价享受5%的佣金。
+Exercise is very good recreation.+运动是很好的休闲活动。
+The first step is to recruit new trainees.+第一步就是要招收新学员。
+A great man cannot brook a rival.+伟人不能容忍竞争者。
+We all like to see the space shuttle arrive.+我们都很喜欢看到航天飞机的到来。
+Just skim the first chapter.+只要把第一章浏览一下就行了。
+She is still working on her sketch.+她还在画她的素描。
+Fanny was a pretty and slender girl.+范妮是个漂亮苗条的女孩。
+The Expo's theme is "Better City, Better Life".+本届世博会的主题是“城市，让生活更美好”。
+Perhaps I'd better explain. I represent a very large textile group.+也许我最好解释一下，我代表一个很大的纺织集团。
+We want to swim and eat tropical fruit.+我们想去游泳，吃热带水果。
+At church people kneel when they pray.+在教堂人们祈祷时要下跪。
+They labelled him as dishonest.+他们认为他不诚实。
+The merchants of Arabia are doing their things all of the world.+阿拉伯商人在世界各地做买卖。
+A mere 2% of their budget has been spent on publicity.+他们的预算开支只有2%用于宣传。
+There are numerous people in the square.+有许多人在广场上。
+The Olympic Games began with a parade of all the competing nations.+奥运会以所有参赛国列队进场开始。
+He rushed out in pants.+他穿着短裤就冲出来。
+A good teacher should not be partial to anyone of the students.+好的老师不应偏袒任何一个学生。
+Your passports expire.+你们的护照满期了。
+The doctor prepared to prescribe a receipt.+医生准备开一张处方。
+Primitive man made himself primitive tools from stones and bones.+原始人用石头和骨头制作原始工具。
+We walked along the mountain ridge.+我们顺着山脊行走。
+It's the most ridiculous thing I've ever heard in my life.+这是我一生中听到的最可笑的事。
+She was rigid with fear.+她害怕得全身僵住了。
+The bridge withstands the flood.+那座桥经得起洪水。
+No one could witness that he was present.+没有人能证明他在现场。
+The general decided to withdraw his soldiers.+那位将军决定撤军。
+We found it very slippery underfoot.+我们感到地上很滑。
+The cup fell and smashed.+杯子落下来摔碎了。
+The branch suddenly snapped.+树枝突然折断了。
+Computer software.+计算机软件。
+This is a solar calendar.+这是阳历。
+May 5th of the Chinese lunar calendar is the Dragon Boat Festival.+中国农历五月初五是端午节。
+The developers submitted building plans to the council for approval.+开发商把施工方案提交议会以求批准。
+The timber has started to decay.+木材已开始腐烂。
+Give some face tissues to me.+给我些面巾纸。
+I prefer the title of reporter.+我更喜欢报告者的标题。
+His tone is rather unfriendly.+他的口气很不友好。
+The snow drifted everywhere.+雪飘至各处。
+Water is dripping from the roof.+水正从屋顶滴下来。
+I want something durable.+我想要耐用的东西。
+Earthquake damage and duration increased.+地震破坏和持续时间增加了。
+The street lights come on at dusk and go off at dawn.+街灯在黄昏时亮起，黎明时熄灭。
+He has a pair of leather shoes.+他有一双皮鞋。
+They began to draft legislation.+他们开始起草法规。
+He reads books at his leisure.+他在空闲时读一些书。
+She is wearing a loose dress.+她穿着一件宽松的连衣裙。
+The medicine may loosen your cough.+这种药能减轻你的咳嗽。
+I like earnest pupils.+我喜欢认真的学生。
+It's handmade and hence expensive.+这是手工做的，因此很贵。
+I could hear the echoes in this temple.+我在这座庙里能听到回声。
+You understand the situation; I needn't elaborate any further.+你了解情况，我就不再赘述了。
+Our plans are fairly elastic.+我们的计划有相当的灵活性。
+Don't lay your elbows on the desk.+不要将两肘放在书桌上。
+An electron tube or a vacuum tube.+电子管或真空管。
+The eruption of a volcano is spontaneous.+火山的爆发是自发的。
+For that article he has worked over some 30 volumes of Chinese history.+为了那篇文章，他查阅了约三十卷中国历史。
+The old lady can't bear the fatigue of a long journey.+这位老妇人无法忍受长途旅行的疲劳。
+We traced the trouble to a faulty transformer.+我们查出故障出在一个有毛病的变压器上。
+They are favorable to the proposal.+他们赞同这项提议。
+Football is my favorite.+足球是我最喜欢的。
+The art galleries of Florence are very famous.+佛罗伦萨的美术馆非常著名。
+I'd like five gallons of wine.+我要五加仑葡萄酒。
+How can we bridge the gap between rich and poor?+怎样才能缩小贫富之间的差距？
+The sanitation department is in charge of garbage disposal.+环境卫生部门负责处理垃圾。
+Please don't only gaze at the coffee in your cup.+请不要只凝视着你杯中的咖啡。
+You have to change gear manually in this car; it's not automatic.+这辆车需要手动换挡，不是自动的。
+In this case, an advantageous gene transfer might be preserved.+这样的话，优势基因转移将会得以保留。
+I shall ring you up lest you forget to come.+我会打电话给你，以免你忘了来。
+Every man is liable to error.+人总是要犯错误。
+They have also tended to be more liberal economically than their French counterparts.+在经济上，他们趋向于比他们的法国同行更加强调自由主义。
+You may extinguish a nation, but not the love of liberty.+你可以消灭一个国家，但不能消灭对自由的热爱。
+Can I see your driver's license?+我能看看你的驾照吗？
+Plants suck moisture from the earth.+植物从土壤中吸收水分。
+Teachers should motivate students to be creative.+老师应该激励学生发挥创造力。
+So far investigators have not offered any motive for the attack.+到目前为止，调查人员还没有任何可能的袭击动机。
+The new car factory will generate a lot of jobs in the area.+新汽车厂将为该地区创造大量就业机会。
+The hostess' warm and genuine welcome made us feel at home at once.+女主人热情真诚的欢迎使我们立刻有了宾至如归的感觉。
+His old car consumed much gasoline.+他的旧车耗油很多。
+Keep yourself and the bathrooms clean and germ-free.+讲究卫生，保持洗手间清洁无病菌。
+Handshake is a gesture of friendship.+握手是一种友好的表示。
+The whale is the giant of the sea.+鲸鱼是海洋中的庞然大物。
+I caught a glimpse of the waterfall when our train passed by.+火车经过时我瞥见了那个瀑布。
+They fought for glory and won a glorious victory. People glorified them.+他们为荣誉而战，取得了辉煌的胜利，人们颂扬他们。
+Pardon is the most glorious revenge.+宽恕是最伟大的报复。
+Hydrogen is the lightest element.+氢是最轻的元素。
+At worst, they sound hostile to democracy.+从最坏方面看，他们似乎对民主有敌意。
+Household expenses.+家庭开支。
+The holy ceremony he has just heard has moved him.+他刚刚听到的庄严仪式令他感动。
+The calm sea gives no hint of the coming storm.+平静的大海没有暴风雨将至的迹象。
+The highlight of the trip was the visit to the Eiffel Tower.+这次旅行最精彩的部分就是参观埃菲尔铁塔。
+`;
+/* ============================================================
+ * 容错：如果某个词库未定义，用空字符串兜底
+ * ============================================================ */
+if(typeof CORE_WORDS_TEXT === "undefined") var CORE_WORDS_TEXT = "";
+if(typeof GENERAL_WORDS_TEXT === "undefined") var GENERAL_WORDS_TEXT = "";
+if(typeof OPD_WORDS_TEXT === "undefined") var OPD_WORDS_TEXT = "";
+if(typeof PHRASES_TEXT === "undefined") var PHRASES_TEXT = "";
+if(typeof HIGH_SCHOOL_SENTENCES_TEXT === "undefined") var HIGH_SCHOOL_SENTENCES_TEXT = "";
 
 /* ============================================================
  * 解析函数
@@ -5319,7 +6453,6 @@ function parseWordsFromText(text, groupName){
     });
     return arr;
 }
-
 function parseSentencesFromText(text, groupName){
     var lines = text.split("\n");
     var arr = [];
@@ -5336,13 +6469,28 @@ function parseSentencesFromText(text, groupName){
     });
     return arr;
 }
+function parsePhrasesFromText(text, groupName){
+    var lines = text.split("\n");
+    var arr = [];
+    lines.forEach(function(line){
+        line = line.trim();
+        if(!line) return;
+        var idx = line.indexOf("+");
+        if(idx < 0) return;
+        var en = line.slice(0, idx).trim();
+        var zh = line.slice(idx + 1).trim();
+        if(en && zh){
+            arr.push({en:en, phon:"", zh:zh, group:groupName, level:0, nextReview:0});
+        }
+    });
+    return arr;
+}
 
 /* ============================================================
- * 1. IndexedDB 封装
+ * IndexedDB 封装
  * ============================================================ */
 var idbRef = null;
 var idbReady = false;
-
 function openIdb(){
     return new Promise(function(resolve){
         try{
@@ -5371,9 +6519,7 @@ function idbGet(key){
             var tx = idbRef.transaction("kv", "readonly");
             var st = tx.objectStore("kv");
             var req = st.get(key);
-            req.onsuccess = function(){
-                resolve(req.result === undefined ? null : req.result);
-            };
+            req.onsuccess = function(){ resolve(req.result === undefined ? null : req.result); };
             req.onerror = function(){ resolve(null); };
         }catch(e){ resolve(null); }
     });
@@ -5392,7 +6538,7 @@ function idbSet(key, val){
 }
 
 /* ============================================================
- * 2. 常量与数据
+ * 常量
  * ============================================================ */
 var EBBINGHAUS = [5*60*1000,30*60*1000,12*60*60*1000,24*60*60*1000,2*24*60*60*1000,4*24*60*60*1000,7*24*60*60*1000,15*24*60*60*1000];
 var LEVEL_TEXT = ["初次学习","5分钟","30分钟","12小时","1天","2天","4天","7天","已掌握"];
@@ -5408,8 +6554,8 @@ var BASE_SENTENCES = [
     {en:"Time flies fast.",zh:"时光飞逝。",group:"句子库",level:0,nextReview:0}
 ];
 
-var DB_KEY="xxm_words_v18", SEN_KEY="xxm_sen_v18", LV_KEY="xxm_lv_v18", ERR_KEY="xxm_err_v18";
-var OLD_DB_KEY="xxm_words_v17", OLD_SEN_KEY="xxm_sen_v17", OLD_LV_KEY="xxm_lv_v17", OLD_ERR_KEY="xxm_err_v17";
+var DB_KEY="xxm_words_v19", SEN_KEY="xxm_sen_v19", LV_KEY="xxm_lv_v19", ERR_KEY="xxm_err_v19";
+var OLD_DB_KEY="xxm_words_v18", OLD_SEN_KEY="xxm_sen_v18", OLD_LV_KEY="xxm_lv_v18", OLD_ERR_KEY="xxm_err_v18";
 
 var MODE_ORDER=["normal","review","sentence"];
 var MODE_NAME={normal:"闯关",review:"复习",sentence:"句闯"};
@@ -5423,12 +6569,11 @@ var reviewTab="word";
 var game={flipped:[],locked:false}, longPressTimer=null, touchStartX=0;
 
 /* ============================================================
- * 3. 工具函数
+ * 工具函数
  * ============================================================ */
 function $(id){return document.getElementById(id);}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];});}
 function safeParse(str,fallback){try{var v=JSON.parse(str);return v||fallback;}catch(e){return fallback;}}
-
 var toastTimer=null;
 function showToast(msg,type){
     var el=$("toast");
@@ -5440,8 +6585,19 @@ function showToast(msg,type){
 }
 
 /* ============================================================
- * 4. 数据加载 / 保存
+ * 加载内置词库（含自动补全缺失分组）
  * ============================================================ */
+function buildAllDefaultWords(){
+    return parseWordsFromText(CORE_WORDS_TEXT, "核心词汇")
+        .concat(parseWordsFromText(GENERAL_WORDS_TEXT, "一般词汇"))
+        .concat(parseWordsFromText(OPD_WORDS_TEXT, "OPD"))
+        .concat(parsePhrasesFromText(PHRASES_TEXT, "词组"));
+}
+function buildAllDefaultSentences(){
+    return JSON.parse(JSON.stringify(BASE_SENTENCES))
+        .concat(parseSentencesFromText(HIGH_SCHOOL_SENTENCES_TEXT, "高中例句"));
+}
+
 async function loadAll(){
     var useIdb = await openIdb();
 
@@ -5453,13 +6609,8 @@ async function loadAll(){
                 w = oldW;
             } else {
                 var lsW = safeParse(localStorage.getItem(OLD_DB_KEY), null) || safeParse(localStorage.getItem(DB_KEY), null);
-                if(lsW && Array.isArray(lsW) && lsW.length > 0){
-                    w = lsW;
-                } else {
-                    w = parseWordsFromText(CORE_WORDS_TEXT, "核心词汇")
-                        .concat(parseWordsFromText(GENERAL_WORDS_TEXT, "一般词汇"))
-                        .concat(parseWordsFromText(OPD_WORDS_TEXT, "OPD"));
-                }
+                if(lsW && Array.isArray(lsW) && lsW.length > 0){ w = lsW; }
+                else { w = buildAllDefaultWords(); }
             }
             await idbSet(DB_KEY, w);
         }
@@ -5472,11 +6623,8 @@ async function loadAll(){
                 s = oldS;
             } else {
                 var lsS = safeParse(localStorage.getItem(OLD_SEN_KEY), null) || safeParse(localStorage.getItem(SEN_KEY), null);
-                if(lsS && Array.isArray(lsS) && lsS.length > 0){
-                    s = lsS;
-                } else {
-                    s = JSON.parse(JSON.stringify(BASE_SENTENCES));
-                }
+                if(lsS && Array.isArray(lsS) && lsS.length > 0){ s = lsS; }
+                else { s = buildAllDefaultSentences(); }
             }
             await idbSet(SEN_KEY, s);
         }
@@ -5492,15 +6640,11 @@ async function loadAll(){
         currentLevel = Number(lv) || 1;
     } else {
         var w2 = safeParse(localStorage.getItem(DB_KEY), null) || safeParse(localStorage.getItem(OLD_DB_KEY), null);
-        if(!w2 || !Array.isArray(w2) || w2.length === 0){
-            w2 = parseWordsFromText(CORE_WORDS_TEXT, "核心词汇")
-                .concat(parseWordsFromText(GENERAL_WORDS_TEXT, "一般词汇"))
-                .concat(parseWordsFromText(OPD_WORDS_TEXT, "OPD"));
-        }
+        if(!w2 || !Array.isArray(w2) || w2.length === 0) w2 = buildAllDefaultWords();
         wordDb = w2;
 
         var s2 = safeParse(localStorage.getItem(SEN_KEY), null) || safeParse(localStorage.getItem(OLD_SEN_KEY), null);
-        if(!s2 || !Array.isArray(s2) || s2.length === 0) s2 = JSON.parse(JSON.stringify(BASE_SENTENCES));
+        if(!s2 || !Array.isArray(s2) || s2.length === 0) s2 = buildAllDefaultSentences();
         sentenceDb = s2;
 
         errorWordSet = {};
@@ -5509,65 +6653,49 @@ async function loadAll(){
         currentLevel = Number(localStorage.getItem(LV_KEY) || localStorage.getItem(OLD_LV_KEY)) || 1;
     }
 
-    /* ============ 自动补全内置分组 ============ */
-    var hasCore = false, hasGeneral = false, hasOPD = false;
-    for(var i = 0; i < wordDb.length; i++){
-        var g = wordDb[i].group || "";
-        if(g === "核心词汇") hasCore = true;
-        if(g === "一般词汇") hasGeneral = true;
-        if(g === "OPD") hasOPD = true;
-    }
-    if(!hasCore){
-        var coreArr = parseWordsFromText(CORE_WORDS_TEXT, "核心词汇");
+    /* ---- 自动补全：核心词汇 / 一般词汇 / OPD / 词组 ---- */
+    var checkGroups = [
+        {name:"核心词汇", parse:function(){ return parseWordsFromText(CORE_WORDS_TEXT, "核心词汇"); }},
+        {name:"一般词汇", parse:function(){ return parseWordsFromText(GENERAL_WORDS_TEXT, "一般词汇"); }},
+        {name:"OPD",      parse:function(){ return parseWordsFromText(OPD_WORDS_TEXT, "OPD"); }},
+        {name:"词组",      parse:function(){ return parsePhrasesFromText(PHRASES_TEXT, "词组"); }}
+    ];
+    checkGroups.forEach(function(item){
+        var exist = false;
+        for(var i = 0; i < wordDb.length; i++){
+            if((wordDb[i].group || "") === item.name){ exist = true; break; }
+        }
+        if(exist) return;
+        var arr = item.parse();
+        if(arr.length === 0) return;
         var existEn = {};
         for(var i = 0; i < wordDb.length; i++){
-            if((wordDb[i].group || "") === "核心词汇") existEn[wordDb[i].en] = true;
+            if((wordDb[i].group || "") === item.name) existEn[wordDb[i].en] = true;
         }
-        for(var j = 0; j < coreArr.length; j++){
-            if(!existEn[coreArr[j].en]) wordDb.push(coreArr[j]);
+        for(var j = 0; j < arr.length; j++){
+            if(!existEn[arr[j].en]) wordDb.push(arr[j]);
         }
-    }
-    if(!hasGeneral){
-        var genArr = parseWordsFromText(GENERAL_WORDS_TEXT, "一般词汇");
-        var existEn2 = {};
-        for(var i = 0; i < wordDb.length; i++){
-            if((wordDb[i].group || "") === "一般词汇") existEn2[wordDb[i].en] = true;
-        }
-        for(var j = 0; j < genArr.length; j++){
-            if(!existEn2[genArr[j].en]) wordDb.push(genArr[j]);
-        }
-    }
-    if(!hasOPD){
-        var opdArr = parseWordsFromText(OPD_WORDS_TEXT, "OPD");
-        var existEn3 = {};
-        for(var i = 0; i < wordDb.length; i++){
-            if((wordDb[i].group || "") === "OPD") existEn3[wordDb[i].en] = true;
-        }
-        for(var j = 0; j < opdArr.length; j++){
-            if(!existEn3[opdArr[j].en]) wordDb.push(opdArr[j]);
-        }
-    }
+    });
 
-    /* 自动补全高中例句 */
+    /* ---- 自动补全：高中例句 ---- */
     var hasHighSchool = false;
     for(var i = 0; i < sentenceDb.length; i++){
         if((sentenceDb[i].group || "") === "高中例句"){ hasHighSchool = true; break; }
     }
     if(!hasHighSchool){
         var hsArr = parseSentencesFromText(HIGH_SCHOOL_SENTENCES_TEXT, "高中例句");
-        var existEn4 = {};
+        var existEn2 = {};
         for(var i = 0; i < sentenceDb.length; i++){
-            if((sentenceDb[i].group || "") === "高中例句") existEn4[sentenceDb[i].en] = true;
+            if((sentenceDb[i].group || "") === "高中例句") existEn2[sentenceDb[i].en] = true;
         }
         for(var j = 0; j < hsArr.length; j++){
-            if(!existEn4[hsArr[j].en]) sentenceDb.push(hsArr[j]);
+            if(!existEn2[hsArr[j].en]) sentenceDb.push(hsArr[j]);
         }
     }
 
     saveWords();
     saveSentences();
 
-    // 补全字段
     wordDb.forEach(function(x){ if(typeof x.level !== "number") x.level = 0; if(typeof x.nextReview !== "number") x.nextReview = 0; if(!x.group) x.group = "核心词汇"; });
     sentenceDb.forEach(function(x){ if(typeof x.level !== "number") x.level = 0; if(typeof x.nextReview !== "number") x.nextReview = 0; if(!x.group) x.group = "句子库"; });
 }
@@ -5613,21 +6741,29 @@ function saveLevel(){
 }
 
 /* ============================================================
- * 5. 业务计算
+ * 业务计算
  * ============================================================ */
 function getCurrentGroup(){return $("groupSelect").value||"核心词汇";}
 function getGroupWords(){var g=getCurrentGroup();return wordDb.filter(function(w){return (w.group||"核心词汇")===g;});}
 function getGroupSentences(){var g=getCurrentGroup();return sentenceDb.filter(function(s){return (s.group||"句子库")===g;});}
 function getDueWords(){var n=Date.now();return getGroupWords().filter(function(w){return w.level<8&&n>=w.nextReview;});}
 function getDueSentences(){var n=Date.now();return getGroupSentences().filter(function(s){return s.level<8&&n>=s.nextReview;});}
-function calcTotalLevel(){var c=getGroupWords().length;return c<=0?1:Math.ceil(c/NORMAL_PAIRS);}
+
+function calcTotalLevel(){
+    if(appMode === "sentence"){
+        var c = getGroupSentences().length;
+        return c <= 0 ? 1 : Math.ceil(c / SENTENCE_PAIRS);
+    }
+    var c2 = getGroupWords().length;
+    return c2 <= 0 ? 1 : Math.ceil(c2 / NORMAL_PAIRS);
+}
 
 function updateLevelUi(){$("levelCount").textContent=currentLevel;$("totalLevelCount").textContent=calcTotalLevel();}
 function updateDueCount(){$("dueCount").textContent=getDueWords().length + getDueSentences().length;}
 function updateModeStatText(){$("currentModeBtn").textContent=MODE_NAME[appMode];}
 
 /* ============================================================
- * 6. 分组下拉
+ * 分组下拉
  * ============================================================ */
 function renderGroup(selectGroup){
     var sel=$("groupSelect");
@@ -5638,15 +6774,13 @@ function renderGroup(selectGroup){
     if(all.length===0)all.push("核心词汇");
     sel.innerHTML="";
     all.forEach(function(g){var o=document.createElement("option");o.value=g;o.textContent=g;sel.appendChild(o);});
-    if(selectGroup && all.indexOf(selectGroup)>=0){
-        sel.value=selectGroup;
-    }
+    if(selectGroup && all.indexOf(selectGroup)>=0) sel.value=selectGroup;
     $("totalCount").textContent=wordDb.length+sentenceDb.length;
     updateDueCount(); updateLevelUi(); updateModeStatText();
 }
 
 /* ============================================================
- * 7. 视图切换
+ * 视图切换
  * ============================================================ */
 function updateUiVisible(){
     var g=$("gameGrid"),r=$("reviewView");
@@ -5656,7 +6790,6 @@ function updateUiVisible(){
     else if(appMode==="sentence"){g.style.display="grid";g.className="grid-sentence";}
     else if(appMode==="review"){r.style.display="flex";}
 }
-
 function switchMode(m){
     if(m==="review"){
         if(appMode==="sentence") reviewTab="sentence";
@@ -5667,16 +6800,15 @@ function switchMode(m){
     if(m==="normal") buildGame();
     else if(m==="sentence") buildSentenceGame();
     else if(m==="review") renderReview();
-    updateDueCount(); updateModeStatText();
+    updateDueCount(); updateModeStatText(); updateLevelUi();
 }
 
 /* ============================================================
- * 8. 语音 & 音效
+ * 语音 & 音效
  * ============================================================ */
 function speakWord(t){try{if(!window.speechSynthesis)return;window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.85;window.speechSynthesis.speak(u);}catch(e){}}
 function playMatchSound(){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type="sine";o.frequency.setValueAtTime(587,c.currentTime);o.frequency.setValueAtTime(880,c.currentTime+.12);g.gain.setValueAtTime(.22,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.25);o.start(c.currentTime);o.stop(c.currentTime+.25);}catch(e){}}
 function spawnStar(el){for(var i=0;i<3;i++){(function(){var s=document.createElement("span");s.className="star";s.textContent="✨";s.style.left=(10+Math.random()*60)+"%";s.style.top="10%";el.appendChild(s);setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},700);})();}}
-
 function bindLongPress(el,t){
     el.addEventListener("mousedown",function(){longPressTimer=setTimeout(function(){speakWord(t);},LONG_PRESS_DELAY);});
     el.addEventListener("mouseup",function(){clearTimeout(longPressTimer);});
@@ -5687,7 +6819,7 @@ function bindLongPress(el,t){
 }
 
 /* ============================================================
- * 9. 记忆更新
+ * 记忆更新
  * ============================================================ */
 function wordRight(en){var g=getCurrentGroup();for(var i=0;i<wordDb.length;i++){if(wordDb[i].en===en&&(wordDb[i].group||"核心词汇")===g){if(wordDb[i].level<EBBINGHAUS.length){wordDb[i].nextReview=Date.now()+EBBINGHAUS[wordDb[i].level];wordDb[i].level++;}else wordDb[i].level=8;delete errorWordSet[en];break;}}saveWords();saveErrors();updateDueCount();}
 function wordWrong(en){var g=getCurrentGroup();for(var i=0;i<wordDb.length;i++){if(wordDb[i].en===en&&(wordDb[i].group||"核心词汇")===g){wordDb[i].level=0;wordDb[i].nextReview=0;errorWordSet[en]=true;break;}}saveWords();saveErrors();updateDueCount();}
@@ -5719,10 +6851,15 @@ function sentenceWrong(en){
 }
 
 /* ============================================================
- * 10. 复习模式
+ * 复习模式
  * ============================================================ */
 function renderReview(){
-    var wrap=$("reviewView");
+    var cardsEl = $("reviewCards");
+    if(!cardsEl) return;
+    var navPrev = $("reviewPrevBtn");
+    var navNext = $("reviewNextBtn");
+    var navInfo = $("reviewPageInfo");
+
     var now=Date.now();
     var gw=getGroupWords(), gs=getGroupSentences();
 
@@ -5741,7 +6878,10 @@ function renderReview(){
     var emptyHint = reviewTab==="word" ? "可去闯关模式做配对，生成复习计划" : "可去句闯模式做配对，生成复习计划";
 
     if(total===0){
-        wrap.innerHTML = '<div class="empty-state"><div class="emoji">✅</div><p>'+emptyText+'</p><p style="font-size:12px;color:#888">'+emptyHint+'</p></div>';
+        cardsEl.innerHTML = '<div class="empty-state"><div class="emoji">✅</div><p>'+emptyText+'</p><p style="font-size:12px;color:#888">'+emptyHint+'</p></div>';
+        if(navPrev) navPrev.disabled = true;
+        if(navNext) navNext.disabled = true;
+        if(navInfo) navInfo.textContent = "0 / 0";
         return;
     }
 
@@ -5780,68 +6920,77 @@ function renderReview(){
             '</div>';
         }
     });
+    cardsEl.innerHTML = html;
 
-    html+='<div class="nav-row">'+
-        '<button class="btn btn-success" data-action="prev" '+(reviewPage<=0?"disabled":"")+'>⬅ 上一页</button>'+
-        '<span style="align-self:center">'+(reviewPage+1)+'/'+pages+'</span>'+
-        '<button class="btn btn-success" data-action="next" '+(reviewPage>=pages-1?"disabled":"")+'>下一页 ➡</button>'+
-    '</div>';
+    if(navPrev) navPrev.disabled = (reviewPage <= 0);
+    if(navNext) navNext.disabled = (reviewPage >= pages-1);
+    if(navInfo) navInfo.textContent = (reviewPage + 1) + " / " + pages;
 
-    wrap.innerHTML=html;
     bindReviewEvents();
-    wrap.querySelectorAll("[data-word]").forEach(function(d){bindLongPress(d,d.dataset.word);});
+    cardsEl.querySelectorAll("[data-word]").forEach(function(d){bindLongPress(d,d.dataset.word);});
+}
+
+/* ★ 翻书页动画（旋转舞台层） */
+function animatePageSwitch(direction, callback){
+    var stage = $("reviewStage");
+    if(!stage){ callback(); return; }
+    if(stage.dataset.animating === "1") return;
+    stage.dataset.animating = "1";
+
+    var outAngle  = direction > 0 ? -90 : 90;
+    var outOrigin = direction > 0 ? "left center" : "right center";
+    var inAngle   = direction > 0 ? 90 : -90;
+    var inOrigin  = direction > 0 ? "right center" : "left center";
+
+    /* 翻出：当前页向一侧翻走 */
+    stage.style.transition = "transform .26s ease-in, opacity .26s ease-in";
+    stage.style.transformOrigin = outOrigin;
+    stage.style.transform = "rotateY(" + outAngle + "deg)";
+    stage.style.opacity = "0";
+
+    setTimeout(function(){
+        callback();  /* 渲染新一页 */
+
+        /* 立即把舞台挪到另一侧起始位置（不可见） */
+        stage.style.transition = "none";
+        stage.style.transformOrigin = inOrigin;
+        stage.style.transform = "rotateY(" + inAngle + "deg)";
+        stage.style.opacity = "0";
+
+        void stage.offsetWidth;  /* 强制重排 */
+
+        /* 翻入：新页从另一侧翻回来 */
+        stage.style.transition = "transform .32s cubic-bezier(.22,.8,.3,1), opacity .32s ease-out";
+        stage.style.transformOrigin = inOrigin;
+        stage.style.transform = "rotateY(0deg)";
+        stage.style.opacity = "1";
+
+        setTimeout(function(){ stage.dataset.animating = "0"; }, 340);
+    }, 270);
 }
 
 function bindReviewEvents(){
-    var wrap=$("reviewView");
+    var wrap = $("reviewView");
     if(!wrap) return;
-    wrap.onclick=function(e){
-        var btn=e.target.closest("button[data-action]");
+    wrap.onclick = function(e){
+        var btn = e.target.closest("button[data-action]");
         if(btn){
-            var act=btn.dataset.action;
-            if(act==="w-right"){wordRight(btn.dataset.en);renderReview();}
-            else if(act==="w-wrong"){wordWrong(btn.dataset.en);renderReview();}
-            else if(act==="s-right"){sentenceRight(btn.dataset.en);renderReview();}
-            else if(act==="s-wrong"){sentenceWrong(btn.dataset.en);renderReview();}
-                       else if(act==="prev"){ if(reviewPage>0){ animatePageSwitch(-1, function(){ reviewPage--; renderReview(); }); } }
-            else if(act==="next"){ animatePageSwitch(1, function(){ reviewPage++; renderReview(); }); }
+            var act = btn.dataset.action;
+            if(act==="w-right"){ wordRight(btn.dataset.en); renderReview(); }
+            else if(act==="w-wrong"){ wordWrong(btn.dataset.en); renderReview(); }
+            else if(act==="s-right"){ sentenceRight(btn.dataset.en); renderReview(); }
+            else if(act==="s-wrong"){ sentenceWrong(btn.dataset.en); renderReview(); }
+            else if(act==="prev"){
+                if(reviewPage > 0){ animatePageSwitch(-1, function(){ reviewPage--; renderReview(); }); }
+            }
+            else if(act==="next"){
+                animatePageSwitch(1, function(){ reviewPage++; renderReview(); });
+            }
         }
     };
-}function animatePageSwitch(direction, callback){
-    var wrap = $("reviewView");
-    if(!wrap){ callback(); return; }
-    if(wrap.dataset.animating === "1") return;
-    wrap.dataset.animating = "1";
-
-    var OFFSET = 40;
-
-    wrap.style.transition = "opacity .16s ease, transform .16s ease";
-    wrap.style.opacity = "0";
-    wrap.style.transform = direction > 0
-        ? "translateX(-" + OFFSET + "px)"
-        : "translateX(" + OFFSET + "px)";
-
-    setTimeout(function(){
-        callback();
-
-        wrap.style.transition = "none";
-        wrap.style.transform = direction > 0
-            ? "translateX(" + OFFSET + "px)"
-            : "translateX(-" + OFFSET + "px)";
-        wrap.style.opacity = "0";
-
-        void wrap.offsetWidth;
-
-        wrap.style.transition = "opacity .22s ease, transform .22s ease";
-        wrap.style.opacity = "1";
-        wrap.style.transform = "translateX(0)";
-
-        setTimeout(function(){
-            wrap.dataset.animating = "0";
-        }, 240);
-    }, 160);
 }
 
+/* ★ 左右滑动翻页 */
 function bindReviewSwipe(){
     var wrap = $("reviewView");
     if(!wrap) return;
@@ -5857,27 +7006,25 @@ function bindReviewSwipe(){
         var dx = e.changedTouches[0].clientX - startX;
         var dy = e.changedTouches[0].clientY - startY;
         var dt = Date.now() - startTime;
-        // 水平位移 > 60px；垂直位移不能超过水平位移的 60%；时间 < 800ms
         if(Math.abs(dx) < 60) return;
         if(Math.abs(dy) > Math.abs(dx) * 0.6) return;
         if(dt > 800) return;
-        // 计算总页数
+
         var now = Date.now();
         var sourceList = (reviewTab==="word" ? getGroupWords() : getGroupSentences())
             .filter(function(x){ return x.level<8 && now >= x.nextReview; });
         var pages = Math.ceil(sourceList.length / REVIEW_PAGE_SIZE);
+
         if(dx > 0){
-            // 向右滑 → 上一页
-                   if(dx > 0){
             if(reviewPage > 0){ animatePageSwitch(-1, function(){ reviewPage--; renderReview(); }); }
         } else {
             if(reviewPage < pages - 1){ animatePageSwitch(1, function(){ reviewPage++; renderReview(); }); }
         }
-        }
     }, {passive:true});
 }
+
 /* ============================================================
- * 11. 闯关 / 句闯
+ * 闯关 / 句闯
  * ============================================================ */
 function shuffle(a){var t=a.slice();for(var i=t.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var x=t[i];t[i]=t[j];t[j]=x;}return t;}
 function calcEnFontSize(t){var l=t.length;if(l<=10)return 16;return Math.max(13,16-(l-10)*0.4);}
@@ -5950,7 +7097,7 @@ function flipCard(el,type){
 }
 
 /* ============================================================
- * 12. 按钮绑定
+ * 按钮绑定
  * ============================================================ */
 function bindButtons(){
     $("currentModeBtn").onclick=function(){modeIndex=(modeIndex+1)%MODE_ORDER.length;switchMode(MODE_ORDER[modeIndex]);};
@@ -5984,10 +7131,7 @@ function bindButtons(){
                 if(en && zh){
                     sentenceDb.push({en:en, zh:zh, group:gname, level:0, nextReview:0});
                     cnt++;
-                } else {
-                    skipped++;
-                    if(!sampleSkip) sampleSkip = line;
-                }
+                } else { skipped++; if(!sampleSkip) sampleSkip = line; }
             } else {
                 var segs = line.split(/[；;]/);
                 if(segs.length >= 3){
@@ -5997,14 +7141,8 @@ function bindButtons(){
                     if(en2 && zh2){
                         wordDb.push({en:en2, phon:phon, zh:zh2, group:gname, level:0, nextReview:0});
                         cnt++;
-                    } else {
-                        skipped++;
-                        if(!sampleSkip) sampleSkip = line;
-                    }
-                } else {
-                    skipped++;
-                    if(!sampleSkip) sampleSkip = line;
-                }
+                    } else { skipped++; if(!sampleSkip) sampleSkip = line; }
+                } else { skipped++; if(!sampleSkip) sampleSkip = line; }
             }
 
             if(i > 0 && i % 300 === 0){
@@ -6014,8 +7152,7 @@ function bindButtons(){
         }
 
         btn.textContent = "💾 保存中...";
-        saveWords();
-        saveSentences();
+        saveWords(); saveSentences();
         await new Promise(function(r){ setTimeout(r, 50); });
 
         btn.disabled = false;
@@ -6037,10 +7174,8 @@ function bindButtons(){
     $("resetLevelBtn").onclick=function(){if(confirm("重置关卡到第1关？")){currentLevel=1;saveLevel();}};
     $("resetAllBtn").onclick=function(){
         if(!confirm("⚠️重置全部？"))return;
-        wordDb=parseWordsFromText(CORE_WORDS_TEXT, "核心词汇")
-            .concat(parseWordsFromText(GENERAL_WORDS_TEXT, "一般词汇"))
-            .concat(parseWordsFromText(OPD_WORDS_TEXT, "OPD"));
-        sentenceDb=JSON.parse(JSON.stringify(BASE_SENTENCES)).concat(parseSentencesFromText(HIGH_SCHOOL_SENTENCES_TEXT, "高中例句"));
+        wordDb=buildAllDefaultWords();
+        sentenceDb=buildAllDefaultSentences();
         errorWordSet={};saveWords();saveSentences();saveErrors();
         currentLevel=1;saveLevel();renderGroup();reviewPage=0;switchMode(appMode);
     };
@@ -6054,21 +7189,13 @@ function bindButtons(){
 }
 
 /* ============================================================
- * 13. 初始化
+ * 初始化
  * ============================================================ */
 async function init(){
     await loadAll();
     renderGroup();
     bindButtons();
-    appMode="normal"; modeIndex=0;
-    updateUiVisible(); buildGame();
-    updateDueCount(); updateLevelUi(); updateModeStatText();
-}
-async function init(){
-    await loadAll();
-    renderGroup();
-    bindButtons();
-    bindReviewSwipe();   // ← 新增这一行
+    bindReviewSwipe();
     appMode="normal"; modeIndex=0;
     updateUiVisible(); buildGame();
     updateDueCount(); updateLevelUi(); updateModeStatText();
