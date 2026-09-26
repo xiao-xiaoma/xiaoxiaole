@@ -44,22 +44,26 @@ select{padding:5px 8px;border:2px solid #fcd34d;border-radius:6px;font-size:13px
 /* ===== 复习视图（翻书页 + 底部固定导航） ===== */
 .review-wrap{flex:1;display:flex;flex-direction:column;padding:4px 2px 0 2px;overflow:hidden;min-height:0;perspective:1200px}
 .review-stage {
-  flex: 0 1 auto;          /* 高度由内容决定，空间不足时收缩 */
+  flex: 0 1 auto;
   min-height: 0;
   position: relative;
-  overflow-y: auto;        /* 内容多时在内部滚动 */
+  overflow-y: auto;
   overflow-x: hidden;
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform, opacity;
   -webkit-overflow-scrolling: touch;
+  /* 新增两行 */
+  touch-action: pan-y;
+  transform: translateX(0);
 }
 .review-cards {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 2px;
-}.review-nav{flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 4px 6px 4px;border-top:1px solid #e5e7eb;background:#fff;box-shadow:0 -2px 8px rgba(0,0,0,.05)}
+}
+.review-nav{flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 4px 6px 4px;border-top:1px solid #e5e7eb;background:#fff;box-shadow:0 -2px 8px rgba(0,0,0,.05)}
 .nav-btn{min-width:96px;padding:7px 12px;font-size:13px}
 .page-indicator{font-size:13px;font-weight:700;color:#374151;min-width:96px;text-align:center}
 
@@ -6557,13 +6561,19 @@ var BASE_SENTENCES = [
 var DB_KEY="xxm_words_v19", SEN_KEY="xxm_sen_v19", LV_KEY="xxm_lv_v19", ERR_KEY="xxm_err_v19";
 var OLD_DB_KEY="xxm_words_v18", OLD_SEN_KEY="xxm_sen_v18", OLD_LV_KEY="xxm_lv_v18", OLD_ERR_KEY="xxm_err_v18";
 
+/* 新增：分组关卡 & 分组复习页码 */
+var GROUP_LV_KEY = "xxm_group_levels_v20";
+var GROUP_REVIEW_PAGE_KEY = "xxm_group_review_pages_v20";
+
 var MODE_ORDER=["normal","review","sentence"];
 var MODE_NAME={normal:"闯关",review:"复习",sentence:"句闯"};
 var NORMAL_PAIRS=6;
 var SENTENCE_PAIRS=4, REVIEW_PAGE_SIZE=6;
 var LONG_PRESS_DELAY=450, SWIPE_THRESHOLD=60;
 
-var wordDb=[], sentenceDb=[], errorWordSet={}, currentLevel=1;
+var wordDb=[], sentenceDb=[], errorWordSet={};
+var groupLevels = {};        // 每分组关卡 {分组名: 关卡数}
+var groupReviewPages = {};   // 每分组复习页码 {分组名: {word: 页码, sentence: 页码}}
 var appMode="normal", modeIndex=0, reviewPage=0;
 var reviewTab="word";
 var game={flipped:[],locked:false}, longPressTimer=null, touchStartX=0;
@@ -6635,9 +6645,19 @@ async function loadAll(){
         errorWordSet = {};
         if(Array.isArray(errArr)) errArr.forEach(function(k){ errorWordSet[k] = true; });
 
-        var lv = await idbGet(LV_KEY);
-        if(lv === null || lv === undefined) lv = Number(localStorage.getItem(OLD_LV_KEY)) || 1;
-        currentLevel = Number(lv) || 1;
+        /* 加载分组关卡 */
+        var gl = await idbGet(GROUP_LV_KEY);
+        if(gl && typeof gl === "object") groupLevels = gl;
+        else {
+            var oldLv = await idbGet(LV_KEY);
+            if(oldLv === null || oldLv === undefined) oldLv = Number(localStorage.getItem(OLD_LV_KEY)) || 1;
+            groupLevels = { "核心词汇": Number(oldLv) || 1 };
+        }
+
+        /* 加载分组复习页码 */
+        var grp = await idbGet(GROUP_REVIEW_PAGE_KEY);
+        if(grp && typeof grp === "object") groupReviewPages = grp;
+        else groupReviewPages = {};
     } else {
         var w2 = safeParse(localStorage.getItem(DB_KEY), null) || safeParse(localStorage.getItem(OLD_DB_KEY), null);
         if(!w2 || !Array.isArray(w2) || w2.length === 0) w2 = buildAllDefaultWords();
@@ -6650,7 +6670,17 @@ async function loadAll(){
         errorWordSet = {};
         var e2 = safeParse(localStorage.getItem(ERR_KEY), safeParse(localStorage.getItem(OLD_ERR_KEY), []));
         if(Array.isArray(e2)) e2.forEach(function(k){ errorWordSet[k] = true; });
-        currentLevel = Number(localStorage.getItem(LV_KEY) || localStorage.getItem(OLD_LV_KEY)) || 1;
+
+        var gl2 = safeParse(localStorage.getItem(GROUP_LV_KEY), null);
+        if(gl2 && typeof gl2 === "object") groupLevels = gl2;
+        else {
+            var oldLv2 = Number(localStorage.getItem(LV_KEY) || localStorage.getItem(OLD_LV_KEY)) || 1;
+            groupLevels = { "核心词汇": oldLv2 };
+        }
+
+        var grp2 = safeParse(localStorage.getItem(GROUP_REVIEW_PAGE_KEY), null);
+        if(grp2 && typeof grp2 === "object") groupReviewPages = grp2;
+        else groupReviewPages = {};
     }
 
     /* ---- 自动补全：核心词汇 / 一般词汇 / OPD / 词组 ---- */
@@ -6728,15 +6758,54 @@ function saveErrors(){
         try{ localStorage.setItem(ERR_KEY, JSON.stringify(arr)); }catch(e){}
     }
 }
-function saveLevel(){
-    var m = calcTotalLevel();
-    if(currentLevel > m) currentLevel = m;
-    if(currentLevel < 1) currentLevel = 1;
+
+/* ========== 新增：分组关卡/复习页码保存 ========== */
+function saveGroupLevels(){
     if(idbReady){
-        idbSet(LV_KEY, currentLevel).catch(function(){});
+        idbSet(GROUP_LV_KEY, groupLevels).catch(function(){});
     } else {
-        try{ localStorage.setItem(LV_KEY, String(currentLevel)); }catch(e){}
+        try{ localStorage.setItem(GROUP_LV_KEY, JSON.stringify(groupLevels)); }catch(e){}
     }
+}
+function saveGroupReviewPages(){
+    if(idbReady){
+        idbSet(GROUP_REVIEW_PAGE_KEY, groupReviewPages).catch(function(){});
+    } else {
+        try{ localStorage.setItem(GROUP_REVIEW_PAGE_KEY, JSON.stringify(groupReviewPages)); }catch(e){}
+    }
+}
+function getCurrentLevel(){
+    var g = getCurrentGroup();
+    return groupLevels[g] || 1;
+}
+function setCurrentLevel(lv){
+    var g = getCurrentGroup();
+    var m = calcTotalLevel();
+    if(lv > m) lv = m;
+    if(lv < 1) lv = 1;
+    groupLevels[g] = lv;
+    saveGroupLevels();
+    updateLevelUi();
+}
+function getReviewPage(){
+    var g = getCurrentGroup();
+    var tab = reviewTab;
+    if(!groupReviewPages[g]) groupReviewPages[g] = {};
+    return groupReviewPages[g][tab] || 0;
+}
+function setReviewPage(p){
+    var g = getCurrentGroup();
+    var tab = reviewTab;
+    if(!groupReviewPages[g]) groupReviewPages[g] = {};
+    groupReviewPages[g][tab] = p;
+    saveGroupReviewPages();
+}
+
+/* 兼容旧接口：保存当前分组关卡 */
+function saveLevel(){
+    var g = getCurrentGroup();
+    groupLevels[g] = getCurrentLevel();
+    saveGroupLevels();
     updateLevelUi();
 }
 
@@ -6758,7 +6827,12 @@ function calcTotalLevel(){
     return c2 <= 0 ? 1 : Math.ceil(c2 / NORMAL_PAIRS);
 }
 
-function updateLevelUi(){$("levelCount").textContent=currentLevel;$("totalLevelCount").textContent=calcTotalLevel();}
+function updateLevelUi(){
+    var lv = getCurrentLevel();
+    var total = calcTotalLevel();
+    $("levelCount").textContent = lv;
+    $("totalLevelCount").textContent = total;
+}
 function updateDueCount(){$("dueCount").textContent=getDueWords().length + getDueSentences().length;}
 function updateModeStatText(){$("currentModeBtn").textContent=MODE_NAME[appMode];}
 
@@ -6795,7 +6869,13 @@ function switchMode(m){
         if(appMode==="sentence") reviewTab="sentence";
         else if(appMode==="normal") reviewTab="word";
     }
-    appMode=m; reviewPage=0; game.flipped=[]; game.locked=false;
+    appMode=m;
+    game.flipped=[]; game.locked=false;
+    if(m==="review"){
+        reviewPage = getReviewPage();
+    } else {
+        reviewPage = 0;
+    }
     updateUiVisible();
     if(m==="normal") buildGame();
     else if(m==="sentence") buildSentenceGame();
@@ -6860,6 +6940,9 @@ function renderReview(){
     var navNext = $("reviewNextBtn");
     var navInfo = $("reviewPageInfo");
 
+    /* 读取当前分组页码 */
+    reviewPage = getReviewPage();
+
     var now=Date.now();
     var gw=getGroupWords(), gs=getGroupSentences();
 
@@ -6888,6 +6971,8 @@ function renderReview(){
     var pages=Math.ceil(total/REVIEW_PAGE_SIZE);
     if(reviewPage>pages-1)reviewPage=pages-1;
     if(reviewPage<0)reviewPage=0;
+    setReviewPage(reviewPage);  /* 保存修正后的页码 */
+
     var pageData=sourceList.slice(reviewPage*REVIEW_PAGE_SIZE,(reviewPage+1)*REVIEW_PAGE_SIZE);
 
     var html="";
@@ -6930,43 +7015,52 @@ function renderReview(){
     cardsEl.querySelectorAll("[data-word]").forEach(function(d){bindLongPress(d,d.dataset.word);});
 }
 
-/* ★ 翻书页动画（旋转舞台层） */
+/* ============ 苹果风格页面切换动画（水平滑动·慢速版） ============ */
+function getTranslateX(el){
+    try{
+        var t = getComputedStyle(el).transform;
+        if(!t || t === "none") return 0;
+        if(t.indexOf("matrix3d") === 0){
+            var v3 = t.slice(9, -1).split(",");
+            return parseFloat(v3[12]) || 0;
+        }
+        if(t.indexOf("matrix") === 0){
+            var v2 = t.slice(7, -1).split(",");
+            return parseFloat(v2[4]) || 0;
+        }
+    }catch(e){}
+    return 0;
+}
+
 function animatePageSwitch(direction, callback){
     var stage = $("reviewStage");
     if(!stage){ callback(); return; }
     if(stage.dataset.animating === "1") return;
     stage.dataset.animating = "1";
 
-    var outAngle  = direction > 0 ? -90 : 90;
-    var outOrigin = direction > 0 ? "left center" : "right center";
-    var inAngle   = direction > 0 ? 90 : -90;
-    var inOrigin  = direction > 0 ? "right center" : "left center";
+    var W = stage.clientWidth || window.innerWidth || 320;
+    var outX = direction > 0 ? -W : W;   /* 下一页：向左滑出；上一页：向右滑出 */
 
-    /* 翻出：当前页向一侧翻走 */
-    stage.style.transition = "transform .26s ease-in, opacity .26s ease-in";
-    stage.style.transformOrigin = outOrigin;
-    stage.style.transform = "rotateY(" + outAngle + "deg)";
-    stage.style.opacity = "0";
+    /* 滑出（放慢：0.26s → 0.42s） */
+    stage.style.transition = "transform .42s cubic-bezier(.25,.8,.25,1)";
+    stage.style.transform = "translateX(" + outX + "px)";
 
     setTimeout(function(){
         callback();  /* 渲染新一页 */
 
-        /* 立即把舞台挪到另一侧起始位置（不可见） */
+        /* 瞬移到反方向起点（不可见） */
+        var inX = direction > 0 ? W : -W;
         stage.style.transition = "none";
-        stage.style.transformOrigin = inOrigin;
-        stage.style.transform = "rotateY(" + inAngle + "deg)";
-        stage.style.opacity = "0";
+        stage.style.transform = "translateX(" + inX + "px)";
 
         void stage.offsetWidth;  /* 强制重排 */
 
-        /* 翻入：新页从另一侧翻回来 */
-        stage.style.transition = "transform .32s cubic-bezier(.22,.8,.3,1), opacity .32s ease-out";
-        stage.style.transformOrigin = inOrigin;
-        stage.style.transform = "rotateY(0deg)";
-        stage.style.opacity = "1";
+        /* 滑入（放慢：0.3s → 0.46s） */
+        stage.style.transition = "transform .46s cubic-bezier(.25,.8,.25,1)";
+        stage.style.transform = "translateX(0)";
 
-        setTimeout(function(){ stage.dataset.animating = "0"; }, 340);
-    }, 270);
+        setTimeout(function(){ stage.dataset.animating = "0"; }, 480);
+    }, 430);
 }
 
 function bindReviewEvents(){
@@ -6981,45 +7075,152 @@ function bindReviewEvents(){
             else if(act==="s-right"){ sentenceRight(btn.dataset.en); renderReview(); }
             else if(act==="s-wrong"){ sentenceWrong(btn.dataset.en); renderReview(); }
             else if(act==="prev"){
-                if(reviewPage > 0){ animatePageSwitch(-1, function(){ reviewPage--; renderReview(); }); }
+                if(reviewPage > 0){
+                    animatePageSwitch(-1, function(){
+                        reviewPage--;
+                        setReviewPage(reviewPage);
+                        renderReview();
+                    });
+                }
             }
             else if(act==="next"){
-                animatePageSwitch(1, function(){ reviewPage++; renderReview(); });
+                animatePageSwitch(1, function(){
+                    reviewPage++;
+                    setReviewPage(reviewPage);
+                    renderReview();
+                });
             }
         }
     };
 }
 
-/* ★ 左右滑动翻页 */
+/* ============ 苹果风格跟手滑动翻页（慢速版） ============ */
 function bindReviewSwipe(){
-    var wrap = $("reviewView");
-    if(!wrap) return;
-    var startX = 0, startY = 0, startTime = 0;
+    var wrap  = $("reviewView");
+    var stage = $("reviewStage");
+    if(!wrap || !stage) return;
+
+    var startX = 0, startY = 0, startTime = 0, baseX = 0;
+    var dragging = false, axisLock = null;   /* axisLock: null / "x" / "y" */
+
+    function getPages(){
+        var now = Date.now();
+        var list = (reviewTab === "word" ? getGroupWords() : getGroupSentences())
+            .filter(function(it){ return it.level < 8 && now >= it.nextReview; });
+        return Math.ceil(list.length / REVIEW_PAGE_SIZE) || 1;
+    }
+
+    /* --- 开始触摸 --- */
     wrap.addEventListener("touchstart", function(e){
         if(e.touches.length !== 1) return;
+        if(stage.dataset.animating === "1") return;
+
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         startTime = Date.now();
+        dragging = false;
+        axisLock = null;
+
+        /* 若正在回弹，立即停住并取当前位置，实现无跳变接续拖动 */
+        baseX = getTranslateX(stage);
+        stage.style.transition = "none";
+        stage.style.transform = "translateX(" + baseX + "px)";
     }, {passive:true});
-    wrap.addEventListener("touchend", function(e){
-        if(!e.changedTouches || e.changedTouches.length !== 1) return;
-        var dx = e.changedTouches[0].clientX - startX;
-        var dy = e.changedTouches[0].clientY - startY;
-        var dt = Date.now() - startTime;
-        if(Math.abs(dx) < 60) return;
-        if(Math.abs(dy) > Math.abs(dx) * 0.6) return;
-        if(dt > 800) return;
 
-        var now = Date.now();
-        var sourceList = (reviewTab==="word" ? getGroupWords() : getGroupSentences())
-            .filter(function(x){ return x.level<8 && now >= x.nextReview; });
-        var pages = Math.ceil(sourceList.length / REVIEW_PAGE_SIZE);
+    /* --- 拖动 --- */
+    wrap.addEventListener("touchmove", function(e){
+        if(e.touches.length !== 1) return;
+        if(stage.dataset.animating === "1") return;
 
-        if(dx > 0){
-            if(reviewPage > 0){ animatePageSwitch(-1, function(){ reviewPage--; renderReview(); }); }
-        } else {
-            if(reviewPage < pages - 1){ animatePageSwitch(1, function(){ reviewPage++; renderReview(); }); }
+        var x = e.touches[0].clientX;
+        var y = e.touches[0].clientY;
+        var dx = x - startX;
+        var dy = y - startY;
+
+        /* 首次超过 8px 时判断主轴方向 */
+        if(axisLock === null){
+            if(Math.abs(dx) > 8 || Math.abs(dy) > 8){
+                axisLock = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+            } else {
+                return;
+            }
         }
+        /* 纵向滑动：交给默认滚动 */
+        if(axisLock !== "x") return;
+
+        /* 横向滑动：阻止纵向滚动 */
+        if(e.cancelable) e.preventDefault();
+        dragging = true;
+
+        var W = wrap.clientWidth || 320;
+        var pages = getPages();
+        var real = baseX + dx;
+
+        /* 边界阻尼（第一页继续右滑 / 最后一页继续左滑时） */
+        if((reviewPage <= 0 && real > 0) || (reviewPage >= pages - 1 && real < 0)){
+            real = real * 0.35;
+        } else {
+            /* 轻微阻尼，手感更"肉" */
+            real = real * 0.92;
+        }
+
+        stage.style.transition = "none";
+        stage.style.transform = "translateX(" + real + "px)";
+    }, {passive:false});
+
+    /* --- 松手 --- */
+    wrap.addEventListener("touchend", function(e){
+        if(!dragging){
+            axisLock = null;
+            /* 若触摸中断了回弹，则恢复回弹（放慢至 0.42s） */
+            if(Math.abs(baseX) > 0.5){
+                stage.style.transition = "transform .42s cubic-bezier(.25,.8,.25,1)";
+                stage.style.transform = "translateX(0)";
+            }
+            return;
+        }
+        dragging = false;
+        axisLock = null;
+
+        var currentX = getTranslateX(stage);
+        var dt = Math.max(1, Date.now() - startTime);
+        var v = currentX / dt;   /* px/ms，负值=向左滑 */
+        var W = wrap.clientWidth || 320;
+        var pages = getPages();
+
+        var canNext = reviewPage < pages - 1;
+        var canPrev = reviewPage > 0;
+
+        var distThreshold = W * 0.25;   /* 位移超过 1/4 宽 判定翻页 */
+        var vThreshold = 0.75;          /* 速度阈值：0.5 → 0.75，需要更明确的滑势才翻页 */
+
+        if(currentX < 0 && canNext && (Math.abs(currentX) > distThreshold || v < -vThreshold)){
+            /* 下一页 */
+            animatePageSwitch(1, function(){
+                reviewPage++;
+                setReviewPage(reviewPage);
+                renderReview();
+            });
+        } else if(currentX > 0 && canPrev && (Math.abs(currentX) > distThreshold || v > vThreshold)){
+            /* 上一页 */
+            animatePageSwitch(-1, function(){
+                reviewPage--;
+                setReviewPage(reviewPage);
+                renderReview();
+            });
+        } else {
+            /* 回弹（放慢至 0.42s） */
+            stage.style.transition = "transform .42s cubic-bezier(.25,.8,.25,1)";
+            stage.style.transform = "translateX(0)";
+        }
+    }, {passive:true});
+
+    /* --- 触摸取消 --- */
+    wrap.addEventListener("touchcancel", function(){
+        dragging = false;
+        axisLock = null;
+        stage.style.transition = "transform .42s cubic-bezier(.25,.8,.25,1)";
+        stage.style.transform = "translateX(0)";
     }, {passive:true});
 }
 
@@ -7081,8 +7282,10 @@ function flipCard(el,type){
                 game.flipped=[];game.locked=false;
                 var remain=document.querySelectorAll("#gameGrid .card:not(.hidden)");
                 if(remain.length===0){
-                    if(currentLevel<calcTotalLevel())currentLevel++;
-                    saveLevel();
+                    var curLv = getCurrentLevel();
+                    if(curLv < calcTotalLevel()){
+                        setCurrentLevel(curLv + 1);
+                    }
                     setTimeout(function(){if(appMode==="sentence")buildSentenceGame();else buildGame();},700);
                 }
             },400);
@@ -7101,9 +7304,17 @@ function flipCard(el,type){
  * ============================================================ */
 function bindButtons(){
     $("currentModeBtn").onclick=function(){modeIndex=(modeIndex+1)%MODE_ORDER.length;switchMode(MODE_ORDER[modeIndex]);};
-    $("restartBtn").onclick=function(){reviewPage=0;switchMode(appMode);};
+    $("restartBtn").onclick=function(){
+        setReviewPage(0);
+        reviewPage = 0;
+        switchMode(appMode);
+    };
     $("manageBtn").onclick=function(){$("managePanel").classList.toggle("active");};
-    $("groupSelect").onchange=function(){game.flipped=[];game.locked=false;reviewPage=0;updateDueCount();updateLevelUi();switchMode(appMode);};
+    $("groupSelect").onchange=function(){
+        game.flipped=[]; game.locked=false;
+        updateDueCount(); updateLevelUi();
+        switchMode(appMode);
+    };
 
     $("importBtn").onclick = async function(){
         var text = $("wordInput").value.trim();
@@ -7171,20 +7382,35 @@ function bindButtons(){
         }
     };
 
-    $("resetLevelBtn").onclick=function(){if(confirm("重置关卡到第1关？")){currentLevel=1;saveLevel();}};
+    $("resetLevelBtn").onclick=function(){
+        if(confirm("重置当前分组关卡到第1关？")){
+            setCurrentLevel(1);
+        }
+    };
     $("resetAllBtn").onclick=function(){
         if(!confirm("⚠️重置全部？"))return;
         wordDb=buildAllDefaultWords();
         sentenceDb=buildAllDefaultSentences();
-        errorWordSet={};saveWords();saveSentences();saveErrors();
-        currentLevel=1;saveLevel();renderGroup();reviewPage=0;switchMode(appMode);
+        errorWordSet={};
+        groupLevels = {};
+        groupReviewPages = {};
+        saveGroupLevels();
+        saveGroupReviewPages();
+        saveWords();saveSentences();saveErrors();
+        renderGroup();
+        switchMode(appMode);
     };
     $("delGroupAllBtn").onclick=function(){
         var g=getCurrentGroup();
         if(!confirm("⚠️删除分组【"+g+"】？"))return;
         wordDb=wordDb.filter(function(w){return (w.group||"核心词汇")!==g;});
         sentenceDb=sentenceDb.filter(function(s){return (s.group||"句子库")!==g;});
-        saveWords();saveSentences();renderGroup();reviewPage=0;switchMode(appMode);
+        delete groupLevels[g];
+        delete groupReviewPages[g];
+        saveGroupLevels();
+        saveGroupReviewPages();
+        saveWords();saveSentences();renderGroup();
+        switchMode(appMode);
     };
 }
 
